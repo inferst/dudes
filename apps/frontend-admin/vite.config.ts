@@ -8,6 +8,13 @@ export default defineConfig({
   cacheDir: '../../node_modules/.vite/apps/frontend-admin',
 
   server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
     port: 4200,
     host: 'localhost',
   },

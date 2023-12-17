@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@app/backend-api/*": ["apps/backend-api/src/*"]
+      "@app/backend-api/*": ["apps/backend-api/src/*"],
+      "@app/frontend-admin/*": ["apps/frontend-admin/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
