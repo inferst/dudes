@@ -5,12 +5,16 @@ import { RouterModule } from '@nestjs/core';
 import { AdminModule } from 'apps/backend-api/src/admin/admin.module';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from '@app/backend-api/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     AuthModule,
     AdminModule,
     PassportModule.register({ session: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     RouterModule.register([
       {
         path: '/auth',

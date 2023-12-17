@@ -1,21 +1,21 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Response } from '@nestjs/common';
 import { TwitchAuthGuard } from '@app/backend-api/auth/guards/twitch-auth.guard';
-
-type Result = {
-  msg: string;
-};
+import { Response as ExpressResponse } from 'express';
 
 @Controller()
 export class AuthController {
   @Get('/login')
   @UseGuards(TwitchAuthGuard)
-  public handleLogin(): Result {
-    return { msg: 'Redirect.' };
+  public handleLogin(): { msg: string } {
+    return { msg: 'Redirecting...' };
   }
 
   @Get('/callback')
   @UseGuards(TwitchAuthGuard)
-  handleRedirect(): Result {
-    return { msg: 'OK.' };
+  public handleRedirect(
+    @Response({ passthrough: true }) res: ExpressResponse
+  ): void {
+    // TODO: get rid of hardcoded url.
+    res.redirect('http://localhost:4200');
   }
 }

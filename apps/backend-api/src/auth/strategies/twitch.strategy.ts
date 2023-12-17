@@ -2,20 +2,17 @@ import { PassportStrategy } from '@nestjs/passport';
 import Oauth2Strategy from 'passport-oauth2';
 import { Injectable } from '@nestjs/common';
 import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
+import { ConfigService } from '@app/backend-api/auth/services';
 
-// TODO: extract to .env.
-const CLIENT_ID = 'lvit12o5wp2dtuysbjvikog7mf39jz';
-const CLIENT_SECRET = '38r88n280n85fw16rfb4sohl8k2v4f';
-const CALLBACK_URL = 'http://localhost:3000/auth/callback';
 const SCOPE = ['channel:read:subscriptions', 'moderator:read:chatters'];
 
 @Injectable()
 export class TwitchStrategy extends PassportStrategy(Oauth2Strategy, 'twitch') {
-  public constructor() {
+  public constructor(configService: ConfigService) {
     super({
-      clientID: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
-      callbackURL: CALLBACK_URL,
+      clientID: configService.twitchClientId,
+      clientSecret: configService.twitchClientSecret,
+      callbackURL: configService.twitchCallbackUrl,
       scope: SCOPE,
       authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
       tokenURL: 'https://id.twitch.tv/oauth2/token',
@@ -23,10 +20,8 @@ export class TwitchStrategy extends PassportStrategy(Oauth2Strategy, 'twitch') {
     });
   }
 
-  public validate(accessToken: string, refreshToken: string): AuthUserProps {
-    console.log(accessToken, 'access-token');
-    console.log(refreshToken, 'refresh-token');
-
+  public validate(_accessToken: string, _refreshToken: string): AuthUserProps {
+    // TODO: implement DB user insert.
     return {
       name: 'Alexander S',
     };
