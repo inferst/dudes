@@ -1,14 +1,20 @@
 import { PassportStrategy } from '@nestjs/passport';
 import Oauth2Strategy from 'passport-oauth2';
 import { Injectable } from '@nestjs/common';
-import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
+import {
+  AuthService,
+  AuthUserProps,
+} from '@app/backend-api/auth/services/auth.service';
 import { ConfigService } from '@app/backend-api/auth/services';
 
 const SCOPE = ['channel:read:subscriptions', 'moderator:read:chatters'];
 
 @Injectable()
 export class TwitchStrategy extends PassportStrategy(Oauth2Strategy, 'twitch') {
-  public constructor(configService: ConfigService) {
+  public constructor(
+    configService: ConfigService,
+    private readonly authService: AuthService
+  ) {
     super({
       clientID: configService.twitchClientId,
       clientSecret: configService.twitchClientSecret,
@@ -20,10 +26,10 @@ export class TwitchStrategy extends PassportStrategy(Oauth2Strategy, 'twitch') {
     });
   }
 
-  public validate(_accessToken: string, _refreshToken: string): AuthUserProps {
-    // TODO: implement DB user insert.
-    return {
-      name: 'Alexander S',
-    };
+  public validate(
+    accessToken: string,
+    refreshToken: string
+  ): Promise<AuthUserProps> {
+    return this.authService.validate(accessToken, refreshToken);
   }
 }

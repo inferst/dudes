@@ -7,7 +7,11 @@ import { useAuth } from '@app/frontend-admin/components/Auth/useAuth';
 const Public = () => {
   const { user } = useAuth();
 
-  return <pre>{JSON.stringify(user)}</pre>;
+  return (
+    <div>
+      <code>{JSON.stringify(user, null, '\n\r')}</code>
+    </div>
+  );
 };
 
 export function Routes() {

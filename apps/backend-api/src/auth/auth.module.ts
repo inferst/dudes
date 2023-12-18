@@ -4,9 +4,11 @@ import { TwitchAuthGuard } from '@app/backend-api/auth/guards/twitch-auth.guard'
 import { AuthController } from '@app/backend-api/auth/controllers/auth.controller';
 import { AuthSerializer } from './serializers';
 import { ConfigService, AuthService } from '@app/backend-api/auth/services';
+import { HttpModule } from '@nestjs/axios';
+import { UserRepository } from '@app/backend-api/auth/repositories';
 
 @Module({
-  imports: [],
+  imports: [HttpModule],
   controllers: [AuthController],
   providers: [
     AuthService,
@@ -14,6 +16,7 @@ import { ConfigService, AuthService } from '@app/backend-api/auth/services';
     TwitchAuthGuard,
     AuthSerializer,
     ConfigService,
+    UserRepository,
   ],
 })
 export class AuthModule {}

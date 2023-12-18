@@ -10,4 +10,7 @@ export class UserController {
   public getUser(@Auth() user: AuthUserProps) {
     return user;
   }
+
+  @Get('/test-db')
+  public async test() {}
 }
