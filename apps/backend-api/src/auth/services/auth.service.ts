@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  User,
-  UserRepository,
-} from '@app/backend-api/auth/repositories/user.repository';
+import { UserRepository } from '@app/backend-api/auth/repositories/user.repository';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { ConfigService } from './config.service';

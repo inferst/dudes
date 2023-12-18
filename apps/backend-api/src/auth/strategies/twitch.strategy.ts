@@ -1,11 +1,11 @@
 import { PassportStrategy } from '@nestjs/passport';
 import Oauth2Strategy from 'passport-oauth2';
+import { ConfigService } from '@app/backend-api/auth/services';
 import { Injectable } from '@nestjs/common';
 import {
   AuthService,
   AuthUserProps,
 } from '@app/backend-api/auth/services/auth.service';
-import { ConfigService } from '@app/backend-api/auth/services';
 
 const SCOPE = ['channel:read:subscriptions', 'moderator:read:chatters'];
 

@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "nx run-many --target=serve",
     "build": "nx run-many --target=build -c=production",
-    "lint": "nx run-many --target=lint",
+    "lint": "npm run lint:types && npm run lint:eslint",
+    "lint:eslint": "nx run-many --target=lint",
+    "lint:types": "nx run-many --target=lint-types",
     "db:migrate": "prisma migrate dev --schema=apps/backend-api/prisma/schema.prisma"
   },
   "private": true,

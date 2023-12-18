@@ -59,6 +59,12 @@
         "reportsDirectory": "../../coverage/apps/frontend-admin"
       }
     },
+    "lint-types": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -b apps/frontend-admin/tsconfig.app.json"
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

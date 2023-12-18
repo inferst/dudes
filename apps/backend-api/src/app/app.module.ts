@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
-import { AdminModule } from 'apps/backend-api/src/admin/admin.module';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from '@app/backend-api/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '@app/backend-api/database/database.module';
+import { AdminModule } from '@app/backend-api/admin/admin.module';
 
 @Module({
   imports: [
