@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UserRepository } from '@app/backend-api/auth/repositories/user.repository';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
@@ -24,6 +24,8 @@ type TwitchUser = {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   public constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
@@ -51,6 +53,26 @@ export class AuthService {
       accessToken,
       name,
     };
+  }
+
+  public async logout(accessToken: string): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.httpService.post(
+          'https://id.twitch.tv/oauth2/revoke',
+          `token=${accessToken}&client_id=${this.configService.twitchClientId}`,
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        )
+      );
+    } catch (e) {
+      this.logger.error('Failed to logout.', {
+        message: e.response.data,
+      });
+    }
   }
 
   private async getTwitchUserInfo(accessToken: string): Promise<TwitchUser> {

@@ -11,16 +11,15 @@ export class UserRepository {
   public async getByTwitchIdOrCreate(
     data: Prisma.UserCreateInput
   ): Promise<User> {
-    const user = await this.prismaService.user.findFirst({
+    return this.prismaService.user.upsert({
       where: {
         twitchId: data.twitchId,
       },
+      update: {
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      },
+      create: data,
     });
-
-    if (user) {
-      return user;
-    }
-
-    return this.prismaService.user.create({ data });
   }
 }
