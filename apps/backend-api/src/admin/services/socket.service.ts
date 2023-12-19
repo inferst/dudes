@@ -82,7 +82,7 @@ export class SocketService {
 
     if (roomIsEmpty) {
       const tmiClient = new tmi.Client({
-        channels: [userGuid],
+        channels: [user.twitchLogin],
       });
 
       void tmiClient.connect();

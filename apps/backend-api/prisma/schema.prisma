@@ -16,6 +16,7 @@ model User {
   refreshToken  String   @db.VarChar(255)
   guid          String   @default(uuid()) @db.Uuid @unique
   twitchId      String   @db.VarChar(255) @unique
+  twitchLogin   String   @db.VarChar(255)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

@@ -22,6 +22,7 @@ type TwitchUser = {
   id: string;
   display_name: string;
   profile_image_url: string;
+  login: string;
 };
 
 @Injectable()
@@ -41,24 +42,24 @@ export class AuthService {
     await this.validateToken(accessToken);
     const result = await this.getTwitchUserInfo(accessToken);
 
-    const { id, display_name: name, profile_image_url: picture } = result;
     const {
       twitchId,
       id: userId,
       guid,
     } = await this.userRepository.getByTwitchIdOrCreate({
-      twitchId: id,
+      twitchId: result.id,
       accessToken,
       refreshToken,
+      twitchLogin: result.login,
     });
 
     return {
       guid,
       userId,
       twitchId,
-      picture,
       accessToken,
-      name,
+      picture: result.profile_image_url,
+      name: result.display_name,
     };
   }
 
