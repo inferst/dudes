@@ -6,7 +6,7 @@ export class ConfigService {
   constructor(private configService: NestConfigService) {}
 
   get appUrl(): string {
-    return this.configService.get('APP_URL');
+    return this.configService.get('ORIGIN');
   }
 
   get twitchClientId(): string {

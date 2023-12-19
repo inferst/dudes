@@ -3,6 +3,7 @@ import { UserRepository } from '@app/backend-api/auth/repositories/user.reposito
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { ConfigService } from './config.service';
+import { InvalidTokenException } from '@app/backend-api/auth/exceptions';
 
 export type AuthUserProps = {
   name: string;
@@ -36,6 +37,7 @@ export class AuthService {
     accessToken: string,
     refreshToken: string
   ): Promise<AuthUserProps> {
+    await this.validateToken(accessToken);
     const result = await this.getTwitchUserInfo(accessToken);
 
     const { id, display_name: name, profile_image_url: picture } = result;
@@ -72,6 +74,24 @@ export class AuthService {
       this.logger.error('Failed to logout.', {
         message: e.response.data,
       });
+    }
+  }
+
+  public async validateToken(accessToken: string): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.httpService.get('https://id.twitch.tv/oauth2/validate', {
+          headers: {
+            Authorization: `OAuth ${accessToken}`,
+          },
+        })
+      );
+    } catch (e) {
+      this.logger.error('Token validation has been failed.', {
+        e,
+      });
+
+      throw new InvalidTokenException();
     }
   }
 
