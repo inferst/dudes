@@ -1,8 +1,9 @@
 import { createContext, ReactNode } from 'react';
-import { useApi, User } from '@app/frontend-admin/hooks/useApi';
+import { useApi } from '@app/frontend-admin/hooks/useApi';
 import { useQuery } from 'react-query';
 import { isAxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { User } from '@dudes/shared';
 
 type AuthContext = {
   user?: User;

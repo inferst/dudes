@@ -1,13 +1,5 @@
 import axios, { GenericAbortSignal } from 'axios';
-
-export type User = {
-  name: string;
-  picture: string;
-  accessToken: string;
-  twitchId: string;
-  userId: number;
-  guid: string;
-};
+import { User } from '@dudes/shared';
 
 type WithSignal = {
   signal?: GenericAbortSignal;
