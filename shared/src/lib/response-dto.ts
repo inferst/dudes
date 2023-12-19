@@ -5,4 +5,5 @@ export type User = {
   twitchId: string;
   userId: number;
   guid: string;
+  personalUrl: string;
 };
