@@ -46,7 +46,7 @@ export class AuthController {
     if (user?.accessToken) {
       await this.authService.logout(user.accessToken);
       req.session.destroy((err) => {
-        if (Object.keys(err).length === 0) {
+        if (!err || Object.keys(err).length === 0) {
           // By some reason it returns an error with an empty object
           // but the session was actually destroyed.
           return;

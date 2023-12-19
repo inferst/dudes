@@ -11,6 +11,7 @@ export type AuthUserProps = {
   accessToken: string;
   twitchId: string;
   userId: number;
+  guid: string;
 };
 
 type WithData<T> = {
@@ -41,14 +42,18 @@ export class AuthService {
     const result = await this.getTwitchUserInfo(accessToken);
 
     const { id, display_name: name, profile_image_url: picture } = result;
-    const { twitchId, id: userId } =
-      await this.userRepository.getByTwitchIdOrCreate({
-        twitchId: id,
-        accessToken,
-        refreshToken,
-      });
+    const {
+      twitchId,
+      id: userId,
+      guid,
+    } = await this.userRepository.getByTwitchIdOrCreate({
+      twitchId: id,
+      accessToken,
+      refreshToken,
+    });
 
     return {
+      guid,
       userId,
       twitchId,
       picture,

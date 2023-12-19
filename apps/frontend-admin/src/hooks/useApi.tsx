@@ -6,6 +6,7 @@ export type User = {
   accessToken: string;
   twitchId: string;
   userId: number;
+  guid: string;
 };
 
 type WithSignal = {
