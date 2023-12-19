@@ -5,6 +5,10 @@ import { ConfigService as NestConfigService } from '@nestjs/config';
 export class ConfigService {
   constructor(private configService: NestConfigService) {}
 
+  get appUrl(): string {
+    return this.configService.get('APP_URL');
+  }
+
   get twitchClientId(): string {
     return this.configService.get('TWITCH_CLIENT_ID');
   }

@@ -1,14 +1,26 @@
-import { Controller, Get, UseGuards, Response, Request } from '@nestjs/common';
 import { TwitchAuthGuard } from '@app/backend-api/auth/guards/twitch-auth.guard';
+import { AuthService, ConfigService } from '@app/backend-api/auth/services';
 import {
   Response as ExpressResponse,
   Request as ExpressRequest,
 } from 'express';
-import { AuthService } from '@app/backend-api/auth/services';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Response,
+  Request,
+  Logger,
+} from '@nestjs/common';
 
 @Controller()
 export class AuthController {
-  public constructor(private readonly authService: AuthService) {}
+  private readonly logger = new Logger(AuthController.name);
+
+  public constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService
+  ) {}
 
   @Get('/login')
   @UseGuards(TwitchAuthGuard)
@@ -21,8 +33,7 @@ export class AuthController {
   public handleRedirect(
     @Response({ passthrough: true }) res: ExpressResponse
   ): void {
-    // TODO: get rid of hardcoded url.
-    res.redirect('http://localhost:4200');
+    res.redirect(this.configService.appUrl);
   }
 
   @Get('/logout')
@@ -34,11 +45,19 @@ export class AuthController {
 
     if (user?.accessToken) {
       await this.authService.logout(user.accessToken);
-      req.session.destroy(() => {
-        // TODO: log the error.
+      req.session.destroy((err) => {
+        if (Object.keys(err).length === 0) {
+          // By some reason it returns an error with an empty object
+          // but the session was actually destroyed.
+          return;
+        }
+
+        this.logger.error('Failed to destroy the session.', {
+          err,
+        });
       });
     }
 
-    res.redirect('http://localhost:4200/login');
+    res.redirect(`${this.configService.appUrl}/login`);
   }
 }
