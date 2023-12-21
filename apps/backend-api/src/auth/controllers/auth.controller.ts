@@ -1,5 +1,6 @@
 import { TwitchAuthGuard } from '@app/backend-api/auth/guards/twitch-auth.guard';
-import { AuthService, ConfigService } from '@app/backend-api/auth/services';
+import { AuthService } from '@app/backend-api/auth/services';
+import { ConfigService } from '@app/backend-api/config/config.service';
 import {
   Response as ExpressResponse,
   Request as ExpressRequest,

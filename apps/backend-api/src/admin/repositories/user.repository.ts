@@ -8,7 +8,7 @@ export type User = Required<Prisma.UserUncheckedCreateInput>;
 export class UserRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async getUserByGuid(guid: string): Promise<User> {
+  public async getUserByGuid(guid: string): Promise<User | null> {
     return this.prismaService.user.findFirst({
       where: {
         guid,

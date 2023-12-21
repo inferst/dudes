@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UserRepository } from '@app/backend-api/auth/repositories/user.repository';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { ConfigService } from './config.service';
 import { InvalidTokenException } from '@app/backend-api/auth/exceptions';
+import { ConfigService } from '@app/backend-api/config/config.service';
 
 export type AuthUserProps = {
   name: string;
