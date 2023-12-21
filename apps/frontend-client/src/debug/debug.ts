@@ -1,6 +1,6 @@
 import { Text } from 'pixi.js';
-import { World } from '@app/client/world/World';
-import { Dude } from '@app/client/world/entities/Dude';
+import { World } from '@app/frontend-client/world/World';
+import { Dude } from '@app/frontend-client/world/entities/Dude';
 
 export class Debug {
   private readonly logs: string[] = [];

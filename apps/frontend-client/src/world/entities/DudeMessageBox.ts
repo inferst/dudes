@@ -1,5 +1,5 @@
 import { Text, Container, TextMetrics, Graphics } from 'pixi.js';
-import { Constants } from '@app/client/config/constants';
+import { Constants } from '@app/frontend-client/config/constants';
 
 export class DudeMessageBox {
   public view: Container = new Container();

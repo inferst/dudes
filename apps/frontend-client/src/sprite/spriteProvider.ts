@@ -1,4 +1,4 @@
-import { assetsLoader } from '@app/client/assets/assetsLoader';
+import { assetsLoader } from '@app/frontend-client/assets/assetsLoader';
 import * as PIXI from 'pixi.js';
 
 export type DudeAnimatedSprite = {

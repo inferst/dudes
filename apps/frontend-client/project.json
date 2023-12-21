@@ -1,8 +1,8 @@
 {
-  "name": "client",
+  "name": "frontend-client",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "apps/client/src",
+  "sourceRoot": "apps/frontend-client/src",
   "tags": [],
   "targets": {
     "build": {
@@ -10,7 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/client"
+        "outputPath": "dist/apps/frontend-client"
       },
       "configurations": {
         "development": {
@@ -25,15 +25,15 @@
       "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "client:build"
+        "buildTarget": "frontend-client:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "client:build:development",
+          "buildTarget": "frontend-client:build:development",
           "hmr": true
         },
         "production": {
-          "buildTarget": "client:build:production",
+          "buildTarget": "frontend-client:build:production",
           "hmr": false
         }
       }
@@ -42,14 +42,14 @@
       "executor": "@nx/vite:preview-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "client:build"
+        "buildTarget": "frontend-client:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "client:build:development"
+          "buildTarget": "frontend-client:build:development"
         },
         "production": {
-          "buildTarget": "client:build:production"
+          "buildTarget": "frontend-client:build:production"
         }
       }
     },

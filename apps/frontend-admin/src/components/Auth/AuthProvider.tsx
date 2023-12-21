@@ -20,6 +20,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { getUser } = useApi();
   const navigate = useNavigate();
   const { isLoading, data: user } = useQuery('admin/user', getUser, {
+    refetchOnWindowFocus: false,
     retry: false,
     onError: (err) => {
       if (isAxiosError(err) && err?.response?.status === 403) {

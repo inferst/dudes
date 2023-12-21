@@ -1,5 +1,5 @@
 import { Container, Sprite } from 'pixi.js';
-import { Constants } from '@app/client/config/constants';
+import { Constants } from '@app/frontend-client/config/constants';
 
 export class DudeEmoteSpitter {
   public view: Container = new Container();

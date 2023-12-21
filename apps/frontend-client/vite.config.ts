@@ -4,7 +4,7 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/apps/client',
+  cacheDir: '../../node_modules/.vite/apps/frontend-client',
   base: '/user',
 
   server: {
@@ -18,7 +18,7 @@ export default defineConfig({
   },
   plugins: [nxViteTsPaths()],
   build: {
-    outDir: '../../dist/apps/client',
+    outDir: '../../dist/apps/frontend-client',
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,

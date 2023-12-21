@@ -1,15 +1,15 @@
 import * as PIXI from 'pixi.js';
 import { DudeMessageBox } from './DudeMessageBox';
-import { renderer } from '@app/client/main';
+import { renderer } from '@app/frontend-client/main';
 import { DudeSpriteContainer } from './DudeSpriteContainer';
 import { DudeEmoteSpitter } from './DudeEmoteSpitter';
-import { Constants } from '@app/client/config/constants';
+import { Constants } from '@app/frontend-client/config/constants';
 import { DudeName } from './DudeName';
 import {
   DudeSpriteLayers,
   DudeSpriteTags,
   spriteProvider,
-} from '@app/client/sprite/spriteProvider';
+} from '@app/frontend-client/sprite/spriteProvider';
 
 type Collider = {
   x: number;
