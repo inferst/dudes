@@ -13,7 +13,7 @@ import {
 })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
-  private readonly server: Socket;
+  private readonly server!: Socket;
 
   public constructor(private readonly socketService: SocketService) {}
 

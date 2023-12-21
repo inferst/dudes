@@ -24,27 +24,33 @@ export class SocketService {
   public constructor(private readonly userRepository: UserRepository) {}
 
   public handleDisconnect(socket: Socket): void {
-    const connectedClient = this.connectedClients.get(socket.id);
-
-    if (connectedClient.roomId) {
-      const room = this.rooms.get(connectedClient.roomId);
-      const clients = room.clients.filter(
-        (client) => client != connectedClient.socket
-      );
-
-      if (clients.length > 0) {
-        this.rooms.set(connectedClient.roomId, { ...room, clients });
-      } else {
-        void room.tmi.disconnect();
-        this.rooms.delete(connectedClient.roomId);
-        this.logger.log(
-          'Room disconnected with name: ' + room.tmi.getUsername()
-        );
-      }
-    }
-
+    this.processDisconnect(socket);
     this.connectedClients.delete(socket.id);
     this.logger.log('Socket disconnected with id: ' + socket.id);
+  }
+
+  private processDisconnect(socket: Socket): void {
+    const connectedClient = this.connectedClients.get(socket.id);
+    if (!connectedClient?.roomId) {
+      return;
+    }
+
+    const room = this.rooms.get(connectedClient.roomId);
+    if (!room) {
+      return;
+    }
+
+    const clients = room.clients.filter(
+      (client) => client != connectedClient.socket
+    );
+
+    if (clients.length > 0) {
+      this.rooms.set(connectedClient.roomId, { ...room, clients });
+    } else {
+      void room.tmi.disconnect();
+      this.rooms.delete(connectedClient.roomId);
+      this.logger.log('Room disconnected with name: ' + room.tmi.getUsername());
+    }
   }
 
   public async handleConnection(socket: Socket): Promise<void> {
@@ -111,12 +117,15 @@ export class SocketService {
       });
 
       const room = this.rooms.get(userGuid);
+      if (!room) {
+        return;
+      }
 
       this.rooms.set(userGuid, { ...room, tmi: tmiClient });
     }
   }
 
-  private async getUserByGuid(userGuid: string): Promise<User> {
+  private async getUserByGuid(userGuid: string): Promise<User | null> {
     try {
       return this.userRepository.getUserByGuid(userGuid);
     } catch (e) {
@@ -124,6 +133,8 @@ export class SocketService {
         e,
       });
     }
+
+    return null;
   }
 
   private emitToRoom<T>(
