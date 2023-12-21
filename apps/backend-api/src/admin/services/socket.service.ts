@@ -78,51 +78,53 @@ export class SocketService {
 
     await socket.join(userGuid);
 
-    if (roomIsEmpty) {
-      const tmiClient = new tmi.Client({
-        channels: [user.twitchLogin],
+    if (!roomIsEmpty) {
+      return;
+    }
+
+    const tmiClient = new tmi.Client({
+      channels: [user.twitchLogin],
+    });
+
+    void tmiClient.connect();
+
+    tmiClient.on('chat', (_channel, tags: tmi.CommonUserstate, message) => {
+      let updatedMessage = message;
+      const emotes = [];
+
+      const emotesArray = Object.entries(tags.emotes ?? {}).map((entity) => {
+        const range = entity[1][0].split('-');
+        const start = Number(range[0]);
+        const end = Number(range[1]) + 1;
+
+        return message.substring(start, end);
       });
 
-      void tmiClient.connect();
-
-      tmiClient.on('chat', (_channel, tags: tmi.CommonUserstate, message) => {
-        let updatedMessage = message;
-        const emotes = [];
-
-        const emotesArray = Object.entries(tags.emotes ?? {}).map((entity) => {
-          const range = entity[1][0].split('-');
-          const start = Number(range[0]);
-          const end = Number(range[1]) + 1;
-
-          return message.substring(start, end);
-        });
-
-        for (const emote in tags.emotes) {
-          emotes.push(`https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`);
-        }
-
-        for (const code of emotesArray ?? []) {
-          updatedMessage = updatedMessage.replaceAll(code, '');
-        }
-
-        updatedMessage = updatedMessage.replace(/\s+/g, ' ').trim();
-
-        this.emitToRoom(socket, userGuid, 'message', {
-          name: tags['display-name'],
-          userId: tags['user-id'],
-          message: updatedMessage,
-          color: tags['color'],
-          emotes: emotes,
-        });
-      });
-
-      const room = this.rooms.get(userGuid);
-      if (!room) {
-        return;
+      for (const emote in tags.emotes) {
+        emotes.push(`https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`);
       }
 
-      this.rooms.set(userGuid, { ...room, tmi: tmiClient });
+      for (const code of emotesArray ?? []) {
+        updatedMessage = updatedMessage.replaceAll(code, '');
+      }
+
+      updatedMessage = updatedMessage.replace(/\s+/g, ' ').trim();
+
+      this.emitToRoom(socket, userGuid, 'message', {
+        name: tags['display-name'],
+        userId: tags['user-id'],
+        message: updatedMessage,
+        color: tags['color'],
+        emotes: emotes,
+      });
+    });
+
+    const room = this.rooms.get(userGuid);
+    if (!room) {
+      return;
     }
+
+    this.rooms.set(userGuid, { ...room, tmi: tmiClient });
   }
 
   private async getUserByGuid(userGuid: string): Promise<User | null> {
