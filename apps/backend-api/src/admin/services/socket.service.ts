@@ -129,7 +129,7 @@ export class SocketService {
 
   private async getUserByGuid(userGuid: string): Promise<User | null> {
     try {
-      return this.userRepository.getUserByGuid(userGuid);
+      return await this.userRepository.getUserByGuid(userGuid);
     } catch (e) {
       this.logger.error('Failed to fetch the user.', {
         e,

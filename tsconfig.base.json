@@ -20,6 +20,7 @@
     "paths": {
       "@app/backend-api/*": ["apps/backend-api/src/*"],
       "@app/frontend-admin/*": ["apps/frontend-admin/src/*"],
+      "@app/client/*": ["apps/client/src/*"],
       "@dudes/shared": ["shared/src/index.ts"]
     }
   },
