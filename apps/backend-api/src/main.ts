@@ -10,7 +10,7 @@ import { PrismaClient } from '@prisma/client';
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 days.
 const SESSION_CHECK_PERIOD = 2 * 60 * 1000; // 2 minutes.
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT || 3000;
   const sessionSecret = app.get(ConfigService).get('SESSION_SECRET');

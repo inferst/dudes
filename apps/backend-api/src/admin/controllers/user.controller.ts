@@ -17,7 +17,4 @@ export class UserController {
       personalUrl: `${this.configService.appUrl}/${user.guid}`,
     };
   }
-
-  @Get('/test-db')
-  public async test() {}
 }

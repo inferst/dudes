@@ -58,15 +58,7 @@ export class SocketService {
       return;
     }
 
-    let user: User;
-
-    try {
-      user = await this.userRepository.getUserByGuid(userGuid);
-    } catch (e) {
-      this.logger.error('Failed to fetch the user.', {
-        e,
-      });
-    }
+    const user = await this.getUserByGuid(userGuid);
 
     if (!user) {
       this.logger.log('The room does not provided or user does not exist.');
@@ -121,6 +113,16 @@ export class SocketService {
       const room = this.rooms.get(userGuid);
 
       this.rooms.set(userGuid, { ...room, tmi: tmiClient });
+    }
+  }
+
+  private async getUserByGuid(userGuid: string): Promise<User> {
+    try {
+      return this.userRepository.getUserByGuid(userGuid);
+    } catch (e) {
+      this.logger.error('Failed to fetch the user.', {
+        e,
+      });
     }
   }
 

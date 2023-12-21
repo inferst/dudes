@@ -6,14 +6,14 @@ export class AuthSerializer extends PassportSerializer {
   public serializeUser(
     user: unknown,
     done: (err: Error, user: unknown) => void
-  ) {
+  ): void {
     done(null, user);
   }
 
   public deserializeUser(
     payload: unknown,
     done: (err: Error, user: unknown) => void
-  ) {
+  ): void {
     done(null, payload);
   }
 }
