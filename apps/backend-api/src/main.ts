@@ -36,6 +36,8 @@ async function bootstrap(): Promise<void> {
   app.use(passport.initialize());
   app.use(passport.session());
 
+  app.setGlobalPrefix('/api');
+
   await app.listen(port);
 
   Logger.log(`🚀 Backend is running on: http://localhost:${port}`);
