@@ -9,7 +9,8 @@ import Joi from 'joi';
   imports: [
     NestConfigModule.forRoot({
       validationSchema: Joi.object({
-        ORIGIN: Joi.string(),
+        ADMIN_URL: Joi.string(),
+        CLIENT_URL: Joi.string(),
         TWITCH_CLIENT_ID: Joi.string(),
         TWITCH_CLIENT_SECRET: Joi.string(),
         TWITCH_CALLBACK_URL: Joi.string(),

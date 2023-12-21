@@ -7,7 +7,7 @@ export function HomePage() {
     <div>
       <h1>{`Hello, ${user?.name}.`}</h1>
       {`Your personal OBS url: `}
-      <a href="#">{user?.personalUrl}</a>
+      <a href={user?.personalUrl}>{user?.personalUrl}</a>
     </div>
   );
 }

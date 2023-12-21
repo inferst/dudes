@@ -14,7 +14,7 @@ export class UserController {
   public getUser(@Auth() user: AuthUserProps): User {
     return {
       ...user,
-      personalUrl: `${this.configService.appUrl}/${user.guid}`,
+      personalUrl: `${this.configService.clientUrl}/${user.guid}`,
     };
   }
 }

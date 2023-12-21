@@ -34,7 +34,7 @@ export class AuthController {
   public handleRedirect(
     @Response({ passthrough: true }) res: ExpressResponse
   ): void {
-    res.redirect(this.configService.appUrl);
+    res.redirect(this.configService.adminUrl);
   }
 
   @Get('/logout')
@@ -59,6 +59,6 @@ export class AuthController {
       });
     }
 
-    res.redirect(`${this.configService.appUrl}/login`);
+    res.redirect(`${this.configService.adminUrl}/login`);
   }
 }

@@ -8,7 +8,7 @@ export function Routes() {
   return (
     <ReactRoutes>
       <Route
-        path="/"
+        path="/admin"
         element={
           <PrivateRoute>
             <Layout />
@@ -17,7 +17,7 @@ export function Routes() {
       >
         <Route index element={<HomePage />} />
       </Route>
-      <Route path="/login" element={<Login />} />
+      <Route path="/admin/login" element={<Login />} />
     </ReactRoutes>
   );
 }

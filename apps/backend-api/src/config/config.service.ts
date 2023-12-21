@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService as NestConfigService } from '@nestjs/config';
 
 type Config = {
-  ORIGIN: string;
+  ADMIN_URL: string;
+  CLIENT_URL: string;
   SESSION_SECRET: string;
   TWITCH_CLIENT_ID: string;
   TWITCH_CLIENT_SECRET: string;
@@ -14,8 +15,12 @@ type Config = {
 export class ConfigService {
   constructor(private configService: NestConfigService<Config, true>) {}
 
-  get appUrl(): string {
-    return this.configService.get('ORIGIN');
+  get adminUrl(): string {
+    return this.configService.get('ADMIN_URL');
+  }
+
+  get clientUrl(): string {
+    return this.configService.get('CLIENT_URL');
   }
 
   get sessionSecret(): string {

@@ -5,15 +5,15 @@ export const manifest = {
       assets: [
         {
           alias: 'dude',
-          src: '/user/sprites/dude/dude.json',
+          src: '/client/sprites/dude/dude.json',
         },
         {
           alias: 'sith',
-          src: '/user/sprites/sith/sith.json',
+          src: '/client/sprites/sith/sith.json',
         },
         {
           alias: 'agent',
-          src: '/user/sprites/agent/agent.json',
+          src: '/client/sprites/agent/agent.json',
         },
       ],
     },
