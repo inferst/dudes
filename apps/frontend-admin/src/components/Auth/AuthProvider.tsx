@@ -24,7 +24,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     retry: false,
     onError: (err) => {
       if (isAxiosError(err) && err?.response?.status === 403) {
-        navigate('/login');
+        navigate('/admin/login');
       }
     },
   });
