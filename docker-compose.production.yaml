@@ -1,0 +1,41 @@
+services:
+  app:
+    image: node:lts
+    command: sh -c "npm install && npm run db:migrate && npx nx reset && npm run build && node dist/apps/backend-api/main.js"
+    container_name: dudes-app
+    ports:
+      - 3004:3000
+    working_dir: /app
+    build: .
+    volumes:
+      - ./:/app
+    environment:
+      - ADMIN_URL=${ADMIN_URL}
+      - CLIENT_URL=${CLIENT_URL}
+      - TWITCH_CLIENT_ID=${TWITCH_CLIENT_ID}
+      - TWITCH_CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
+      - TWITCH_CALLBACK_URL=${TWITCH_CALLBACK_URL}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
+      - VITE_CJS_IGNORE_WARNING=${VITE_CJS_IGNORE_WARNING}
+    user: $DOCKER_USER
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: dudes-postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=dudes
+      - POSTGRES_USER=dudes
+      - POSTGRES_DB=dudes
+
+volumes:
+  postgres-data:
+
+networks:
+  default:
+    external: true
+    name: scoobydoo
