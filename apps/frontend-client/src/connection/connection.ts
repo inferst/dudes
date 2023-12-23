@@ -26,7 +26,7 @@ export class Connection {
     const userGuid = path[path.length - 1];
 
     const socket = io(
-      import.meta.env.VITE_SOCKET_HOST || 'http://localhost:3000',
+      import.meta.env.VITE_CLIENT_SOCKET_HOST,
       {
         transports: ['websocket'],
         auth: {
