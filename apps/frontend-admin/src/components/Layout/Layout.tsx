@@ -32,7 +32,7 @@ export function Layout() {
               </summary>
               <ul role="listbox">
                 <li>
-                  <a href="http://localhost:3000/api/auth/logout">Logout</a>
+                  <a href="/api/auth/logout">Logout</a>
                 </li>
               </ul>
             </details>
