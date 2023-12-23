@@ -5,7 +5,7 @@ import { UserRepository } from '@app/backend-api/admin/repositories';
 import { User } from '@app/backend-api/admin/repositories/user.repository';
 import { TwitchApiClientFactory } from '@app/backend-api/admin/twitch-api-client';
 
-const CHATTERS_SEND_INTERVAL = 5 * 1000; // 1 minute.
+const CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
 type ClientSocket = {
   socket: Socket;
