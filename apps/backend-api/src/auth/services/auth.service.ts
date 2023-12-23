@@ -8,7 +8,6 @@ import { ConfigService } from '@app/backend-api/config/config.service';
 export type AuthUserProps = {
   name: string;
   picture: string;
-  accessToken: string;
   twitchId: string;
   userId: number;
   guid: string;
@@ -57,7 +56,6 @@ export class AuthService {
       guid,
       userId,
       twitchId,
-      accessToken,
       picture: result.profile_image_url,
       name: result.display_name,
     };
