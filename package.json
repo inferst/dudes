@@ -25,6 +25,7 @@
     "@quixo3/prisma-session-store": "^3.1.13",
     "@swc/helpers": "~0.5.2",
     "axios": "^1.6.2",
+    "axios-auth-refresh": "^3.3.6",
     "express-session": "^1.17.3",
     "joi": "^17.11.0",
     "oidc-client-ts": "^3.0.0-rc.0",

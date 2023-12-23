@@ -3,6 +3,9 @@ import { Socket } from 'socket.io';
 import * as tmi from 'tmi.js';
 import { UserRepository } from '@app/backend-api/admin/repositories';
 import { User } from '@app/backend-api/admin/repositories/user.repository';
+import { TwitchApiClientFactory } from '@app/backend-api/admin/twitch-api-client';
+
+const CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
 type ClientSocket = {
   socket: Socket;
@@ -10,6 +13,7 @@ type ClientSocket = {
 };
 
 type Room = {
+  timerId: NodeJS.Timer;
   tmi: tmi.Client;
   clients: Socket[];
 };
@@ -21,7 +25,10 @@ export class SocketService {
   private readonly connectedClients: Map<string, ClientSocket> = new Map();
   private readonly rooms: Map<string, Room> = new Map();
 
-  public constructor(private readonly userRepository: UserRepository) {}
+  public constructor(
+    private readonly userRepository: UserRepository,
+    private readonly twitchApiClientFactory: TwitchApiClientFactory
+  ) {}
 
   public handleDisconnect(socket: Socket): void {
     this.processDisconnect(socket);
@@ -41,20 +48,20 @@ export class SocketService {
     }
 
     const clients = room.clients.filter(
-      (client) => client != connectedClient.socket
+      (client) => client.id !== connectedClient.socket.id
     );
 
     if (clients.length > 0) {
       this.rooms.set(connectedClient.roomId, { ...room, clients });
     } else {
+      clearInterval(room.timerId);
       void room.tmi.disconnect();
       this.rooms.delete(connectedClient.roomId);
-      this.logger.log('Room disconnected with name: ' + room.tmi.getUsername());
+      this.logger.log('Room disconnected with name: ' + connectedClient.roomId);
     }
   }
 
   public async handleConnection(socket: Socket): Promise<void> {
-    this.connectedClients.set(socket.id, { socket });
     this.logger.log('Socket connected with id: ' + socket.id);
 
     const userGuid = socket.handshake.auth.userGuid;
@@ -72,13 +79,14 @@ export class SocketService {
       return;
     }
 
-    this.logger.log('Room initialize with name: ' + userGuid);
-
-    const roomIsEmpty = !this.rooms.has(userGuid);
+    const room = this.rooms.get(userGuid);
 
     await socket.join(userGuid);
 
-    if (!roomIsEmpty) {
+    this.connectedClients.set(socket.id, { socket, roomId: userGuid });
+
+    if (room) {
+      this.rooms.set(userGuid, { ...room, clients: [...room.clients, socket] });
       return;
     }
 
@@ -86,7 +94,7 @@ export class SocketService {
       channels: [user.twitchLogin],
     });
 
-    void tmiClient.connect();
+    await tmiClient.connect();
 
     tmiClient.on('chat', (_channel, tags: tmi.CommonUserstate, message) => {
       let updatedMessage = message;
@@ -119,12 +127,32 @@ export class SocketService {
       });
     });
 
-    const room = this.rooms.get(userGuid);
-    if (!room) {
-      return;
-    }
+    const twitchApiClient = await this.twitchApiClientFactory.createFromUserId(
+      user.id
+    );
 
-    this.rooms.set(userGuid, { ...room, tmi: tmiClient });
+    const timerId = setInterval(async () => {
+      try {
+        const chatters = await twitchApiClient.getChatters(user.twitchId);
+        const userIds = chatters.map(({ user_id }) => user_id);
+
+        this.emitToRoom(socket, userGuid, 'chatters', {
+          userIds,
+        });
+
+        this.logger.log('Chatters are sent.', {
+          userGuid,
+          userIds,
+        });
+      } catch (e) {
+        this.logger.error('Failed to send chatters.', {
+          e,
+        });
+      }
+    }, CHATTERS_SEND_INTERVAL);
+
+    this.logger.log('Room initialize with name: ' + userGuid);
+    this.rooms.set(userGuid, { tmi: tmiClient, clients: [socket], timerId });
   }
 
   private async getUserByGuid(userGuid: string): Promise<User | null> {
