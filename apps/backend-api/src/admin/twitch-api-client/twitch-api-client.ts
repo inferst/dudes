@@ -18,6 +18,7 @@ export class TwitchApiClient {
       data: { data },
     } = await this.client.get<PaginatedData<Chatter[]>>('/chat/chatters', {
       params: {
+        // TODO: aggregate all element in memory in the future.
         first: 1000,
         broadcaster_id: broadcasterId,
         moderator_id: broadcasterId,

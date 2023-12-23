@@ -41,7 +41,7 @@ export class SocketService {
     }
 
     const clients = room.clients.filter(
-      (client) => client != connectedClient.socket
+      (client) => client.id !== connectedClient.socket.id
     );
 
     if (clients.length > 0) {
@@ -49,12 +49,11 @@ export class SocketService {
     } else {
       void room.tmi.disconnect();
       this.rooms.delete(connectedClient.roomId);
-      this.logger.log('Room disconnected with name: ' + room.tmi.getUsername());
+      this.logger.log('Room disconnected with name: ' + connectedClient.roomId);
     }
   }
 
   public async handleConnection(socket: Socket): Promise<void> {
-    this.connectedClients.set(socket.id, { socket });
     this.logger.log('Socket connected with id: ' + socket.id);
 
     const userGuid = socket.handshake.auth.userGuid;
@@ -74,11 +73,14 @@ export class SocketService {
 
     this.logger.log('Room initialize with name: ' + userGuid);
 
-    const roomIsEmpty = !this.rooms.has(userGuid);
+    const room = this.rooms.get(userGuid);
 
     await socket.join(userGuid);
 
-    if (!roomIsEmpty) {
+    this.connectedClients.set(socket.id, { socket, roomId: userGuid });
+
+    if (room) {
+      this.rooms.set(userGuid, { ...room, clients: [...room.clients, socket] });
       return;
     }
 
@@ -119,12 +121,7 @@ export class SocketService {
       });
     });
 
-    const room = this.rooms.get(userGuid);
-    if (!room) {
-      return;
-    }
-
-    this.rooms.set(userGuid, { ...room, tmi: tmiClient });
+    this.rooms.set(userGuid, { tmi: tmiClient, clients: [socket] });
   }
 
   private async getUserByGuid(userGuid: string): Promise<User | null> {
