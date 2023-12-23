@@ -4,7 +4,7 @@ services:
     command: sh -c "npm install && npm run db:migrate && npx nx reset && npm run build && node dist/apps/backend-api/main.js"
     container_name: dudes-app
     ports:
-      - 3004:3000
+      - 3004
     working_dir: /app
     build: .
     volumes:
@@ -24,7 +24,7 @@ services:
     image: postgres:15-alpine
     container_name: dudes-postgres
     ports:
-      - 5433:5432
+      - 5433
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
