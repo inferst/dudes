@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import './style.css';
+// @TODO: uncomment when new UI will be implemented.
+// import './style.css';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);

@@ -16,7 +16,7 @@ http://localhost:4300 - client
 
 ## Run migration
 
-Run `npm run db:migrate`
+Run `npm run db:migrate:dev`
 
 ## Linters
 
