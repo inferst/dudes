@@ -3,7 +3,10 @@ import { Socket } from 'socket.io';
 import * as tmi from 'tmi.js';
 import { UserRepository } from '@app/backend-api/admin/repositories';
 import { User } from '@app/backend-api/admin/repositories/user.repository';
-import { TwitchApiClientFactory } from '@app/backend-api/admin/twitch-api-client';
+import {
+  TwitchApiClientFactory,
+  TokenRevokedException,
+} from '@app/backend-api/admin/twitch-api-client';
 
 const CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
@@ -145,6 +148,11 @@ export class SocketService {
           userIds,
         });
       } catch (e) {
+        if (e instanceof TokenRevokedException) {
+          // Token is revoked, do nothing.
+          return;
+        }
+
         this.logger.error('Failed to send chatters.', {
           e,
         });

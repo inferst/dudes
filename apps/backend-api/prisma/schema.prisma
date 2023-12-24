@@ -19,6 +19,7 @@ model User {
   twitchLogin   String   @db.VarChar(255)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  tokenRevoked  Boolean  @default(false)
 }
 
 model Session {

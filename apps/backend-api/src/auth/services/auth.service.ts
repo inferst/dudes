@@ -50,6 +50,7 @@ export class AuthService {
       accessToken,
       refreshToken,
       twitchLogin: result.login,
+      tokenRevoked: false,
     });
 
     return {

@@ -1,13 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { Prisma } from '@prisma/client';
 
 export type User = Required<Prisma.UserUncheckedCreateInput>;
-
-type Credentials = {
-  accessToken: string;
-  refreshToken: string;
-};
 
 @Injectable()
 export class UserRepository {
@@ -29,12 +24,12 @@ export class UserRepository {
     });
   }
 
-  public async updateCredentials(
+  public async patch(
     userId: number,
-    credentials: Credentials
+    data: Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
   ): Promise<User> {
     return this.prismaService.user.update({
-      data: credentials,
+      data,
       where: {
         id: userId,
       },

@@ -11,7 +11,7 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
   const location = useLocation();
 
   if (!isAuthorized) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
   return children;

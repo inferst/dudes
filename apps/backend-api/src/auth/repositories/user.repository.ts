@@ -19,6 +19,7 @@ export class UserRepository {
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
         twitchLogin: data.twitchLogin,
+        tokenRevoked: data.tokenRevoked,
       },
       create: data,
     });
