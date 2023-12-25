@@ -9,7 +9,7 @@
     "lint:eslint": "nx run-many --target=lint",
     "lint:types": "nx run-many --target=lint-types",
     "db:migrate:dev": "prisma migrate dev --schema=apps/backend-api/prisma/schema.prisma",
-    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:deploy": "prisma migrate deploy --schema=apps/backend-api/prisma/schema.prisma",
     "shadcn-ui": "TS_NODE_PROJECT=tsconfig.base.json npx shadcn-ui@latest"
   },
   "private": true,
