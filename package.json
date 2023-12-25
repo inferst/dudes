@@ -4,11 +4,11 @@
   "license": "MIT",
   "scripts": {
     "dev": "nx run-many --target=serve",
-    "build": "db:generate && nx run-many --target=build -c=production",
+    "build": "npm run db:generate && nx run-many --target=build -c=production",
     "lint": "npm run lint:types && npm run lint:eslint",
     "lint:eslint": "nx run-many --target=lint",
     "lint:types": "nx run-many --target=lint-types",
-    "db:generate": "npx prisma generate --schema=apps/backend-api/prisma/schema.prisma",
+    "db:generate": "prisma generate --schema=apps/backend-api/prisma/schema.prisma",
     "db:migrate:dev": "prisma migrate dev --schema=apps/backend-api/prisma/schema.prisma",
     "db:migrate:deploy": "prisma migrate deploy --schema=apps/backend-api/prisma/schema.prisma",
     "shadcn-ui": "TS_NODE_PROJECT=tsconfig.base.json npx shadcn-ui@latest"
