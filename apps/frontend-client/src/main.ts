@@ -1,3 +1,4 @@
+import { Debug } from './debug/debug';
 import './style.css';
 import { World } from './world/World';
 import { Renderer } from 'pixi.js';
@@ -9,6 +10,11 @@ export const renderer = new Renderer({
 });
 
 const init = async (): Promise<void> => {
+  // Hot reload
+  if (import.meta.hot) {
+    import.meta.hot.accept(() => {});
+  }
+
   document.body.appendChild(renderer.view as HTMLCanvasElement);
 
   window.onresize = (): void => {
@@ -26,7 +32,7 @@ const init = async (): Promise<void> => {
   const minElapsedMS = 1000 / maxFps;
   const maxElapsedMS = 100;
 
-  // const debug = new Debug(world);
+  const debug = new Debug(world);
 
   requestAnimationFrame(animate);
   function animate(currentTime = performance.now()): void {
