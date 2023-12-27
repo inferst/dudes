@@ -3,8 +3,6 @@ services:
     image: node:lts
     command: sh -c "npm install && npm run db:migrate:deploy && npx nx reset && npm run build && node dist/apps/backend-api/main.js"
     container_name: dudes-app
-    ports:
-      - 3004
     working_dir: /app
     build: .
     volumes:
@@ -19,6 +17,7 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - VITE_CJS_IGNORE_WARNING=${VITE_CJS_IGNORE_WARNING}
       - CLIENT_SOCKET_HOST=${CLIENT_SOCKET_HOST}
+      - PORT=3004
     user: $DOCKER_USER
 
   postgres:
