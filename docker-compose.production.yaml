@@ -17,7 +17,7 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - VITE_CJS_IGNORE_WARNING=${VITE_CJS_IGNORE_WARNING}
       - CLIENT_SOCKET_HOST=${CLIENT_SOCKET_HOST}
-      - PORT=3004
+      - PORT=3003
     user: $DOCKER_USER
 
   postgres:
