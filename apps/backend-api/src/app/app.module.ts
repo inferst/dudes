@@ -7,6 +7,7 @@ import { RouterModule } from '@nestjs/core';
 import { PassportModule } from '@nestjs/passport';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AppController } from './controllers/app.controller';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { join } from 'path';
       serveRoot: '/admin',
     }),
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
