@@ -1,4 +1,3 @@
-import { Debug } from './debug/debug';
 import './style.css';
 import { World } from './world/World';
 import { Renderer } from 'pixi.js';
@@ -32,7 +31,7 @@ const init = async (): Promise<void> => {
   const minElapsedMS = 1000 / maxFps;
   const maxElapsedMS = 100;
 
-  const debug = new Debug(world);
+  // const debug = new Debug(world);
 
   requestAnimationFrame(animate);
   function animate(currentTime = performance.now()): void {
