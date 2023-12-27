@@ -1,7 +1,7 @@
 services:
   app:
-    image: node:lts
-    command: sh -c "npm install && npm run db:migrate:deploy && npx nx reset && npm run build && node dist/apps/backend-api/main.js"
+    image: dudes-build
+    command: sh -c "npm run db:migrate:deploy && node dist/apps/backend-api/main.js"
     container_name: dudes-app
     working_dir: /app
     build: .
@@ -22,8 +22,6 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: dudes-postgres
-    ports:
-      - 5433:5433
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
