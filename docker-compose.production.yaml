@@ -3,10 +3,7 @@ services:
     image: dudes-build
     command: sh -c "npm run db:migrate:deploy && node dist/apps/backend-api/main.js"
     container_name: dudes-app
-    working_dir: /app
-    build: .
-    volumes:
-      - ./:/app
+    working_dir: /usr/src/dudes
     environment:
       - ADMIN_URL=${ADMIN_URL}
       - CLIENT_URL=${CLIENT_URL}
