@@ -10,7 +10,7 @@ import {
 export function Login() {
   return (
     <div>
-      <div className="flex items-center justify-center h-[100vh]">
+      <div className="flex items-center justify-center h-[100vh] w-">
         <Card>
           <CardHeader>
             <CardTitle>{'Welcome to Dudes Admin Panel'}</CardTitle>

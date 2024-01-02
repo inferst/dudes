@@ -29,7 +29,7 @@ export class Debug {
   }
 
   public generateDudes(): void {
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 25; i++) {
       setTimeout(() => {
         const dude = new Dude('bot');
         this.world.addDude('bot ' + i, dude);

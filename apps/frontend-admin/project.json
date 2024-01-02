@@ -69,6 +69,9 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
+    },
+    "shadcn": {
+      "command": "TS_NODE_PROJECT=tsconfig.base.json npx shadcn-ui@latest"
     }
   },
   "tags": []
