@@ -49,9 +49,9 @@ export const config: Config = {
       sprite: 'cat',
       collider: {
         x: 8,
-        y: 3,
+        y: 4,
         w: 16,
-        h: 22,
+        h: 21,
       },
     },
     kryptamine90: {

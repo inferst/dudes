@@ -1,6 +1,7 @@
 import { Text } from 'pixi.js';
 import { World } from '@app/frontend-client/world/World';
 import { Dude } from '@app/frontend-client/world/entities/Dude';
+import { config } from '../config/config';
 
 export class Debug {
   private readonly logs: string[] = [];
@@ -31,11 +32,18 @@ export class Debug {
   public generateDudes(): void {
     for (let i = 0; i < 20; i++) {
       setTimeout(() => {
-        const dude = new Dude('MikeRime');
+        const keys = Object.keys(config.chatters);
+        const index = Math.round(Math.random() * keys.length);
+        const dude = new Dude('MikeRime', config.chatters[keys[index]]);
         this.world.addDude('bot ' + i, dude);
         setInterval(() => {
-          dude.addMessage('Приветики! Пистолетики. А что это ты тут стримишь, а?');
-        }, i * 10000);
+          dude.addMessage(
+            'Приветики! Пистолетики. А что это ты тут стримишь, а?'
+          );
+        }, (i + 1) * 10000);
+        setInterval(() => {
+          dude.jump();
+        }, (i + 1) * 5000);
       }, 100 * i);
     }
   }
