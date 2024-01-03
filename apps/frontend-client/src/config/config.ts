@@ -16,5 +16,14 @@ export const config: Config = {
     St_zarus: {
       sprite: 'agent',
     },
+    Duckate: {
+      sprite: 'girl',
+    },
+    ArcticSpaceCat: {
+      sprite: 'cat',
+    },
+    kryptamine90: {
+      sprite: 'senior'
+    }
   },
 };

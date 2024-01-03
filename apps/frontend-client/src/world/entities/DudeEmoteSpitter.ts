@@ -6,7 +6,7 @@ export class DudeEmoteSpitter {
 
   private emotes: Sprite[] = [];
 
-  private gapTime = 1000;
+  private gapTime = 2000;
   private currentGapTime = 0;
 
   private moveSpeed = 50;

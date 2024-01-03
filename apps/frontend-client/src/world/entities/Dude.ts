@@ -113,16 +113,12 @@ export class Dude {
 
     this.runIdleAnimationTime = performance.now();
     this.maxRunIdleAnimationTime = Math.random() * 5000;
-
-    setInterval(() => {
-      this.jump();
-    }, 4000);
   }
 
   jump(): void {
     if (!this.isJumping) {
       this.velocity.x = this.direction * 100;
-      this.velocity.y = -700;
+      this.velocity.y = -400;
 
       this.playAnimation(DudeSpriteTags.Jump);
     }
