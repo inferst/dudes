@@ -1,6 +1,7 @@
-import './style.css';
+import { Debug } from './debug/debug';
 import { World } from './world/World';
 import { Renderer } from 'pixi.js';
+import './style.css';
 
 export const renderer = new Renderer({
   width: window.innerWidth,
@@ -31,7 +32,9 @@ const init = async (): Promise<void> => {
   const minElapsedMS = 1000 / maxFps;
   const maxElapsedMS = 100;
 
-  // const debug = new Debug(world);
+  if (import.meta.env.DEV) {
+    new Debug(world);
+  }
 
   requestAnimationFrame(animate);
   function animate(currentTime = performance.now()): void {
@@ -48,7 +51,7 @@ const init = async (): Promise<void> => {
       lastTime = currentTime;
 
       world.update();
-      renderer.render(world.stage);
+      renderer.render(World.stage);
     }
 
     requestAnimationFrame(animate);

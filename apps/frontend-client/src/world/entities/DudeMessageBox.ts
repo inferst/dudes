@@ -1,5 +1,7 @@
 import { Text, Container, TextMetrics, Graphics } from 'pixi.js';
 import { Constants } from '@app/frontend-client/config/constants';
+import { Dude } from './Dude';
+import { World } from '../World';
 
 export class DudeMessageBox {
   public view: Container = new Container();
@@ -10,8 +12,8 @@ export class DudeMessageBox {
   private padding: number = 10;
   private borderRadius: number = 10;
   private boxColor: number = 0xeeeeee;
-  private textColor: number = 0x333333;
-  private fontFamily: string = 'Arial';
+  private textColor: number = 0x222222;
+  private fontFamily: string = 'Verdana';
   private fontSize: number = 20;
 
   private animationTime = 500;
@@ -35,15 +37,17 @@ export class DudeMessageBox {
       : text.text;
   }
 
-  public update(): void {
+  public update(dude: Dude): void {
     if (this.currentAnimationTime >= 0) {
       this.currentAnimationTime -= Constants.fixedDeltaTime;
 
       this.container.alpha += Constants.fixedDeltaTime / this.animationTime;
       this.container.position.y -=
         (this.shift * Constants.fixedDeltaTime) / this.animationTime;
-    } else {
-      this.container.alpha = 1;
+    }
+
+    if (this.currentShowTime <= this.animationTime) {
+      this.container.alpha -= Constants.fixedDeltaTime / this.animationTime;
     }
 
     if (this.currentShowTime <= 0) {
@@ -55,6 +59,13 @@ export class DudeMessageBox {
         const message = this.messageQueue.shift();
 
         if (message) {
+          const zIndex = Object.values(World.dudes).reduce(
+            (zIndex, dude) => {
+              return zIndex <= dude.view.zIndex ? dude.view.zIndex + 1 : zIndex;
+            },
+            dude.view.zIndex
+          );
+          dude.view.zIndex = zIndex;
           this.show(message);
         }
 
@@ -85,15 +96,53 @@ export class DudeMessageBox {
     text.position.set(0, -this.padding);
     text.text = this.trim(text);
 
+    const roundedRect = {
+      x: text.x - this.padding - text.width * text.anchor.x,
+      y: text.y - this.padding - text.height * text.anchor.y,
+      w: text.width + this.padding * 2,
+      h: text.height + this.padding * 2,
+    };
+
     this.box = new Graphics();
     this.box.beginFill(this.boxColor);
+    this.box.lineStyle(2, 0x222222, 0.8);
     this.box.drawRoundedRect(
-      text.x - this.padding - text.width * text.anchor.x,
-      text.y - this.padding - text.height * text.anchor.y,
-      text.width + this.padding * 2,
-      text.height + this.padding * 2,
+      roundedRect.x,
+      roundedRect.y,
+      roundedRect.w,
+      roundedRect.h,
       this.borderRadius
     );
+    this.box.lineStyle(0);
+    this.box.drawPolygon(
+      {
+        x: roundedRect.x + roundedRect.w / 2 - 10,
+        y: roundedRect.y + roundedRect.h - 2,
+      },
+      {
+        x: roundedRect.x + roundedRect.w / 2 + 10,
+        y: roundedRect.y + roundedRect.h - 2,
+      },
+      {
+        x: roundedRect.x + roundedRect.w / 2,
+        y: roundedRect.y + roundedRect.h + 10 - 6,
+      }
+    );
+    this.box.lineStyle(2, 0x222222, 0.8);
+    this.box
+      .moveTo(
+        roundedRect.x + roundedRect.w / 2 + 10,
+        roundedRect.y + roundedRect.h
+      )
+      .lineTo(
+        roundedRect.x + roundedRect.w / 2,
+        roundedRect.y + roundedRect.h + 10 - 4
+      )
+      .lineTo(
+        roundedRect.x + roundedRect.w / 2 - 10,
+        roundedRect.y + roundedRect.h
+      );
+
     this.box.endFill();
 
     this.container.alpha = 0;

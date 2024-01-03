@@ -8,35 +8,36 @@ import tinycolor from 'tinycolor2';
 export class World {
   private connection = new Connection();
 
-  public stage: Container = new Container();
-  public dudes: utils.Dict<Dude> = {};
+  public static stage: Container = new Container();
+  public static dudes: utils.Dict<Dude> = {};
 
   public async init(): Promise<void> {
     await assetsLoader.load();
 
     this.connection.init();
     this.connection.onMessage((data) => this.handleMessage(data));
+
+    World.stage.sortableChildren = true;
   }
 
   public update(): void {
-    for (const id in this.dudes) {
-      this.dudes[id].update();
+    for (const id in World.dudes) {
+      World.dudes[id].update();
 
-      if (this.dudes[id].shouldBeDeleted) {
-        this.deleteDude(id, this.dudes[id]);
+      if (World.dudes[id].shouldBeDeleted) {
+        this.deleteDude(id, World.dudes[id]);
       }
     }
   }
 
   private handleMessage(data: Message): void {
-    if (!this.dudes[data.userId]) {
+    if (!World.dudes[data.userId]) {
       const chatter = config.chatters[data.name];
-      const sprite = chatter ? chatter.sprite : 'dude';
-      const dude = new Dude(data.name, sprite);
+      const dude = new Dude(data.name, chatter);
       this.addDude(data.userId, dude);
     }
 
-    const dude = this.dudes[data.userId];
+    const dude = World.dudes[data.userId];
 
     const message = data.message;
     const array = message.split(' ').filter((item) => item != '');
@@ -71,12 +72,12 @@ export class World {
   }
 
   public addDude(id: string, dude: Dude): void {
-    this.dudes[id] = dude;
-    this.stage.addChild(dude.view);
+    World.dudes[id] = dude;
+    World.stage.addChild(dude.view);
   }
 
   public deleteDude(id: string, dude: Dude): void {
-    delete this.dudes[id];
-    this.stage.removeChild(dude.view);
+    delete World.dudes[id];
+    World.stage.removeChild(dude.view);
   }
 }

@@ -13,7 +13,7 @@ export class Debug {
     this.view.position.set(10, 10);
 
     this.world = world;
-    this.world.stage.addChild(this.view);
+    World.stage.addChild(this.view);
 
     this.generateDudes();
   }
@@ -29,11 +29,14 @@ export class Debug {
   }
 
   public generateDudes(): void {
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 20; i++) {
       setTimeout(() => {
-        const dude = new Dude('bot');
+        const dude = new Dude('MikeRime');
         this.world.addDude('bot ' + i, dude);
-      }, 10 * i);
+        setInterval(() => {
+          dude.addMessage('Приветики! Пистолетики. А что это ты тут стримишь, а?');
+        }, i * 10000);
+      }, 100 * i);
     }
   }
 }

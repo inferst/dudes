@@ -10,26 +10,21 @@ import {
   DudeSpriteTags,
   spriteProvider,
 } from '@app/frontend-client/sprite/spriteProvider';
-
-type Collider = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
+import { SpriteConfig } from '@app/frontend-client/config/config';
 
 export class Dude {
-  private readonly spriteName: string = 'dude';
-
   private currentScale: number = 4;
 
   private direction: number = 1;
 
-  private collider: Collider = {
-    x: 9,
-    y: 8,
-    width: 14,
-    height: 16,
+  private spriteConfig: SpriteConfig = {
+    sprite: 'dude',
+    collider: {
+      x: 8,
+      y: 7,
+      w: 16,
+      h: 18,
+    },
   };
 
   private spriteSize: number = 32;
@@ -81,14 +76,14 @@ export class Dude {
     );
   }
 
-  constructor(name: string, sprite?: string) {
-    this.spriteName = sprite ?? this.spriteName;
+  constructor(name: string, spriteConfig?: SpriteConfig) {
+    this.spriteConfig = spriteConfig ?? this.spriteConfig;
 
+    const collider = this.spriteConfig.collider;
     const width = renderer.width;
 
     this.view.y =
-      -(this.collider.y + this.collider.height - this.spriteSize / 2) *
-      this.currentScale;
+      -(collider.y + collider.h - this.spriteSize / 2) * this.currentScale;
     this.view.x =
       Math.random() * (width - this.spriteSize * this.currentScale) +
       (this.spriteSize / 2) * this.currentScale;
@@ -97,13 +92,13 @@ export class Dude {
 
     this.name = new DudeName(name);
     this.name.view.position.y =
-      -(this.spriteSize / 2 - this.collider.y) * this.currentScale;
+      -(this.spriteSize / 2 - collider.y) * this.currentScale;
 
     this.view.sortableChildren = true;
     this.emoteSpitter.view.zIndex = 1;
     this.message.view.zIndex = 3;
     this.message.view.position.y =
-      this.name.view.position.y - this.name.view.height;
+      this.name.view.position.y - this.name.view.height - 6;
 
     this.view.addChild(this.name.view);
     this.view.addChild(this.emoteSpitter.view);
@@ -136,6 +131,8 @@ export class Dude {
 
   update(): void {
     const now = performance.now();
+
+    const collider = this.spriteConfig.collider;
 
     if (
       this.landAnimationTime &&
@@ -176,8 +173,7 @@ export class Dude {
 
     if (
       newPosition.y +
-        (this.collider.y + this.collider.height - this.spriteSize / 2) *
-          this.currentScale >
+        (collider.y + collider.h - this.spriteSize / 2) * this.currentScale >
       renderer.height
     ) {
       this.velocity.y = 0;
@@ -185,8 +181,7 @@ export class Dude {
 
       newPosition.y =
         renderer.height -
-        (this.collider.y + this.collider.height - this.spriteSize / 2) *
-          this.currentScale;
+        (collider.y + collider.h - this.spriteSize / 2) * this.currentScale;
 
       if (this.animationState == DudeSpriteTags.Fall) {
         this.playAnimation(DudeSpriteTags.Land);
@@ -207,8 +202,8 @@ export class Dude {
         (1 * this.direction * Constants.fixedDeltaTime * 60) / 1000;
 
       if (
-        this.view.x + (this.collider.width / 2) * this.currentScale >= width ||
-        this.view.x - (this.collider.width / 2) * this.currentScale <= 0
+        this.view.x + (collider.w / 2) * this.currentScale >= width ||
+        this.view.x - (collider.w / 2) * this.currentScale <= 0
       ) {
         this.direction = -this.direction;
         this.velocity.x = -this.velocity.x;
@@ -236,7 +231,7 @@ export class Dude {
     this.emoteSpitter.view.position.y =
       this.message.view.position.y - this.message.view.height;
 
-    this.message.update();
+    this.message.update(this);
   }
 
   addMessage(message: string): void {
@@ -264,7 +259,10 @@ export class Dude {
       this.view.removeChild(this.sprite.view);
     }
 
-    const dudeSprite = spriteProvider.getSprite(this.spriteName, state);
+    const dudeSprite = spriteProvider.getSprite(
+      this.spriteConfig.sprite,
+      state
+    );
     this.sprite = new DudeSpriteContainer({
       body: dudeSprite[DudeSpriteLayers.Body],
       eyes: dudeSprite[DudeSpriteLayers.Eyes],

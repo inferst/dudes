@@ -5,7 +5,7 @@ export class DudeName {
 
   constructor(name: string) {
     this.view = new Text(name, {
-      fontFamily: 'Arial',
+      fontFamily: 'Verdana',
       fontSize: 18,
       fill: 0xffffff,
       align: 'center',
