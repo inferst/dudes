@@ -1,6 +1,9 @@
 import { Container, utils } from 'pixi.js';
 import { assetsLoader } from '../assets/assetsLoader';
-import { Connection, Message } from '@app/frontend-client/connection/connection';
+import {
+  Connection,
+  Message,
+} from '@app/frontend-client/connection/connection';
 import { Dude } from './entities/Dude';
 import { config } from '@app/frontend-client/config/config';
 import tinycolor from 'tinycolor2';

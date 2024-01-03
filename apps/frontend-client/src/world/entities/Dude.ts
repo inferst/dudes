@@ -65,6 +65,8 @@ export class Dude {
 
   private emoteSpitter: DudeEmoteSpitter = new DudeEmoteSpitter();
 
+  private jumpSound: HTMLAudioElement;
+
   private get color(): string {
     return this.userColor ?? this.twitchColor;
   }
@@ -108,6 +110,9 @@ export class Dude {
 
     this.runIdleAnimationTime = performance.now();
     this.maxRunIdleAnimationTime = Math.random() * 5000;
+
+    this.jumpSound = new Audio('/client/sounds/jump.mp3');
+    this.jumpSound.volume = 0.2;
   }
 
   jump(): void {
@@ -116,6 +121,8 @@ export class Dude {
       this.velocity.y = -400;
 
       this.playAnimation(DudeSpriteTags.Jump);
+
+      this.jumpSound.play();
     }
   }
 
