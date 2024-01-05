@@ -3,10 +3,11 @@ import { useApi } from '@app/frontend-admin/hooks/useApi';
 import { useQuery } from 'react-query';
 import { isAxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { User } from '@dudes/shared';
+import { UserEntity } from '@shared';
+import { Loader } from '../common/Loader';
 
 type AuthContext = {
-  user?: User;
+  user?: UserEntity;
   isAuthorized: boolean;
 };
 
@@ -30,7 +31,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   });
 
   if (isLoading) {
-    return <div>{'Loading...'}</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader></Loader>
+      </div>
+    );
   }
 
   return (

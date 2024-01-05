@@ -1,5 +1,5 @@
-import axios, { GenericAbortSignal } from 'axios';
-import { User } from '@dudes/shared';
+import { UpdateUserCommandDto, UserCommandEntity, UserEntity } from '@shared';
+import axios, { AxiosResponse, GenericAbortSignal } from 'axios';
 
 type WithSignal = {
   signal?: GenericAbortSignal;
@@ -11,10 +11,33 @@ export const useApi = () => {
   });
 
   return {
-    getUser: async ({ signal }: WithSignal): Promise<User> => {
-      const { data } = await apiClient.get<User>('/admin/user', {
+    getUser: async ({ signal }: WithSignal): Promise<UserEntity> => {
+      const { data } = await apiClient.get<UserEntity>('/admin/user', {
         signal,
       });
+
+      return data;
+    },
+    getCommands: async ({
+      signal,
+    }: WithSignal): Promise<UserCommandEntity[]> => {
+      const { data } = await apiClient.get<UserCommandEntity[]>(
+        '/admin/command/list',
+        {
+          signal,
+        }
+      );
+
+      return data;
+    },
+    updateCommand: async (
+      command: UpdateUserCommandDto
+    ): Promise<UserCommandEntity> => {
+      const { data } = await apiClient.put<
+        UserCommandEntity,
+        AxiosResponse<UserCommandEntity>,
+        UpdateUserCommandDto
+      >('/admin/command/' + command.id, command);
 
       return data;
     },

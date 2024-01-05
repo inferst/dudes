@@ -9,27 +9,23 @@ import {
 
 export function Login() {
   return (
-    <div>
-      <div className="flex items-center justify-center h-[100vh] w-">
-        <Card>
-          <CardHeader>
-            <CardTitle>{'Welcome to Dudes Admin Panel'}</CardTitle>
-            <CardDescription>
-              {'The way to manage your stream dudes.'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              className="w-full bg-[#9147ff] text-white hover:bg-[#772ce8]"
-              asChild
-            >
-              <a href="/api/auth/login" target="_blank">
-                {'Twitch Login'}
-              </a>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="flex items-center justify-center h-screen">
+      <Card>
+        <CardHeader>
+          <CardTitle>{'Welcome to Dudes Admin'}</CardTitle>
+          <CardDescription>
+            {'The way to manage your stream dudes.'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button
+            className="w-full bg-[#9147ff] text-white hover:bg-[#772ce8]"
+            asChild
+          >
+            <a href="/api/auth/login">{'Twitch Login'}</a>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

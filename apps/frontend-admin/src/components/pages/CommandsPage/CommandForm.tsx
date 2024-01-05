@@ -1,5 +1,6 @@
+import { nanoid } from 'nanoid';
 import { useForm } from 'react-hook-form';
-import { Form, FormField } from '../../ui/form';
+import { Button } from '../../ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,23 +10,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../../ui/dialog';
-import { Button } from '../../ui/button';
-import { Label } from '../../ui/label';
+import { Form, FormField } from '../../ui/form';
 import { Input } from '../../ui/input';
-import { nanoid } from 'nanoid';
+import { Label } from '../../ui/label';
+import { useState } from 'react';
 
 type FormInput = {
   text: string;
   cooldown: number;
 };
 
-export function CommandForm({
-  text,
-  cooldown,
-}: {
+type CommandFormProps = {
   text: string;
   cooldown: number;
-}) {
+  onSave: (data: FormInput) => void;
+};
+
+export function CommandForm(props: CommandFormProps) {
+  const { text, cooldown, onSave } = props;
+
+  const [open, setOpen] = useState(false);
+
   const form = useForm<FormInput>({
     defaultValues: {
       text,
@@ -33,14 +38,15 @@ export function CommandForm({
     },
   });
 
-  const onSubmit = (data: FormInput) => {
-    console.log(data);
-  };
-
   const uuid = nanoid();
 
+  const onSubmit = (data: FormInput) => {
+    onSave(data);
+    setOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary">Edit</Button>
       </DialogTrigger>
@@ -86,6 +92,9 @@ export function CommandForm({
                         type="number"
                         className="col-span-3"
                         {...field}
+                        onChange={(event) =>
+                          field.onChange(+event.target.value)
+                        }
                       />
                     </>
                   )}

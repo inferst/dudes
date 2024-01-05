@@ -11,20 +11,39 @@ datasource db {
 }
 
 model User {
-  id            Int      @default(autoincrement()) @id
-  accessToken   String   @db.VarChar(255)
-  refreshToken  String   @db.VarChar(255)
-  guid          String   @default(uuid()) @db.Uuid @unique
-  twitchId      String   @db.VarChar(255) @unique
-  twitchLogin   String   @db.VarChar(255)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  tokenRevoked  Boolean  @default(false)
+  id           Int           @id @default(autoincrement())
+  accessToken  String        @db.VarChar(255)
+  refreshToken String        @db.VarChar(255)
+  guid         String        @unique @default(uuid()) @db.Uuid
+  twitchId     String        @unique @db.VarChar(255)
+  twitchLogin  String        @db.VarChar(255)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  tokenRevoked Boolean       @default(false)
+  commands     UserCommand[]
 }
 
 model Session {
-  id          String   @id
-  sid         String   @unique
-  data        String
-  expiresAt   DateTime
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model UserCommand {
+  id        Int     @id @default(autoincrement())
+  isActive  Boolean @default(false)
+  text      String  @db.VarChar(255)
+  cooldown  Int     @default(0)
+  commandId Int
+  command   Command @relation(fields: [commandId], references: [id])
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+}
+
+model Command {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(255)
+  description String        @db.VarChar(255)
+  UserCommand UserCommand[]
 }

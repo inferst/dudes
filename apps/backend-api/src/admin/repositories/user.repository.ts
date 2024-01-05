@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
-export type User = Required<Prisma.UserUncheckedCreateInput>;
+export { User } from '@prisma/client';
 
 @Injectable()
 export class UserRepository {

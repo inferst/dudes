@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Checkbox } from '../../ui/checkbox';
 import {
@@ -11,37 +10,88 @@ import {
   TableRow,
 } from '../../ui/table';
 import { CommandForm } from './CommandForm';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useApi } from '@app/frontend-admin/hooks/useApi';
+import { AxiosError, isAxiosError } from 'axios';
 
-type Command = {
-  id: string;
-  text: string;
-  description: string;
-  isActive: boolean;
-  cooldown: number;
-};
+import { useNavigate } from 'react-router-dom';
+
+import { UpdateUserCommandDto, UserCommandEntity } from '@shared';
+import { Loader } from '../../common/Loader';
 
 export function CommandsPage() {
-  const [commands, setCommands] = useState<Command[]>([
+  const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+
+  const { getCommands, updateCommand } = useApi();
+
+  const { isLoading, data } = useQuery<UserCommandEntity[]>(
+    'admin/command/list',
+    getCommands,
     {
-      id: 'jump',
-      text: '!jump',
-      description: 'Jump',
-      isActive: true,
-      cooldown: 0,
+      refetchOnWindowFocus: false,
+      retry: false,
+      initialData: [],
+      onError: (err) => {
+        if (isAxiosError(err) && err?.response?.status === 403) {
+          navigate('/admin/login');
+        }
+      },
+    }
+  );
+
+  const commands = data ?? [];
+
+  const mutation = useMutation<
+    UserCommandEntity,
+    AxiosError,
+    UpdateUserCommandDto,
+    UserCommandEntity[]
+  >({
+    mutationFn: updateCommand,
+    onMutate: async (data) => {
+      await queryClient.cancelQueries('admin/command/list');
+
+      const prev =
+        queryClient.getQueryData<UserCommandEntity[]>('admin/command/list');
+
+      queryClient.setQueryData<UpdateUserCommandDto[]>(
+        ['admin/command/list'],
+        (commands) =>
+          (commands ?? []).map((command) =>
+            command.id === data.id ? { ...command, ...data } : command
+          )
+      );
+
+      return prev;
     },
-    {
-      id: 'color',
-      text: '!color {color}',
-      description: 'Change color',
-      isActive: false,
-      cooldown: 5,
+    onError: (_err, _commands, context) => {
+      queryClient.setQueryData<UpdateUserCommandDto[]>(
+        'admin/command/list',
+        context ?? []
+      );
     },
-  ]);
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   const handleIsActiveChange = (index: number, value: boolean) => {
-    const updated = [...commands];
-    updated[index].isActive = value;
-    setCommands(updated);
+    const command = commands[index];
+
+    if (command) {
+      mutation.mutate({ ...command, isActive: value });
+    }
+  };
+
+  const handleCommandSave = (index: number, data: UpdateUserCommandDto) => {
+    const command = commands[index];
+
+    if (command) {
+      mutation.mutate({ ...command, ...data });
+    }
   };
 
   return (
@@ -56,7 +106,7 @@ export function CommandsPage() {
             <TableRow>
               <TableHead className="w-[100px]">Active</TableHead>
               <TableHead>Command</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead>Cooldown</TableHead>
               <TableHead className="w-40">Edit</TableHead>
             </TableRow>
           </TableHeader>
@@ -73,11 +123,12 @@ export function CommandsPage() {
                   ></Checkbox>
                 </TableCell>
                 <TableCell>{command.text}</TableCell>
-                <TableCell>{command.description}</TableCell>
+                <TableCell>{command.cooldown}</TableCell>
                 <TableCell>
                   <CommandForm
                     text={command.text}
                     cooldown={command.cooldown}
+                    onSave={(data) => handleCommandSave(index, data)}
                   ></CommandForm>
                 </TableCell>
               </TableRow>
