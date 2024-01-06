@@ -1,0 +1,16 @@
+name: Dudes Copy
+run-name: ${{ github.actor }} is copying Dudes
+on: [push]
+jobs:
+  run_example_job:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Copy folder content recursively to remote
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: /
+        remote: /srv/dudes
+        host: ${{ secrets.hostname }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
