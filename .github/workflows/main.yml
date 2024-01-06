@@ -2,11 +2,26 @@ name: Dudes Deploy
 run-name: ${{ github.actor }} is deploying Dudes
 on: [push]
 jobs:
-  run_example_job:
+  copy_files_to_server:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-    - name: print out example job
+    - uses: actions/checkout@v4
+      with:
+        sparse-checkout: .
+    - name: Copy folder content recursively to remote
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        source: "apps,shared,docker-compose.production.yaml,Dockerfile,nx.json,package-lock.json,package.json,tsconfig.base.json"
+        target: /srv/dudes
+        host: ${{ secrets.hostname }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+  run_dockerfile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Run Dockerfile
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.hostname }}
@@ -14,5 +29,34 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         command_timeout: 30m
-        script: | 
-          echo "Nice Job!!!"
+        script: |
+          cd /srv/dudes
+          docker system prune --all --force
+          docker build -t dudes-build .
+  run_docker_compose_up:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Docker compose up
+      uses: appleboy/ssh-action@v0.1.10
+      env:
+        ADMIN_URL: ${{ vars.ADMIN_URL }}
+        CLIENT_URL: ${{ vars.CLIENT_URL }}
+        TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+        TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+        TWITCH_CALLBACK_URL: ${{ vars.TWITCH_CALLBACK_URL }}
+        SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+        DATABASE_URL: ${{ vars.DATABASE_URL }}
+        VITE_CLIENT_SOCKET_HOST: ${{ vars.VITE_CLIENT_SOCKET_HOST }}
+        VITE_CJS_IGNORE_WARNING: ${{ vars.VITE_CJS_IGNORE_WARNING }}
+      with:
+        host: ${{ secrets.hostname }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        command_timeout: 30m
+        envs: ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,VITE_CJS_IGNORE_WARNING,VITE_CLIENT_SOCKET_HOST
+        script: |
+          cd /srv/dudes
+          docker compose -f docker-compose.production.yaml down
+          docker compose -f docker-compose.production.yaml up -d
