@@ -20,6 +20,7 @@ jobs:
   run_dockerfile:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    needs: copy_files_to_server
     steps:
     - name: Run Dockerfile
       uses: appleboy/ssh-action@v0.1.10
@@ -36,6 +37,7 @@ jobs:
   run_docker_compose_up:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    needs: run_dockerfile
     steps:
     - name: Docker compose up
       uses: appleboy/ssh-action@v0.1.10
