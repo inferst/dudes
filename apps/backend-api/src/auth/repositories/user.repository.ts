@@ -22,4 +22,27 @@ export class UserRepository {
       create: data,
     });
   }
+
+  public async createUserCommandsIfNotExists(userId: number): Promise<void> {
+    const commands = await this.prismaService.command.findMany();
+
+    for (const command of commands) {
+      await this.prismaService.userCommand.upsert({
+        where: {
+          userId_commandId: {
+            commandId: command.id,
+            userId: userId,
+          },
+        },
+        update: {},
+        create: {
+          text: '!' + command.name,
+          commandId: command.id,
+          userId: userId,
+          cooldown: 0,
+          isActive: false,
+        },
+      });
+    }
+  }
 }

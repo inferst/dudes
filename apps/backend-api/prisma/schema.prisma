@@ -32,18 +32,21 @@ model Session {
 
 model UserCommand {
   id        Int     @id @default(autoincrement())
-  isActive  Boolean @default(false)
-  text      String  @db.VarChar(255)
-  cooldown  Int     @default(0)
   commandId Int
   command   Command @relation(fields: [commandId], references: [id])
   userId    Int
   user      User    @relation(fields: [userId], references: [id])
+  isActive  Boolean @default(false)
+  text      String  @db.VarChar(255)
+  cooldown  Int     @default(0)
+
+  @@unique([userId, commandId])
 }
 
 model Command {
   id          Int           @id @default(autoincrement())
-  name        String        @db.VarChar(255)
-  description String        @db.VarChar(255)
+  name        String        @unique @db.VarChar(255)
+  title       String        @db.VarChar(255)
+  description String        @default("") @db.VarChar(255)
   UserCommand UserCommand[]
 }

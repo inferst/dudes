@@ -15,6 +15,7 @@
   },
   "private": true,
   "dependencies": {
+    "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.3",
     "@nestjs/axios": "^3.0.1",
     "@nestjs/common": "^10.0.2",
@@ -40,6 +41,8 @@
     "@tanstack/react-table": "^8.11.2",
     "axios": "^1.6.2",
     "axios-auth-refresh": "^3.3.6",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "express-session": "^1.17.3",

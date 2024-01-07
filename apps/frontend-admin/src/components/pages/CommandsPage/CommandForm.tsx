@@ -1,4 +1,8 @@
+import { ErrorMessage } from '@hookform/error-message';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { updateUserCommandFormSchema } from '@shared';
 import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '../../ui/button';
 import {
@@ -13,9 +17,8 @@ import {
 import { Form, FormField } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
-import { useState } from 'react';
 
-type FormInput = {
+export type CommandFormInput = {
   text: string;
   cooldown: number;
 };
@@ -23,7 +26,7 @@ type FormInput = {
 type CommandFormProps = {
   text: string;
   cooldown: number;
-  onSave: (data: FormInput) => void;
+  onSave: (data: CommandFormInput) => void;
 };
 
 export function CommandForm(props: CommandFormProps) {
@@ -31,8 +34,9 @@ export function CommandForm(props: CommandFormProps) {
 
   const [open, setOpen] = useState(false);
 
-  const form = useForm<FormInput>({
-    defaultValues: {
+  const form = useForm<CommandFormInput>({
+    resolver: zodResolver(updateUserCommandFormSchema),
+    values: {
       text,
       cooldown,
     },
@@ -40,7 +44,7 @@ export function CommandForm(props: CommandFormProps) {
 
   const uuid = nanoid();
 
-  const onSubmit = (data: FormInput) => {
+  const onSubmit = (data: CommandFormInput) => {
     onSave(data);
     setOpen(false);
   };
@@ -74,6 +78,15 @@ export function CommandForm(props: CommandFormProps) {
                         className="col-span-3"
                         {...field}
                       />
+                      <ErrorMessage
+                        errors={form.formState.errors}
+                        name="text"
+                        render={({ message }) => (
+                          <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
+                            {message}
+                          </p>
+                        )}
+                      />
                     </>
                   )}
                 ></FormField>
@@ -90,11 +103,21 @@ export function CommandForm(props: CommandFormProps) {
                       <Input
                         id="command-cooldown"
                         type="number"
+                        min={0}
                         className="col-span-3"
                         {...field}
                         onChange={(event) =>
                           field.onChange(+event.target.value)
                         }
+                      />
+                      <ErrorMessage
+                        errors={form.formState.errors}
+                        name="cooldown"
+                        render={({ message }) => (
+                          <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
+                            {message}
+                          </p>
+                        )}
                       />
                     </>
                   )}

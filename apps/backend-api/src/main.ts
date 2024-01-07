@@ -6,6 +6,7 @@ import passport from 'passport';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 import { ConfigService } from '@app/backend-api/config/config.service';
+import { ZodFilter } from './filters/zod.filter';
 
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 days.
 const SESSION_CHECK_PERIOD = 2 * 60 * 1000; // 2 minutes.
@@ -37,6 +38,8 @@ async function bootstrap(): Promise<void> {
   app.use(passport.session());
 
   app.setGlobalPrefix('/api');
+
+  app.useGlobalFilters(new ZodFilter());
 
   await app.listen(port);
 

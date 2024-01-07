@@ -1,3 +1,6 @@
+import { useApi } from '@app/frontend-admin/hooks/useApi';
+import { AxiosError, isAxiosError } from 'axios';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Checkbox } from '../../ui/checkbox';
 import {
@@ -9,10 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { CommandForm } from './CommandForm';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useApi } from '@app/frontend-admin/hooks/useApi';
-import { AxiosError, isAxiosError } from 'axios';
+import { CommandForm, CommandFormInput } from './CommandForm';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -57,7 +57,7 @@ export function CommandsPage() {
         queryClient.getQueryData<UserCommandEntity[]>('admin/command/list');
 
       queryClient.setQueryData<UpdateUserCommandDto[]>(
-        ['admin/command/list'],
+        'admin/command/list',
         (commands) =>
           (commands ?? []).map((command) =>
             command.id === data.id ? { ...command, ...data } : command
@@ -82,15 +82,19 @@ export function CommandsPage() {
     const command = commands[index];
 
     if (command) {
-      mutation.mutate({ ...command, isActive: value });
+      mutation.mutate({ id: command.id, isActive: value });
     }
   };
 
-  const handleCommandSave = (index: number, data: UpdateUserCommandDto) => {
+  const handleCommandSave = (index: number, data: CommandFormInput) => {
     const command = commands[index];
 
     if (command) {
-      mutation.mutate({ ...command, ...data });
+      mutation.mutate({
+        id: command.id,
+        text: data.text,
+        cooldown: data.cooldown,
+      });
     }
   };
 
