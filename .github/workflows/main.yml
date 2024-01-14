@@ -17,6 +17,7 @@ jobs:
         host: ${{ secrets.hostname }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
+        overwrite: true
   run_dockerfile:
     runs-on: ubuntu-latest
     timeout-minutes: 5
