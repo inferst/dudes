@@ -16,6 +16,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         overwrite: true
+        tar_exec: tar --overwrite
   run_dockerfile:
     runs-on: ubuntu-latest
     timeout-minutes: 5
