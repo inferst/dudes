@@ -1,31 +1,39 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "accessToken" VARCHAR(255) NOT NULL,
+    "refreshToken" VARCHAR(255) NOT NULL,
+    "guid" UUID NOT NULL,
+    "twitchId" VARCHAR(255) NOT NULL,
+    "twitchLogin" VARCHAR(255) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "tokenRevoked" BOOLEAN NOT NULL DEFAULT false,
 
-  - You are about to drop the column `description` on the `Command` table. All the data in the column will be lost.
-  - You are about to drop the column `name` on the `Command` table. All the data in the column will be lost.
-  - You are about to drop the `UserCommand` table. If the table is not empty, all the data it contains will be lost.
-  - Added the required column `actionId` to the `Command` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `text` to the `Command` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `userId` to the `Command` table without a default value. This is not possible if the table is not empty.
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
-*/
--- DropForeignKey
-ALTER TABLE "UserCommand" DROP CONSTRAINT "UserCommand_commandId_fkey";
+-- CreateTable
+CREATE TABLE "Session" (
+    "id" TEXT NOT NULL,
+    "sid" TEXT NOT NULL,
+    "data" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
 
--- DropForeignKey
-ALTER TABLE "UserCommand" DROP CONSTRAINT "UserCommand_userId_fkey";
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
+);
 
--- AlterTable
-ALTER TABLE "Command" DROP COLUMN "description",
-DROP COLUMN "name",
-ADD COLUMN     "actionId" INTEGER NOT NULL,
-ADD COLUMN     "cooldown" INTEGER NOT NULL DEFAULT 0,
-ADD COLUMN     "isActive" BOOLEAN NOT NULL DEFAULT false,
-ADD COLUMN     "text" VARCHAR(255) NOT NULL,
-ADD COLUMN     "userId" INTEGER NOT NULL;
+-- CreateTable
+CREATE TABLE "Command" (
+    "id" SERIAL NOT NULL,
+    "actionId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "text" VARCHAR(255) NOT NULL,
+    "cooldown" INTEGER NOT NULL DEFAULT 0,
 
--- DropTable
-DROP TABLE "UserCommand";
+    CONSTRAINT "Command_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Action" (
@@ -51,6 +59,15 @@ CREATE TABLE "Reward" (
 
     CONSTRAINT "Reward_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_guid_key" ON "User"("guid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_twitchId_key" ON "User"("twitchId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Session_sid_key" ON "Session"("sid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Action_name_key" ON "Action"("name");
