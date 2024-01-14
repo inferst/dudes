@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
 import { Prisma, User } from '@prisma/client';
 
-export { User } from '@prisma/client';
-
 @Injectable()
 export class UserRepository {
   public constructor(private readonly prismaService: PrismaService) {}
@@ -24,9 +22,9 @@ export class UserRepository {
     });
   }
 
-  public async patch(
+  public async update(
     userId: number,
-    data: Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
+    data: Prisma.UserUpdateInput
   ): Promise<User> {
     return this.prismaService.user.update({
       data,

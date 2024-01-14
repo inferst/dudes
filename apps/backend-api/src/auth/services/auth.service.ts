@@ -53,8 +53,6 @@ export class AuthService {
       tokenRevoked: false,
     });
 
-    await this.userRepository.createUserCommandsIfNotExists(userId);
-
     return {
       guid,
       userId,

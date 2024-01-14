@@ -1,6 +1,3 @@
-import { useApi } from '@app/frontend-admin/hooks/useApi';
-import { AxiosError, isAxiosError } from 'axios';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Checkbox } from '../../ui/checkbox';
 import {
@@ -14,65 +11,17 @@ import {
 } from '../../ui/table';
 import { CommandForm, CommandFormInput } from './CommandForm';
 
-import { useNavigate } from 'react-router-dom';
 
-import { UpdateUserCommandDto, UserCommandEntity } from '@shared';
+import { useUpdateCommandMutation } from '@app/frontend-admin/mutations/commands';
+import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
 import { Loader } from '../../common/Loader';
 
 export function CommandsPage() {
-  const navigate = useNavigate();
-
-  const queryClient = useQueryClient();
-
-  const { getCommands, updateCommand } = useApi();
-
-  const { isLoading, data } = useQuery<UserCommandEntity[]>(
-    'admin/command/list',
-    getCommands,
-    {
-      refetchOnWindowFocus: false,
-      retry: false,
-      initialData: [],
-      onError: (err) => {
-        if (isAxiosError(err) && err?.response?.status === 403) {
-          navigate('/admin/login');
-        }
-      },
-    }
-  );
+  const { isLoading, data} = useCommndsQuery();
 
   const commands = data ?? [];
 
-  const mutation = useMutation<
-    UserCommandEntity,
-    AxiosError,
-    UpdateUserCommandDto,
-    UserCommandEntity[]
-  >({
-    mutationFn: updateCommand,
-    onMutate: async (data) => {
-      await queryClient.cancelQueries('admin/command/list');
-
-      const prev =
-        queryClient.getQueryData<UserCommandEntity[]>('admin/command/list');
-
-      queryClient.setQueryData<UpdateUserCommandDto[]>(
-        'admin/command/list',
-        (commands) =>
-          (commands ?? []).map((command) =>
-            command.id === data.id ? { ...command, ...data } : command
-          )
-      );
-
-      return prev;
-    },
-    onError: (_err, _commands, context) => {
-      queryClient.setQueryData<UpdateUserCommandDto[]>(
-        'admin/command/list',
-        context ?? []
-      );
-    },
-  });
+  const mutation = useUpdateCommandMutation();
 
   if (isLoading) {
     return <Loader />;

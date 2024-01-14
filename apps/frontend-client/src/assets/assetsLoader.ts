@@ -19,6 +19,7 @@ export class AssetsLoader {
     if (!this.isLoaded) {
       await PIXI.Assets.init({ manifest });
       this.sheets = await PIXI.Assets.loadBundle('main');
+      await PIXI.Assets.loadBundle('fonts');
       this.isLoaded = true;
     }
   }

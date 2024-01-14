@@ -30,7 +30,7 @@ export class Debug {
   }
 
   public generateDudes(): void {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 1; i++) {
       setTimeout(() => {
         const keys = Object.keys(config.chatters);
         const index = Math.round(Math.random() * keys.length);
@@ -40,7 +40,7 @@ export class Debug {
           dude.addMessage(
             'Приветики! Пистолетики. А что это ты тут стримишь, а?'
           );
-        }, (i + 1) * 10000);
+        }, (i + 1) * 3000);
         setInterval(() => {
           dude.jump();
         }, (i + 1) * 5000);

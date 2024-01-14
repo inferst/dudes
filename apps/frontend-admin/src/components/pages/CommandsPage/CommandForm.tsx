@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateUserCommandFormSchema } from '@shared';
+import { updateCommandFormSchema } from '@shared';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -35,7 +35,7 @@ export function CommandForm(props: CommandFormProps) {
   const [open, setOpen] = useState(false);
 
   const form = useForm<CommandFormInput>({
-    resolver: zodResolver(updateUserCommandFormSchema),
+    resolver: zodResolver(updateCommandFormSchema),
     values: {
       text,
       cooldown,

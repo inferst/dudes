@@ -28,7 +28,7 @@ export class TwitchApiClientFactory {
         const { refresh_token: refreshToken, access_token: accessToken } =
           await this.refreshAuth(userId);
 
-        await this.userRepository.patch(userId, {
+        await this.userRepository.update(userId, {
           refreshToken,
           accessToken,
         });
@@ -46,7 +46,7 @@ export class TwitchApiClientFactory {
 
         return Promise.resolve();
       } catch (e) {
-        await this.userRepository.patch(userId, {
+        await this.userRepository.update(userId, {
           tokenRevoked: true,
         });
 

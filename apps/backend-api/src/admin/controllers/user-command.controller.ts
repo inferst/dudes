@@ -1,30 +1,30 @@
 import { Auth } from '@app/backend-api/auth/decorators';
 import { AuthGuard } from '@app/backend-api/auth/guards';
 import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
-import { CommandRepository } from '../repositories/user-command.repository';
-import { UserCommandEntity, UpdateUserCommandDto, updateUserCommandDtoSchema } from '@shared';
 import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
+import { Body, Controller, Get, Param, ParseIntPipe, Put, UseGuards } from '@nestjs/common';
+import { UpdateCommandDto, CommandEntity, updateCommandDtoSchema } from '@shared';
+import { UserCommandRepository } from '../repositories/user-command.repository';
 
 @Controller('/command')
-export class CommandController {
-  public constructor(private readonly commandRepository: CommandRepository) {}
+export class UserCommandController {
+  public constructor(private readonly commandRepository: UserCommandRepository) {}
 
   @Get('/list')
   @UseGuards(AuthGuard)
   public async getCommands(
     @Auth() user: AuthUserProps
-  ): Promise<UserCommandEntity[]> {
+  ): Promise<CommandEntity[]> {
     return this.commandRepository.getComomandsByUserId(user.userId);
   }
 
   @Put('/:id')
   @UseGuards(AuthGuard)
   public async update(
-    @Param() params: { id: number },
-    @Body(new ZodPipe(updateUserCommandDtoSchema)) command: UpdateUserCommandDto
-  ): Promise<UserCommandEntity> {
-    const id = Number(params.id);
-    return this.commandRepository.patch(id, command);
+    @Param('id', ParseIntPipe) id: number,
+    @Auth() user: AuthUserProps,
+    @Body(new ZodPipe(updateCommandDtoSchema)) command: UpdateCommandDto
+  ): Promise<CommandEntity> {
+    return this.commandRepository.update(user.userId, id, command);
   }
 }

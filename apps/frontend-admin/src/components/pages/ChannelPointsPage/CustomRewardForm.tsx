@@ -12,10 +12,13 @@ import {
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { Textarea } from '../../ui/textarea';
-import { Reward } from './ChannelPointsPage';
+import { Reward } from '@prisma/client';
 
-export function CustomRewardForm(props: { reward: Reward }) {
-  const { reward } = props;
+export function CustomRewardForm(props: {
+  reward: Reward;
+  isDisabled?: boolean;
+}) {
+  const { reward, isDisabled = false } = props;
 
   const form = useForm({
     defaultValues: reward,
@@ -26,7 +29,7 @@ export function CustomRewardForm(props: { reward: Reward }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary">Edit</Button>
+        <Button variant="secondary" disabled={isDisabled}>Edit</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={form.handleSubmit(onSubmit)}>

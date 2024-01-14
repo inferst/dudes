@@ -1,2 +1,2 @@
 export { UserController } from './user.controller';
-export { CommandController } from './user-command.controller';
+export { UserCommandController as CommandController } from './user-command.controller';

@@ -20,7 +20,8 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   tokenRevoked Boolean       @default(false)
-  commands     UserCommand[]
+  commands     Command[]
+  reward       Reward[]
 }
 
 model Session {
@@ -30,23 +31,36 @@ model Session {
   expiresAt DateTime
 }
 
-model UserCommand {
-  id        Int     @id @default(autoincrement())
-  commandId Int
-  command   Command @relation(fields: [commandId], references: [id])
-  userId    Int
-  user      User    @relation(fields: [userId], references: [id])
-  isActive  Boolean @default(false)
-  text      String  @db.VarChar(255)
-  cooldown  Int     @default(0)
-
-  @@unique([userId, commandId])
+model Command {
+  id       Int     @id @default(autoincrement())
+  actionId Int
+  action   Action  @relation(fields: [actionId], references: [id])
+  userId   Int
+  user     User    @relation(fields: [userId], references: [id])
+  isActive Boolean @default(false)
+  text     String  @db.VarChar(255)
+  cooldown Int     @default(0)
 }
 
-model Command {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique @db.VarChar(255)
-  title       String        @db.VarChar(255)
-  description String        @default("") @db.VarChar(255)
-  UserCommand UserCommand[]
+model Action {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(255)
+  title       String    @db.VarChar(255)
+  description String    @default("") @db.VarChar(255)
+  command     Command[]
+  reward      Reward[]
+}
+
+model Reward {
+  id          Int     @id @default(autoincrement())
+  actionId    Int
+  action      Action  @relation(fields: [actionId], references: [id])
+  userId      Int
+  user        User    @relation(fields: [userId], references: [id])
+  title       String  @db.VarChar(255)
+  description String  @default("") @db.VarChar(255)
+  cost        Int     @default(0)
+  cooldown    Int     @default(0)
+  isActive    Boolean @default(true)
+  isPaused    Boolean @default(false)
 }

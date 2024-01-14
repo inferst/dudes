@@ -30,6 +30,11 @@ const links: NavLink[] = [
     isDisabled: true,
   },
   {
+    path: '/admin/donations',
+    title: 'Donations',
+    isDisabled: true,
+  },
+  {
     path: '/admin/hidden-users',
     title: 'Hidden Users',
   },

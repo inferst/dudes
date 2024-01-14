@@ -33,5 +33,14 @@ export const manifest = {
         },
       ],
     },
+    {
+      name: 'fonts',
+      assets: [
+        {
+          alias: 'Rubik',
+          src: '/client/fonts/Rubik.ttf',
+        },
+      ],
+    },
   ],
 };

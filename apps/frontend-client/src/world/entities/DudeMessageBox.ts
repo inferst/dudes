@@ -13,7 +13,7 @@ export class DudeMessageBox {
   private borderRadius: number = 10;
   private boxColor: number = 0xeeeeee;
   private textColor: number = 0x222222;
-  private fontFamily: string = 'Verdana';
+  private fontFamily: string = 'Rubik';
   private fontSize: number = 20;
 
   private animationTime = 500;
@@ -74,6 +74,7 @@ export class DudeMessageBox {
       }
     } else {
       this.currentShowTime -= Constants.fixedDeltaTime;
+      this.container.position.y = Math.sin(this.currentShowTime* 0.0025) * 4 - 2;
     }
   }
 
@@ -105,7 +106,6 @@ export class DudeMessageBox {
 
     this.box = new Graphics();
     this.box.beginFill(this.boxColor);
-    this.box.lineStyle(2, 0x222222, 0.8);
     this.box.drawRoundedRect(
       roundedRect.x,
       roundedRect.y,
@@ -113,35 +113,20 @@ export class DudeMessageBox {
       roundedRect.h,
       this.borderRadius
     );
-    this.box.lineStyle(0);
     this.box.drawPolygon(
       {
         x: roundedRect.x + roundedRect.w / 2 - 10,
-        y: roundedRect.y + roundedRect.h - 2,
+        y: roundedRect.y + roundedRect.h,
       },
       {
         x: roundedRect.x + roundedRect.w / 2 + 10,
-        y: roundedRect.y + roundedRect.h - 2,
+        y: roundedRect.y + roundedRect.h,
       },
       {
         x: roundedRect.x + roundedRect.w / 2,
-        y: roundedRect.y + roundedRect.h + 10 - 6,
+        y: roundedRect.y + roundedRect.h + 10 - 4,
       }
     );
-    this.box.lineStyle(2, 0x222222, 0.8);
-    this.box
-      .moveTo(
-        roundedRect.x + roundedRect.w / 2 + 10,
-        roundedRect.y + roundedRect.h
-      )
-      .lineTo(
-        roundedRect.x + roundedRect.w / 2,
-        roundedRect.y + roundedRect.h + 10 - 4
-      )
-      .lineTo(
-        roundedRect.x + roundedRect.w / 2 - 10,
-        roundedRect.y + roundedRect.h
-      );
 
     this.box.endFill();
 

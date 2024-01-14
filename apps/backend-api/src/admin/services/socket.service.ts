@@ -2,11 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import * as tmi from 'tmi.js';
 import { UserRepository } from '@app/backend-api/admin/repositories';
-import { User } from '@app/backend-api/admin/repositories/user.repository';
 import {
   TwitchApiClientFactory,
   TokenRevokedException,
 } from '@app/backend-api/admin/twitch-api-client';
+import { User } from '@prisma/client';
 
 const CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 

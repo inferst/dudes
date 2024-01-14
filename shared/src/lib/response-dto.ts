@@ -1,3 +1,5 @@
+import { Reward, Command } from '@prisma/client';
+
 export type UserEntity = {
   name: string;
   picture: string;
@@ -7,9 +9,6 @@ export type UserEntity = {
   personalUrl: string;
 };
 
-export type UserCommandEntity = {
-  id: number;
-  isActive: boolean;
-  text: string;
-  cooldown: number;
-};
+export type CommandEntity = Command;
+
+export type RewardEntity = Reward;

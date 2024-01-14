@@ -1,9 +1,7 @@
-import { createContext, ReactNode } from 'react';
-import { useApi } from '@app/frontend-admin/hooks/useApi';
-import { useQuery } from 'react-query';
-import { isAxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { api } from '@app/frontend-admin/api/api';
+import { useApiQuery } from '@app/frontend-admin/api/useApiQuery';
 import { UserEntity } from '@shared';
+import { ReactNode, createContext } from 'react';
 import { Loader } from '../common/Loader';
 
 type AuthContext = {
@@ -18,16 +16,12 @@ type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { getUser } = useApi();
-  const navigate = useNavigate();
-  const { isLoading, data: user } = useQuery('admin/user', getUser, {
-    refetchOnWindowFocus: false,
-    retry: false,
-    onError: (err) => {
-      if (isAxiosError(err) && err?.response?.status === 403) {
-        navigate('/admin/login');
-      }
-    },
+  const {
+    isLoading,
+    data: user,
+  } = useApiQuery({
+    queryKey: ['admin/user'],
+    queryFn: api.getUser,
   });
 
   if (isLoading) {
