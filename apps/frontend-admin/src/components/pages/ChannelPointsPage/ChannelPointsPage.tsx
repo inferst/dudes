@@ -1,4 +1,7 @@
-import { useCreateRewardMutation, useUpdateRewardMutation } from '@app/frontend-admin/mutations/rewards';
+import {
+  useCreateRewardMutation,
+  useUpdateRewardMutation,
+} from '@app/frontend-admin/mutations/rewards';
 import { useRewardsQuery } from '@app/frontend-admin/queries/rewards';
 import { Loader } from '../../common/Loader';
 import { Button } from '../../ui/button';
@@ -15,17 +18,27 @@ import {
 } from '../../ui/table';
 import { CustomRewardDelete } from './CustomRewardDelete';
 import { CustomRewardForm } from './CustomRewardForm';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../../ui/dropdown-menu';
+import { Plus } from 'lucide-react';
+import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 
 export function ChanngelPointsPage() {
-  const { isLoading, data } = useRewardsQuery();
+  const actionsQuery = useActionsQuery();
+  const rewardsQuery = useRewardsQuery();
 
-  const rewards = data ?? [];
+  const actions = actionsQuery.data ?? [];
+  const rewards = rewardsQuery.data ?? [];
 
   const updateMutation = useUpdateRewardMutation();
 
   const createMutation = useCreateRewardMutation();
 
-  if (isLoading) {
+  if (rewardsQuery.isLoading) {
     return <Loader />;
   }
 
@@ -49,16 +62,20 @@ export function ChanngelPointsPage() {
     console.log('delete');
   };
 
-  const handleCreate = () => {
-    createMutation.mutate({
-      actionId: 1,
-      cost: 100,
-      title: 'test',
-      description: 'test',
-      cooldown: 0,
-      isActive: true,
-      isPaused: false,
-    });
+  const handleActionClick = (id: number) => {
+    const action = actions.find((action) => action.id === id);
+
+    if (action) {
+      createMutation.mutate({
+        actionId: id,
+        title: action.title,
+        description: action.description,
+        isActive: true,
+        isPaused: false,
+        cost: 0,
+        cooldown: 0,
+      });
+    }
   };
 
   return (
@@ -68,7 +85,24 @@ export function ChanngelPointsPage() {
       </CardHeader>
       <CardContent>
         <div className="mb-6">
-          <Button onClick={handleCreate}>Create new reward</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="default">
+                <Plus className="mr-2" />
+                Add new reward
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {actions.map((action) => (
+                <DropdownMenuItem
+                  key={action.id}
+                  onClick={() => handleActionClick(action.id)}
+                >
+                  {action.title}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <Table>

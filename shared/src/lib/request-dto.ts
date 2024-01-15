@@ -21,7 +21,7 @@ export const updateCommandFormSchema = updateCommandDtoSchema.omit({
 export const updateRewardDtoSchema = z.object({
   id: z.number().int().min(1),
   title: z.string().min(1).max(255).optional(),
-  description: z.string().min(1).max(255).optional(),
+  description: z.string().max(255).optional(),
   cost: z.number().int().min(0).optional(),
   cooldown: z.number().int().min(0).optional(),
   isActive: z.boolean().optional(),
@@ -31,7 +31,7 @@ export const updateRewardDtoSchema = z.object({
 export const createRewardDtoSchema = z.object({
   actionId: z.number().int().min(1),
   title: z.string().min(1).max(255),
-  description: z.string().min(1).max(255).optional(),
+  description: z.string().max(255).optional(),
   cost: z.number().int().min(0),
   cooldown: z.number().int().min(0).optional(),
   isActive: z.boolean().optional(),
