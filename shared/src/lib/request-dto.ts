@@ -7,6 +7,13 @@ export const updateCommandDtoSchema = z.object({
   cooldown: z.number().int().min(0).optional(),
 });
 
+export const createCommandDtoSchema = z.object({
+  actionId: z.number().int().min(0),
+  isActive: z.boolean().optional(),
+  text: z.string().min(1).max(255),
+  cooldown: z.number().int().min(0).optional(),
+});
+
 export const updateCommandFormSchema = updateCommandDtoSchema.omit({
   id: true,
 });
@@ -36,6 +43,8 @@ export const updateRewardFormSchema = updateRewardDtoSchema.omit({
 });
 
 export type UpdateCommandDto = z.infer<typeof updateCommandDtoSchema>;
+
+export type CreateCommandDto = z.infer<typeof createCommandDtoSchema>;
 
 export type UpdateCommandForm = z.infer<typeof updateCommandFormSchema>;
 

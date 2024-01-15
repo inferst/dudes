@@ -4,19 +4,27 @@ import { SocketService } from '@app/backend-api/admin/services';
 import { EventsGateway } from '@app/backend-api/admin/gateways';
 import { UserRepository } from '@app/backend-api/admin/repositories';
 import { TwitchApiClientFactory } from '@app/backend-api/admin/twitch-api-client';
-import { UserCommandRepository } from './repositories/user-command.repository';
+import { CommandRepository } from './repositories/command.repository';
 import { RewardController } from './controllers/reward.controller';
 import { RewardRepository } from './repositories/reward.repository';
+import { ActionController } from './controllers/action.controller';
+import { ActionRepository } from './repositories/action.repository';
 
 @Module({
   imports: [],
-  controllers: [UserController, CommandController, RewardController],
+  controllers: [
+    UserController,
+    CommandController,
+    RewardController,
+    ActionController,
+  ],
   providers: [
     EventsGateway,
     SocketService,
     UserRepository,
     RewardRepository,
-    UserCommandRepository,
+    CommandRepository,
+    ActionRepository,
     TwitchApiClientFactory,
   ],
 })

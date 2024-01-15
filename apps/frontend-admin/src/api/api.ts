@@ -5,6 +5,8 @@ import {
   UpdateCommandDto,
   CommandEntity,
   UserEntity,
+  ActionEntity,
+  CreateCommandDto,
 } from '@shared';
 import axios, { GenericAbortSignal } from 'axios';
 
@@ -42,19 +44,29 @@ export const api = {
     return data;
   },
   getCommands: async ({ signal }: WithSignal): Promise<CommandEntity[]> => {
-    const { data } = await appAxios.get(
-      '/admin/command/list',
-      {
-        signal,
-      }
+    const { data } = await appAxios.get('/admin/command/list', {
+      signal,
+    });
+
+    return data;
+  },
+  createCommand: async (command: CreateCommandDto): Promise<CommandEntity> => {
+    const { data } = await appAxios.post('/admin/command/', command);
+
+    return data;
+  },
+  updateCommand: async (command: UpdateCommandDto): Promise<CommandEntity> => {
+    const { data } = await appAxios.put(
+      '/admin/command/' + command.id,
+      command
     );
 
     return data;
   },
-  updateCommand: async (
-    command: UpdateCommandDto
-  ): Promise<CommandEntity> => {
-    const { data } = await appAxios.put('/admin/command/' + command.id, command);
+  getActions: async ({ signal }: WithSignal): Promise<ActionEntity[]> => {
+    const { data } = await appAxios.get('/admin/action/list', {
+      signal,
+    });
 
     return data;
   },

@@ -1,4 +1,4 @@
-import { Reward, Command } from '@prisma/client';
+import { Reward, Command, Action } from '@prisma/client';
 
 export type UserEntity = {
   name: string;
@@ -12,3 +12,5 @@ export type UserEntity = {
 export type CommandEntity = Command;
 
 export type RewardEntity = Reward;
+
+export type ActionEntity = Action;

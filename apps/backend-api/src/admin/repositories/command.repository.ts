@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, Command } from '@prisma/client';
 
 @Injectable()
-export class UserCommandRepository {
+export class CommandRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async getComomandsByUserId(userId: number): Promise<Command[]> {
@@ -18,15 +18,20 @@ export class UserCommandRepository {
   }
 
   public async update(
-    userId: number,
-    userCommandId: number,
+    commandId: number,
     data: Prisma.CommandUpdateInput
   ): Promise<Command> {
     return this.prismaService.command.update({
       data,
       where: {
-        id: userCommandId,
+        id: commandId,
       },
+    });
+  }
+
+  public async create(data: Prisma.CommandCreateInput): Promise<Command> {
+    return this.prismaService.command.create({
+      data,
     });
   }
 }

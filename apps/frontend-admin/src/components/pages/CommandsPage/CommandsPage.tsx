@@ -11,19 +11,33 @@ import {
 } from '../../ui/table';
 import { CommandForm, CommandFormInput } from './CommandForm';
 
-
-import { useUpdateCommandMutation } from '@app/frontend-admin/mutations/commands';
+import {
+  useCreateCommandMutation,
+  useUpdateCommandMutation,
+} from '@app/frontend-admin/mutations/commands';
 import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
 import { Loader } from '../../common/Loader';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../../ui/dropdown-menu';
+import { Button } from '../../ui/button';
+import { Plus } from 'lucide-react';
+import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 
 export function CommandsPage() {
-  const { isLoading, data} = useCommndsQuery();
+  const actionsQuery = useActionsQuery();
+  const commandsQuery = useCommndsQuery();
 
-  const commands = data ?? [];
+  const commands = commandsQuery.data ?? [];
+  const actions = actionsQuery.data ?? [];
 
-  const mutation = useUpdateCommandMutation();
+  const updateMutation = useUpdateCommandMutation();
+  const createMutation = useCreateCommandMutation();
 
-  if (isLoading) {
+  if (commandsQuery.isLoading || actionsQuery.isLoading) {
     return <Loader />;
   }
 
@@ -31,7 +45,7 @@ export function CommandsPage() {
     const command = commands[index];
 
     if (command) {
-      mutation.mutate({ id: command.id, isActive: value });
+      updateMutation.mutate({ id: command.id, isActive: value });
     }
   };
 
@@ -39,10 +53,23 @@ export function CommandsPage() {
     const command = commands[index];
 
     if (command) {
-      mutation.mutate({
+      updateMutation.mutate({
         id: command.id,
         text: data.text,
         cooldown: data.cooldown,
+      });
+    }
+  };
+
+  const handleActionClick = (id: number) => {
+    const action = actions.find((action) => action.id === id);
+
+    if (action) {
+      createMutation.mutate({
+        actionId: id,
+        text: '!' + action.name,
+        isActive: true,
+        cooldown: 0,
       });
     }
   };
@@ -53,6 +80,26 @@ export function CommandsPage() {
         <CardTitle>Commands</CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="mb-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="default">
+                <Plus className="mr-2" />
+                Add new command
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {actions.map((action) => (
+                <DropdownMenuItem
+                  key={action.id}
+                  onClick={() => handleActionClick(action.id)}
+                >
+                  {action.title}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <Table>
           <TableCaption>A list of dude commands</TableCaption>
           <TableHeader>

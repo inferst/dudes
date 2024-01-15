@@ -47,10 +47,10 @@ export class RewardController {
   @Post()
   @UseGuards(AuthGuard)
   public async create(
-    @Body(new ZodPipe(createRewardDtoSchema)) reward: CreateRewardDto,
+    @Body(new ZodPipe(createRewardDtoSchema)) data: CreateRewardDto,
     @Auth() user: AuthUserProps
   ): Promise<RewardEntity> {
-    const command: Prisma.RewardCreateInput = {
+    const reward: Prisma.RewardCreateInput = {
       user: {
         connect: {
           id: user.userId,
@@ -58,15 +58,15 @@ export class RewardController {
       },
       action: {
         connect: {
-          id: reward.actionId,
+          id: data.actionId,
         },
       },
-      title: reward.title,
-      description: reward.description,
-      cooldown: reward.cooldown,
-      cost: reward.cost,
+      title: data.title,
+      description: data.description,
+      cooldown: data.cooldown,
+      cost: data.cost,
     };
 
-    return this.rewardRepository.create(command);
+    return this.rewardRepository.create(reward);
   }
 }
