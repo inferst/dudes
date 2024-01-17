@@ -45,31 +45,39 @@ export const useCreateCommandMutation = () => {
   return useMutation<CommandEntity, AxiosError, CreateCommandDto, CommandEntity[]>(
     {
       mutationFn: api.createCommand,
-      onMutate: async (data) => {
+      onSuccess: (data) => {
+        queryClient.setQueryData<CommandEntity[]>(
+          commandsKeys.list.queryKey,
+          (rewards) =>
+            [...(rewards ?? []), data]
+        );
+      },
+    }
+  );
+};
+
+export const useDeleteCommandMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<CommandEntity, AxiosError, number, CommandEntity[]>(
+    {
+      mutationFn: api.deleteCommand,
+      onMutate: async (id) => {
         await queryClient.cancelQueries({ ...commandsKeys.list });
 
         const prev = queryClient.getQueryData<CommandEntity[]>(
           commandsKeys.list.queryKey
         );
 
-        queryClient.setQueryData<CreateCommandDto[]>(
+        queryClient.setQueryData<CommandEntity[]>(
           commandsKeys.list.queryKey,
-          (rewards) => [...(rewards ?? []), data]
+          (commands) => (commands ?? []).filter(command => command.id !== id)
         );
 
         return prev;
       },
-      onSuccess: (data, variables) => {
-        queryClient.setQueryData<CommandEntity[]>(
-          commandsKeys.list.queryKey,
-          (rewards) =>
-            (rewards ?? []).map((reward) =>
-              reward === variables ? { ...reward, ...data } : reward
-            )
-        );
-      },
       onError: (_err, _commands, context) => {
-        queryClient.setQueryData<CreateCommandDto[]>(
+        queryClient.setQueryData<CommandEntity[]>(
           commandsKeys.list.queryKey,
           context ?? []
         );

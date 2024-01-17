@@ -43,6 +43,11 @@ export const api = {
 
     return data;
   },
+  deleteReward: async (id: number): Promise<RewardEntity> => {
+    const { data } = await appAxios.delete('/admin/reward/' + id);
+
+    return data;
+  },
   getCommands: async ({ signal }: WithSignal): Promise<CommandEntity[]> => {
     const { data } = await appAxios.get('/admin/command/list', {
       signal,
@@ -52,6 +57,11 @@ export const api = {
   },
   createCommand: async (command: CreateCommandDto): Promise<CommandEntity> => {
     const { data } = await appAxios.post('/admin/command/', command);
+
+    return data;
+  },
+  deleteCommand: async (id: number): Promise<CommandEntity> => {
+    const { data } = await appAxios.delete('/admin/command/' + id);
 
     return data;
   },

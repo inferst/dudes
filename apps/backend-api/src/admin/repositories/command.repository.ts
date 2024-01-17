@@ -18,6 +18,7 @@ export class CommandRepository {
   }
 
   public async update(
+    userId: number,
     commandId: number,
     data: Prisma.CommandUpdateInput
   ): Promise<Command> {
@@ -25,6 +26,9 @@ export class CommandRepository {
       data,
       where: {
         id: commandId,
+        user: {
+          id: userId,
+        },
       },
     });
   }
@@ -32,6 +36,17 @@ export class CommandRepository {
   public async create(data: Prisma.CommandCreateInput): Promise<Command> {
     return this.prismaService.command.create({
       data,
+    });
+  }
+
+  public async delete(userId: number, id: number): Promise<Command> {
+    return this.prismaService.command.delete({
+      where: {
+        id,
+        user: {
+          id: userId,
+        },
+      },
     });
   }
 }

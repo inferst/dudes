@@ -1,5 +1,6 @@
 import {
   useCreateRewardMutation,
+  useDeleteRewardMutation,
   useUpdateRewardMutation,
 } from '@app/frontend-admin/mutations/rewards';
 import { useRewardsQuery } from '@app/frontend-admin/queries/rewards';
@@ -16,7 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { CustomRewardDelete } from './CustomRewardDelete';
 import { CustomRewardForm } from './CustomRewardForm';
 import {
   DropdownMenu,
@@ -26,6 +26,7 @@ import {
 } from '../../ui/dropdown-menu';
 import { Plus } from 'lucide-react';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
+import { DeleteDialog } from '../../common/DeleteDialog';
 
 export function ChanngelPointsPage() {
   const actionsQuery = useActionsQuery();
@@ -35,8 +36,8 @@ export function ChanngelPointsPage() {
   const rewards = rewardsQuery.data ?? [];
 
   const updateMutation = useUpdateRewardMutation();
-
   const createMutation = useCreateRewardMutation();
+  const deleteMutation = useDeleteRewardMutation();
 
   if (rewardsQuery.isLoading) {
     return <Loader />;
@@ -58,8 +59,8 @@ export function ChanngelPointsPage() {
     }
   };
 
-  const handleDelete = (index: number) => {
-    console.log('delete');
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id);
   };
 
   const handleActionClick = (id: number) => {
@@ -120,83 +121,40 @@ export function ChanngelPointsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rewards
-              .filter((reward) => reward.id)
-              .map((reward, index) => (
-                <TableRow key={reward.id}>
-                  <TableCell>
-                    <Checkbox
-                      onCheckedChange={(value: boolean) =>
-                        handleIsActiveChange(index, value)
-                      }
-                      checked={reward.isActive}
-                      className="block"
-                    ></Checkbox>
-                  </TableCell>
-                  <TableCell>
-                    <Checkbox
-                      onCheckedChange={(value: boolean) =>
-                        handleIsPausedChange(index, value)
-                      }
-                      checked={reward.isPaused}
-                      className="block"
-                    ></Checkbox>
-                  </TableCell>
-                  <TableCell>{reward.id}</TableCell>
-                  <TableCell>{reward.title}</TableCell>
-                  <TableCell>{reward.description}</TableCell>
-                  <TableCell>{reward.cost}</TableCell>
-                  <TableCell>
-                    <CustomRewardForm reward={reward}></CustomRewardForm>
-                  </TableCell>
-                  <TableCell>
-                    <CustomRewardDelete
-                      onDelete={() => handleDelete(index)}
-                    ></CustomRewardDelete>
-                  </TableCell>
-                </TableRow>
-              ))}
-
-            {rewards
-              .filter((reward) => !reward.id)
-              .map((reward, index) => (
-                <TableRow key={'new' + index}>
-                  <TableCell>
-                    <Checkbox
-                      onCheckedChange={(value: boolean) =>
-                        handleIsActiveChange(index, value)
-                      }
-                      checked={reward.isActive}
-                      className="block"
-                    ></Checkbox>
-                  </TableCell>
-                  <TableCell>
-                    <Checkbox
-                      onCheckedChange={(value: boolean) =>
-                        handleIsPausedChange(index, value)
-                      }
-                      checked={reward.isPaused}
-                      className="block"
-                    ></Checkbox>
-                  </TableCell>
-                  <TableCell>{reward.id}</TableCell>
-                  <TableCell>{reward.title}</TableCell>
-                  <TableCell>{reward.description}</TableCell>
-                  <TableCell>{reward.cost}</TableCell>
-                  <TableCell>
-                    <CustomRewardForm
-                      isDisabled={true}
-                      reward={reward}
-                    ></CustomRewardForm>
-                  </TableCell>
-                  <TableCell>
-                    <CustomRewardDelete
-                      isDisabled={true}
-                      onDelete={() => handleDelete(index)}
-                    ></CustomRewardDelete>
-                  </TableCell>
-                </TableRow>
-              ))}
+            {rewards.map((reward, index) => (
+              <TableRow key={reward.id}>
+                <TableCell>
+                  <Checkbox
+                    onCheckedChange={(value: boolean) =>
+                      handleIsActiveChange(index, value)
+                    }
+                    checked={reward.isActive}
+                    className="block"
+                  ></Checkbox>
+                </TableCell>
+                <TableCell>
+                  <Checkbox
+                    onCheckedChange={(value: boolean) =>
+                      handleIsPausedChange(index, value)
+                    }
+                    checked={reward.isPaused}
+                    className="block"
+                  ></Checkbox>
+                </TableCell>
+                <TableCell>{reward.id}</TableCell>
+                <TableCell>{reward.title}</TableCell>
+                <TableCell>{reward.description}</TableCell>
+                <TableCell>{reward.cost}</TableCell>
+                <TableCell>
+                  <CustomRewardForm reward={reward}></CustomRewardForm>
+                </TableCell>
+                <TableCell>
+                  <DeleteDialog
+                    onDelete={() => handleDelete(reward.id)}
+                  ></DeleteDialog>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>

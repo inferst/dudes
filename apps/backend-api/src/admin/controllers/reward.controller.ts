@@ -5,12 +5,13 @@ import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
   Put,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import {
@@ -42,6 +43,15 @@ export class RewardController {
     @Body(new ZodPipe(updateRewardDtoSchema)) reward: UpdateRewardDto
   ): Promise<RewardEntity> {
     return this.rewardRepository.update(user.userId, id, reward);
+  }
+
+  @Delete('/:id')
+  @UseGuards(AuthGuard)
+  public async delete(
+    @Param('id', ParseIntPipe) id: number,
+    @Auth() user: AuthUserProps
+  ): Promise<RewardEntity> {
+    return this.rewardRepository.delete(user.userId, id);
   }
 
   @Post()

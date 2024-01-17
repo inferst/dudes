@@ -13,6 +13,7 @@ import { CommandForm, CommandFormInput } from './CommandForm';
 
 import {
   useCreateCommandMutation,
+  useDeleteCommandMutation,
   useUpdateCommandMutation,
 } from '@app/frontend-admin/mutations/commands';
 import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
@@ -26,6 +27,7 @@ import {
 import { Button } from '../../ui/button';
 import { Plus } from 'lucide-react';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
+import { DeleteDialog } from '../../common/DeleteDialog';
 
 export function CommandsPage() {
   const actionsQuery = useActionsQuery();
@@ -36,6 +38,7 @@ export function CommandsPage() {
 
   const updateMutation = useUpdateCommandMutation();
   const createMutation = useCreateCommandMutation();
+  const deleteMutation = useDeleteCommandMutation();
 
   if (commandsQuery.isLoading || actionsQuery.isLoading) {
     return <Loader />;
@@ -59,6 +62,10 @@ export function CommandsPage() {
         cooldown: data.cooldown,
       });
     }
+  };
+
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id);
   };
 
   const handleActionClick = (id: number) => {
@@ -108,6 +115,7 @@ export function CommandsPage() {
               <TableHead>Command</TableHead>
               <TableHead>Cooldown</TableHead>
               <TableHead className="w-40">Edit</TableHead>
+              <TableHead>Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -130,6 +138,11 @@ export function CommandsPage() {
                     cooldown={command.cooldown}
                     onSave={(data) => handleCommandSave(index, data)}
                   ></CommandForm>
+                </TableCell>
+                <TableCell>
+                  <DeleteDialog
+                    onDelete={() => handleDelete(command.id)}
+                  ></DeleteDialog>
                 </TableCell>
               </TableRow>
             ))}

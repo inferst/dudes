@@ -8,28 +8,26 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '../../ui/alert-dialog';
-import { Button } from '../../ui/button';
+} from '../ui/alert-dialog';
+import { Button } from '../ui/button';
 
-export type CustomRewardDeleteProps = {
+export type DeleteDialogProps = {
   onDelete: () => void;
-  isDisabled?: boolean;
 };
 
-export function CustomRewardDelete(props: CustomRewardDeleteProps) {
-  const { onDelete, isDisabled = false } = props;
+export function DeleteDialog(props: DeleteDialogProps) {
+  const { onDelete } = props;
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button disabled={isDisabled} variant="outline">Delete</Button>
+        <Button variant="outline">Delete</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete custom
-            reward.
+            This action cannot be undone. This will permanently delete item.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

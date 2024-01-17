@@ -43,35 +43,40 @@ export const useCreateRewardMutation = () => {
   return useMutation<RewardEntity, AxiosError, CreateRewardDto, RewardEntity[]>(
     {
       mutationFn: api.createReward,
-      onMutate: async (data) => {
-        await queryClient.cancelQueries({ ...rewardsKeys.list });
-
-        const prev = queryClient.getQueryData<RewardEntity[]>(
-          rewardsKeys.list.queryKey
-        );
-
-        queryClient.setQueryData<CreateRewardDto[]>(
-          rewardsKeys.list.queryKey,
-          (rewards) => [...(rewards ?? []), data]
-        );
-
-        return prev;
-      },
       onSuccess: (data, variables) => {
         queryClient.setQueryData<RewardEntity[]>(
           rewardsKeys.list.queryKey,
-          (rewards) =>
-            (rewards ?? []).map((reward) =>
-              reward === variables ? { ...reward, ...data } : reward
-            )
-        );
-      },
-      onError: (_err, _commands, context) => {
-        queryClient.setQueryData<CreateRewardDto[]>(
-          rewardsKeys.list.queryKey,
-          context ?? []
+          (rewards) => [...(rewards ?? []), data]
         );
       },
     }
   );
+};
+
+export const useDeleteRewardMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<RewardEntity, AxiosError, number, RewardEntity[]>({
+    mutationFn: api.deleteReward,
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ ...rewardsKeys.list });
+
+      const prev = queryClient.getQueryData<RewardEntity[]>(
+        rewardsKeys.list.queryKey
+      );
+
+      queryClient.setQueryData<RewardEntity[]>(
+        rewardsKeys.list.queryKey,
+        (rewards) => (rewards ?? []).filter((reward) => reward.id !== id)
+      );
+
+      return prev;
+    },
+    onError: (_err, _commands, context) => {
+      queryClient.setQueryData<RewardEntity[]>(
+        rewardsKeys.list.queryKey,
+        context ?? []
+      );
+    },
+  });
 };
