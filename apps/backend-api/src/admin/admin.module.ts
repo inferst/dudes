@@ -9,6 +9,8 @@ import { RewardController } from './controllers/reward.controller';
 import { RewardRepository } from './repositories/reward.repository';
 import { ActionController } from './controllers/action.controller';
 import { ActionRepository } from './repositories/action.repository';
+import { SettingsController } from './controllers/settings.controller';
+import { SettingsRepository } from './repositories/settings.repository';
 
 @Module({
   imports: [],
@@ -17,6 +19,7 @@ import { ActionRepository } from './repositories/action.repository';
     CommandController,
     RewardController,
     ActionController,
+    SettingsController,
   ],
   providers: [
     EventsGateway,
@@ -25,6 +28,7 @@ import { ActionRepository } from './repositories/action.repository';
     RewardRepository,
     CommandRepository,
     ActionRepository,
+    SettingsRepository,
     TwitchApiClientFactory,
   ],
 })

@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { CustomRewardForm } from './CustomRewardForm';
+import { RewardForm } from './RewardForm';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +28,7 @@ import { Plus } from 'lucide-react';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { DeleteDialog } from '../../common/DeleteDialog';
 
-export function ChanngelPointsPage() {
+export function RewardsPage() {
   const actionsQuery = useActionsQuery();
   const rewardsQuery = useRewardsQuery();
 
@@ -146,7 +146,7 @@ export function ChanngelPointsPage() {
                 <TableCell>{reward.description}</TableCell>
                 <TableCell>{reward.cost}</TableCell>
                 <TableCell>
-                  <CustomRewardForm reward={reward}></CustomRewardForm>
+                  <RewardForm reward={reward}></RewardForm>
                 </TableCell>
                 <TableCell>
                   <DeleteDialog

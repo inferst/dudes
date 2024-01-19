@@ -55,13 +55,12 @@ export class Dude {
   private runIdleAnimationTime?: number;
   private maxRunIdleAnimationTime?: number;
 
-  private maxLifeTime: number = 1000 * 60 * 69;
-  private currentLifeTime: number = this.maxLifeTime;
-
   private maxOpacityTime: number = 5000;
   private currentOpacityTime: number = this.maxOpacityTime;
 
   public shouldBeDeleted: boolean = false;
+
+  public isDestroying: boolean = false;
 
   private emoteSpitter: DudeEmoteSpitter = new DudeEmoteSpitter();
 
@@ -82,15 +81,6 @@ export class Dude {
     this.spriteConfig = spriteConfig ?? this.spriteConfig;
 
     const collider = this.spriteConfig.collider;
-    const width = renderer.width;
-
-    this.view.y =
-      -(collider.y + collider.h - this.spriteSize / 2) * this.currentScale;
-    this.view.x =
-      Math.random() * (width - this.spriteSize * this.currentScale) +
-      (this.spriteSize / 2) * this.currentScale;
-
-    this.direction = Math.random() > 0.5 ? 1 : -1;
 
     this.name = new DudeName(name);
     this.name.view.position.y =
@@ -115,6 +105,26 @@ export class Dude {
     this.jumpSound.volume = 0.2;
   }
 
+  spawn(isFalling: boolean = false): void {
+    const collider = this.spriteConfig.collider;
+    const { width, height } = renderer;
+
+    const spawnHeight = isFalling
+      ? -(collider.y + collider.h - this.spriteSize / 2)
+      : height;
+
+    this.view.y = spawnHeight * this.currentScale;
+    this.view.x =
+      Math.random() * (width - this.spriteSize * this.currentScale) +
+      (this.spriteSize / 2) * this.currentScale;
+
+    this.direction = Math.random() > 0.5 ? 1 : -1;
+  }
+
+  destroy(): void {
+    this.isDestroying = true;
+  }
+
   jump(): void {
     if (!this.isJumping) {
       this.velocity.x = this.direction * 100;
@@ -126,8 +136,10 @@ export class Dude {
     }
   }
 
-  tint(twitchColor: string, userColor?: string): void {
-    this.twitchColor = twitchColor;
+  tint(twitchColor?: string, userColor?: string): void {
+    if (twitchColor) {
+      this.twitchColor = twitchColor;
+    }
 
     if (userColor) {
       this.userColor = userColor;
@@ -221,9 +233,7 @@ export class Dude {
       }
     }
 
-    if (this.currentLifeTime > 0) {
-      this.currentLifeTime -= Constants.fixedDeltaTime;
-    } else {
+    if (this.isDestroying) {
       if (this.currentOpacityTime > 0) {
         this.currentOpacityTime -= Constants.fixedDeltaTime;
         this.view.alpha = this.currentOpacityTime / this.maxOpacityTime;
@@ -241,12 +251,17 @@ export class Dude {
     this.message.update(this);
   }
 
+  anonymous() {
+    this.name.view.visible = false;
+  }
+
   addMessage(message: string): void {
     this.message.add(message);
 
-    this.currentLifeTime = this.maxLifeTime;
     this.currentOpacityTime = this.maxOpacityTime;
     this.view.alpha = 1;
+    this.name.view.visible = true;
+    this.isDestroying = false;
   }
 
   spitEmotes(emotes: string[]): void {

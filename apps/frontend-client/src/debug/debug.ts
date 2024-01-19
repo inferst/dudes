@@ -7,13 +7,11 @@ export class Debug {
   private readonly logs: string[] = [];
 
   public view: Text;
-  public world: World;
 
-  constructor(world: World) {
+  constructor() {
     this.view = new Text();
     this.view.position.set(10, 10);
 
-    this.world = world;
     World.stage.addChild(this.view);
 
     this.generateDudes();
@@ -35,7 +33,10 @@ export class Debug {
         const keys = Object.keys(config.chatters);
         const index = Math.round(Math.random() * keys.length);
         const dude = new Dude('MikeRime', config.chatters[keys[index]]);
-        this.world.addDude('bot ' + i, dude);
+        dude.spawn(true);
+
+        World.addDude('bot ' + i, dude);
+
         setInterval(() => {
           dude.addMessage(
             'Приветики! Пистолетики. А что это ты тут стримишь, а?'

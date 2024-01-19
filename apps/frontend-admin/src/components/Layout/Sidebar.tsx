@@ -13,16 +13,16 @@ const links: NavLink[] = [
     title: 'Preview',
   },
   {
-    path: '/admin/dude',
-    title: 'Dude Show/Hide',
+    path: '/admin/settings',
+    title: 'Settings',
   },
   {
     path: '/admin/commands',
     title: 'Commands',
   },
   {
-    path: '/admin/channel-points',
-    title: 'Channel Points',
+    path: '/admin/rewards',
+    title: 'Rewards',
   },
   {
     path: '/admin/skins',

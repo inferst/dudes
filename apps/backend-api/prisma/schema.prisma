@@ -5,23 +5,36 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  accessToken  String        @db.VarChar(255)
-  refreshToken String        @db.VarChar(255)
-  guid         String        @unique @default(uuid()) @db.Uuid
-  twitchId     String        @unique @db.VarChar(255)
-  twitchLogin  String        @db.VarChar(255)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  tokenRevoked Boolean       @default(false)
+  id           Int        @id @default(autoincrement())
+  accessToken  String     @db.VarChar(255)
+  refreshToken String     @db.VarChar(255)
+  guid         String     @unique @default(uuid()) @db.Uuid
+  twitchId     String     @unique @db.VarChar(255)
+  twitchLogin  String     @db.VarChar(255)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  tokenRevoked Boolean    @default(false)
   commands     Command[]
   reward       Reward[]
+  settings     Settings[]
+}
+
+model Settings {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+  /// [SettingsData]
+  data   Json @db.JsonB() @default("{}")
 }
 
 model Session {

@@ -7,6 +7,8 @@ import {
   TokenRevokedException,
 } from '@app/backend-api/admin/twitch-api-client';
 import { User } from '@prisma/client';
+import { SettingsRepository } from '../repositories/settings.repository';
+import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
 
 const CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
@@ -22,7 +24,9 @@ type Room = {
 };
 
 @Injectable()
-export class SocketService {
+export class SocketService<
+  TSocket extends Socket<ClientToServerEvents, ServerToClientsEvents>
+> {
   private readonly logger = new Logger(SocketService.name);
 
   private readonly connectedClients: Map<string, ClientSocket> = new Map();
@@ -30,10 +34,11 @@ export class SocketService {
 
   public constructor(
     private readonly userRepository: UserRepository,
+    private readonly settingsRepository: SettingsRepository,
     private readonly twitchApiClientFactory: TwitchApiClientFactory
   ) {}
 
-  public handleDisconnect(socket: Socket): void {
+  public handleDisconnect(socket: TSocket): void {
     this.processDisconnect(socket);
     this.connectedClients.delete(socket.id);
     this.logger.log('Socket disconnected with id: ' + socket.id);
@@ -64,7 +69,7 @@ export class SocketService {
     }
   }
 
-  public async handleConnection(socket: Socket): Promise<void> {
+  public async handleConnection(socket: TSocket): Promise<void> {
     this.logger.log('Socket connected with id: ' + socket.id);
 
     const userGuid = socket.handshake.auth.userGuid;
@@ -92,6 +97,11 @@ export class SocketService {
       this.rooms.set(userGuid, { ...room, clients: [...room.clients, socket] });
       return;
     }
+
+    const settings = await this.settingsRepository.get(user.id);
+
+    socket.emit('settings', settings.data);
+    socket.broadcast.to(userGuid).emit('settings', settings.data);
 
     const tmiClient = new tmi.Client({
       channels: [user.twitchLogin],
@@ -121,13 +131,18 @@ export class SocketService {
 
       updatedMessage = updatedMessage.replace(/\s+/g, ' ').trim();
 
-      this.emitToRoom(socket, userGuid, 'message', {
-        name: tags['display-name'],
-        userId: tags['user-id'],
-        message: updatedMessage,
-        color: tags['color'],
-        emotes: emotes,
-      });
+      if (tags['display-name'] && tags['user-id']) {
+        const data = {
+          name: tags['display-name'],
+          userId: tags['user-id'],
+          message: updatedMessage,
+          color: tags['color'],
+          emotes: emotes,
+        };
+
+        socket.emit('message', data);
+        socket.broadcast.to(userGuid).emit('message', data);
+      }
     });
 
     const twitchApiClient = await this.twitchApiClientFactory.createFromUserId(
@@ -137,16 +152,14 @@ export class SocketService {
     const timerId = setInterval(async () => {
       try {
         const chatters = await twitchApiClient.getChatters(user.twitchId);
-        const userIds = chatters.map(({ user_id }) => user_id);
 
-        this.emitToRoom(socket, userGuid, 'chatters', {
-          userIds,
-        });
+        const data = chatters.map((chatter) => ({
+          userId: chatter.user_id,
+          name: chatter.user_name,
+        }));
 
-        this.logger.log('Chatters are sent.', {
-          userGuid,
-          userIds,
-        });
+        socket.emit('chatters', data);
+        socket.broadcast.to(userGuid).emit('chatters', data);
       } catch (e) {
         if (e instanceof TokenRevokedException) {
           // Token is revoked, do nothing.
@@ -173,15 +186,5 @@ export class SocketService {
     }
 
     return null;
-  }
-
-  private emitToRoom<T>(
-    socket: Socket,
-    roomId: string,
-    name: string,
-    data: T
-  ): void {
-    socket.emit(name, data);
-    socket.broadcast.to(roomId).emit(name, data);
   }
 }

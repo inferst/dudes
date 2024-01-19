@@ -14,7 +14,7 @@ import { Label } from '../../ui/label';
 import { Textarea } from '../../ui/textarea';
 import { Reward } from '@prisma/client';
 
-export function CustomRewardForm(props: {
+export function RewardForm(props: {
   reward: Reward;
   isDisabled?: boolean;
 }) {

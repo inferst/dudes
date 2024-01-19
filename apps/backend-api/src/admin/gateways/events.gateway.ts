@@ -6,6 +6,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
 
 @WebSocketGateway({
   cors: true,
@@ -15,7 +16,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private readonly server!: Socket;
 
-  public constructor(private readonly socketService: SocketService) {}
+  public constructor(
+    private readonly socketService: SocketService<
+      Socket<ServerToClientsEvents, ClientToServerEvents>
+    >
+  ) {}
 
   public handleDisconnect(socket: Socket): void {
     this.socketService.handleDisconnect(socket);

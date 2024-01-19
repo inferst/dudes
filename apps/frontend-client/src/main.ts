@@ -21,8 +21,7 @@ const init = async (): Promise<void> => {
     renderer.resize(window.innerWidth, window.innerHeight);
   };
 
-  const world = new World();
-  await world.init();
+  await World.init();
 
   let lastTime = performance.now();
   let lastFrame = -1;
@@ -33,7 +32,7 @@ const init = async (): Promise<void> => {
   const maxElapsedMS = 100;
 
   if (import.meta.env.DEV) {
-    new Debug(world);
+    new Debug();
   }
 
   requestAnimationFrame(animate);
@@ -50,7 +49,7 @@ const init = async (): Promise<void> => {
       lastFrame = currentTime - (delta % minElapsedMS);
       lastTime = currentTime;
 
-      world.update();
+      World.update();
       renderer.render(World.stage);
     }
 

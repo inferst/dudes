@@ -7,6 +7,8 @@ import {
   UserEntity,
   ActionEntity,
   CreateCommandDto,
+  SettingsEntity,
+  UpdateSettingsDto,
 } from '@shared';
 import axios, { GenericAbortSignal } from 'axios';
 
@@ -77,6 +79,20 @@ export const api = {
     const { data } = await appAxios.get('/admin/action/list', {
       signal,
     });
+
+    return data;
+  },
+  getSettings: async ({ signal }: WithSignal): Promise<SettingsEntity> => {
+    const { data } = await appAxios.get('/admin/settings', {
+      signal,
+    });
+
+    return data;
+  },
+  updateSettings: async (
+    settings: UpdateSettingsDto
+  ): Promise<SettingsEntity> => {
+    const { data } = await appAxios.put('/admin/settings/', settings);
 
     return data;
   },
