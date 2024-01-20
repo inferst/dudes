@@ -40,8 +40,6 @@ export class Debug {
 
         World.addDude('bot ' + i, dude);
 
-        // dude.fade();
-
         setInterval(() => {
           dude.addMessage(
             'Приветики! Пистолетики. А что это ты тут стримишь, а?'
@@ -55,7 +53,7 @@ export class Debug {
         setTimeout(() => {
           dude.fade();
         }, 10000);
-      }, 10 * i);
+      }, 100 * i);
     }
   }
 }

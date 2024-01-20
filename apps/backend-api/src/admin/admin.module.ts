@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CommandController, UserController } from './controllers';
-import { SocketService } from '@app/backend-api/admin/services';
+import { BotService, SocketService } from '@app/backend-api/admin/services';
 import { EventsGateway } from '@app/backend-api/admin/gateways';
 import { UserRepository } from '@app/backend-api/admin/repositories';
 import { TwitchApiClientFactory } from '@app/backend-api/admin/twitch-api-client';
@@ -22,6 +22,7 @@ import { SettingsRepository } from './repositories/settings.repository';
     SettingsController,
   ],
   providers: [
+    BotService,
     EventsGateway,
     SocketService,
     UserRepository,

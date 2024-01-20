@@ -5,10 +5,13 @@ import { UserRepository } from '@app/backend-api/admin/repositories';
 import {
   TwitchApiClientFactory,
   TokenRevokedException,
+  TwitchApiClient,
 } from '@app/backend-api/admin/twitch-api-client';
 import { User } from '@prisma/client';
 import { SettingsRepository } from '../repositories/settings.repository';
 import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
+import { BotService } from './bot.service';
+import { ChatterEntity } from 'shared/src/dto/socket/chatters';
 
 const CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
@@ -20,6 +23,7 @@ type ClientSocket = {
 type Room = {
   timerId: NodeJS.Timer;
   tmi: tmi.Client;
+  twitchApi: TwitchApiClient;
   clients: Socket[];
 };
 
@@ -33,6 +37,7 @@ export class SocketService<
   private readonly rooms: Map<string, Room> = new Map();
 
   public constructor(
+    private readonly botService: BotService,
     private readonly userRepository: UserRepository,
     private readonly settingsRepository: SettingsRepository,
     private readonly twitchApiClientFactory: TwitchApiClientFactory
@@ -93,15 +98,14 @@ export class SocketService<
 
     this.connectedClients.set(socket.id, { socket, roomId: userGuid });
 
+    const settings = await this.settingsRepository.get(user.id);
+
+    socket.emit('settings', settings.data);
+
     if (room) {
       this.rooms.set(userGuid, { ...room, clients: [...room.clients, socket] });
       return;
     }
-
-    const settings = await this.settingsRepository.get(user.id);
-
-    socket.emit('settings', settings.data);
-    socket.broadcast.to(userGuid).emit('settings', settings.data);
 
     const tmiClient = new tmi.Client({
       channels: [user.twitchLogin],
@@ -151,15 +155,10 @@ export class SocketService<
 
     const timerId = setInterval(async () => {
       try {
-        const chatters = await twitchApiClient.getChatters(user.twitchId);
+        const chatters = await this.getChatters(user);
 
-        const data = chatters.map((chatter) => ({
-          userId: chatter.user_id,
-          name: chatter.user_name,
-        }));
-
-        socket.emit('chatters', data);
-        socket.broadcast.to(userGuid).emit('chatters', data);
+        socket.emit('chatters', chatters);
+        socket.broadcast.to(userGuid).emit('chatters', chatters);
       } catch (e) {
         if (e instanceof TokenRevokedException) {
           // Token is revoked, do nothing.
@@ -173,7 +172,31 @@ export class SocketService<
     }, CHATTERS_SEND_INTERVAL);
 
     this.logger.log('Room initialize with name: ' + userGuid);
-    this.rooms.set(userGuid, { tmi: tmiClient, clients: [socket], timerId });
+
+    this.rooms.set(userGuid, {
+      tmi: tmiClient,
+      clients: [socket],
+      timerId,
+      twitchApi: twitchApiClient,
+    });
+  }
+
+  private async getChatters(user: User): Promise<ChatterEntity[]> {
+    const room = this.rooms.get(user.guid);
+
+    if (!room) {
+      return [];
+    }
+
+    const twitchApi = room.twitchApi;
+    const chatters = await twitchApi.getChatters(user.twitchId);
+
+    return chatters
+      .filter((chatter) => !this.botService.isBot(chatter.user_login))
+      .map((chatter) => ({
+        userId: chatter.user_id,
+        name: chatter.user_name,
+      }));
   }
 
   private async getUserByGuid(userGuid: string): Promise<User | null> {

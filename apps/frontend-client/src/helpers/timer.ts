@@ -3,7 +3,7 @@ import { Constants } from '../config/constants';
 export class Timer {
   public isCompleted: boolean = false;
 
-  constructor(private current: number, private onComplete: () => void) {}
+  constructor(public current: number = 0, private onComplete: () => void) {}
 
   tick(delta: number = Constants.fixedDeltaTime) {
     if (this.isCompleted) {

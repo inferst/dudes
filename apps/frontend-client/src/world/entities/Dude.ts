@@ -30,6 +30,9 @@ type UserProps = {
   color?: string;
 };
 
+const jumpSound = new Audio('/client/sounds/jump.mp3');
+jumpSound.volume = 0.2;
+
 export class Dude {
   private animationState?: DudeSpriteTags;
 
@@ -55,18 +58,7 @@ export class Dude {
 
   private emoteSpitter: DudeEmoteSpitter = new DudeEmoteSpitter();
 
-  private jumpSound: HTMLAudioElement;
-
-  private get color(): string {
-    return this.userState.color ?? this.state.color;
-  }
-
-  private get isJumping(): boolean {
-    return (
-      this.animationState == DudeSpriteTags.Fall ||
-      this.animationState == DudeSpriteTags.Jump
-    );
-  }
+  private isJumping: boolean = false;
 
   private userState: UserProps = {};
 
@@ -111,9 +103,6 @@ export class Dude {
     this.container.addChild(this.message.container);
 
     void this.playAnimation(DudeSpriteTags.Idle);
-
-    this.jumpSound = new Audio('/client/sounds/jump.mp3');
-    this.jumpSound.volume = 0.2;
 
     this.stateTimer = new Timer(5000, () => {
       if (!this.isJumping) {
@@ -164,12 +153,16 @@ export class Dude {
 
   jump(): void {
     if (!this.isJumping) {
+      this.isJumping = true;
+
       this.velocity.x = this.state.direction * 3.5;
       this.velocity.y = -8;
 
       this.playAnimation(DudeSpriteTags.Jump);
 
-      this.jumpSound.play().catch(() => {});
+      jumpSound.pause();
+      jumpSound.currentTime = 0;
+      jumpSound.play().catch(() => {});
     }
   }
 
@@ -243,6 +236,7 @@ export class Dude {
         this.playAnimation(DudeSpriteTags.Land);
         this.landTimer = new Timer(200, () => {
           this.playAnimation(DudeSpriteTags.Idle);
+          this.isJumping = false;
         });
       }
     }
@@ -275,11 +269,11 @@ export class Dude {
 
     if (this.sprite) {
       this.sprite.update({
-        color: this.color,
+        color: this.userState.color ?? this.state.color,
         scale: {
           x: this.state.direction * this.state.scale,
-          y: this.state.scale
-        }
+          y: this.state.scale,
+        },
       });
     }
   }
