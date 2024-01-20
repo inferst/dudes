@@ -1,6 +1,9 @@
 name: Dudes Deploy
 run-name: ${{ github.actor }} is deploying Dudes
-on: [push]
+on:
+  push:
+    branches:
+      - main
 jobs:
   copy_files_to_server:
     runs-on: ubuntu-latest
