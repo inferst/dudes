@@ -2,11 +2,11 @@ import { config } from '@app/frontend-client/config/config';
 import { Connection } from '@app/frontend-client/connection/connection';
 import { SettingsEntity } from '@shared';
 import { Container } from 'pixi.js';
+import { ChatterEntity } from 'shared/src/dto/socket/chatters';
 import { MessageEntity } from 'shared/src/dto/socket/message';
 import tinycolor from 'tinycolor2';
 import { assetsLoader } from '../assets/assetsLoader';
-import { Dude } from './entities/Dude';
-import { ChatterEntity } from 'shared/src/dto/socket/chatters';
+import { Dude, DudeProps } from './entities/Dude';
 
 export class World {
   private static connection = new Connection();
@@ -22,6 +22,7 @@ export class World {
     await assetsLoader.load();
 
     this.connection.init();
+
     this.connection.onSettings((data) => this.handleSettings(data));
     this.connection.onMessage((data) => this.handleMessage(data));
     this.connection.onChatters((data) => this.handleChatters(data));
@@ -32,10 +33,6 @@ export class World {
   public static update(): void {
     for (const id in World.dudes) {
       World.dudes[id].update();
-
-      if (World.dudes[id].shouldBeDeleted) {
-        this.removeDude(id, World.dudes[id]);
-      }
     }
   }
 
@@ -47,8 +44,7 @@ export class World {
     if (this.settings?.showAnonymousDudes) {
       for (const chatter of data) {
         if (!World.dudes[chatter.userId]) {
-          const dude = new Dude(chatter.name);
-          dude.anonymous();
+          const dude = new Dude({ name: chatter.name, isAnonymous: true });
           dude.spawn();
           this.addDude(chatter.userId, dude);
         }
@@ -57,26 +53,36 @@ export class World {
 
     for (const id in World.dudes) {
       if (!data.some((chatter) => chatter.userId == id)) {
-        this.removeDude(id, World.dudes[id]);
+        const dude = World.dudes[id];
+        dude.fade(() => {
+          this.removeDude(id, dude);
+        });
       }
     }
   }
 
+  private static isFirstMessage = (userId: string) =>
+    this.chatterIds.every((id) => id != userId);
+
   private static handleMessage(data: MessageEntity): void {
     if (!World.dudes[data.userId]) {
-      const chatter = config.chatters[data.name];
-      const dude = new Dude(data.name, chatter);
-      this.addDude(data.userId, dude);
-
-      console.log(this.settings?.fallingDudes);
-
       const isFalling = this.settings?.fallingDudes
-        ? this.chatterIds.every((id) => id != data.userId)
+        ? this.isFirstMessage(data.userId)
         : false;
+
+      const props: DudeProps = { name: data.name };
+      const sprite = config.chatters[data.name];
+
+      if (sprite) {
+        props.sprite = sprite;
+      }
+
+      const dude = new Dude(props);
       dude.spawn(isFalling);
+      this.addDude(data.userId, dude);
     }
 
-    if (this.chatterIds.every((id) => id != data.userId)) {
+    if (this.isFirstMessage(data.userId)) {
       this.chatterIds.push(data.userId);
     }
 
@@ -96,8 +102,9 @@ export class World {
         const color = tinycolor(value);
 
         if (color && color.isValid()) {
-          dude.tint(data.color, value);
+          dude.setUserProps({ color: value });
         }
+
         break;
       }
       default: {
@@ -112,17 +119,33 @@ export class World {
     }
 
     if (data.color) {
-      dude.tint(data.color);
+      dude.setProps({ color: data.color });
     }
   }
 
   public static addDude(id: string, dude: Dude): void {
     World.dudes[id] = dude;
-    World.stage.addChild(dude.view);
+    World.stage.addChild(dude.container);
   }
 
   public static removeDude(id: string, dude: Dude): void {
     delete World.dudes[id];
-    World.stage.removeChild(dude.view);
+    World.stage.removeChild(dude.container);
+  }
+
+  public static zIndexDudeMax(from: number) {
+    return Object.values(World.dudes).reduce((zIndex, dude) => {
+      return zIndex <= dude.container.zIndex
+        ? dude.container.zIndex + 1
+        : zIndex;
+    }, from);
+  }
+
+  public static zIndexDudeMin(from: number) {
+    return Object.values(World.dudes).reduce((zIndex, dude) => {
+      return zIndex >= dude.container.zIndex
+        ? dude.container.zIndex - 1
+        : zIndex;
+    }, from);
   }
 }

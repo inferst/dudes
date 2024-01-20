@@ -1,8 +1,14 @@
 import { Container, Sprite } from 'pixi.js';
 import { Constants } from '@app/frontend-client/config/constants';
+import { Point } from '@app/frontend-client/helpers/types';
+import { Timer } from '@app/frontend-client/helpers/timer';
+
+export type DudeEmoteSpitterProps = {
+  position: Point;
+};
 
 export class DudeEmoteSpitter {
-  public view: Container = new Container();
+  public container: Container = new Container();
 
   private emotes: Sprite[] = [];
 
@@ -13,6 +19,8 @@ export class DudeEmoteSpitter {
   private alphaSpeed = 1;
   private scaleSpeed = 0.5;
 
+  private timer?: Timer;
+
   public add(url: string): void {
     const sprite = Sprite.from(url);
     sprite.anchor.set(0.5, 0.5);
@@ -20,8 +28,22 @@ export class DudeEmoteSpitter {
     this.emotes.push(sprite);
   }
 
-  public update(): void {
-    for (const child of this.view.children) {
+  public update(props: DudeEmoteSpitterProps): void {
+    this.timer?.tick();
+
+    if (!this.timer || this.timer.isCompleted) {
+      if (this.emotes.length > 0) {
+        this.timer = new Timer(2000, () => {
+          const sprite = this.emotes.shift();
+          this.container.addChild(sprite!);
+        });
+      }
+    }
+
+    this.container.position.x = props.position.x ?? this.container.position.x;
+    this.container.position.y = props.position.y ?? this.container.position.y;
+
+    for (const child of this.container.children) {
       child.position.y -= (Constants.fixedDeltaTime * this.moveSpeed) / 1000;
       child.scale.x += (Constants.fixedDeltaTime * this.scaleSpeed) / 1000;
       child.scale.y += (Constants.fixedDeltaTime * this.scaleSpeed) / 1000;
@@ -31,17 +53,7 @@ export class DudeEmoteSpitter {
       }
 
       if (child.alpha <= 0) {
-        this.view.removeChild(child);
-      }
-    }
-
-    if (this.currentGapTime >= 0) {
-      this.currentGapTime -= Constants.fixedDeltaTime;
-    } else {
-      if (this.emotes.length > 0) {
-        const sprite = this.emotes.shift();
-        this.view.addChild(sprite!);
-        this.currentGapTime = this.gapTime;
+        this.container.removeChild(child);
       }
     }
   }

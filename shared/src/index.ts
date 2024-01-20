@@ -1,3 +1,3 @@
 export * from './schema';
 export * from './dto';
-export * from './types';
+export * from './prisma/types';

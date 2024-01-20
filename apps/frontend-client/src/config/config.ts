@@ -7,7 +7,9 @@ export type Config = {
 };
 
 export type SpriteConfig = {
-  sprite: string;
+  name: string;
+  w: number,
+  h: number,
   collider: {
     x: number;
     y: number;
@@ -19,7 +21,9 @@ export type SpriteConfig = {
 export const config: Config = {
   chatters: {
     nets1l: {
-      sprite: 'sith',
+      name: 'sith',
+      w: 32,
+      h: 32,
       collider: {
         x: 8,
         y: 5,
@@ -28,7 +32,9 @@ export const config: Config = {
       },
     },
     St_zarus: {
-      sprite: 'agent',
+      name: 'agent',
+      w: 32,
+      h: 32,
       collider: {
         x: 8,
         y: 7,
@@ -37,7 +43,9 @@ export const config: Config = {
       },
     },
     Duckate: {
-      sprite: 'girl',
+      name: 'girl',
+      w: 32,
+      h: 32,
       collider: {
         x: 8,
         y: 5,
@@ -46,7 +54,9 @@ export const config: Config = {
       },
     },
     ArcticSpaceCat: {
-      sprite: 'cat',
+      name: 'cat',
+      w: 32,
+      h: 32,
       collider: {
         x: 8,
         y: 4,
@@ -55,7 +65,9 @@ export const config: Config = {
       },
     },
     kryptamine90: {
-      sprite: 'senior',
+      name: 'senior',
+      w: 32,
+      h: 32,
       collider: {
         x: 8,
         y: 4,

@@ -1,73 +1,64 @@
-import * as PIXI from 'pixi.js';
-import { DudeMessageBox } from './DudeMessageBox';
-import { renderer } from '@app/frontend-client/main';
-import { DudeSpriteContainer } from './DudeSpriteContainer';
-import { DudeEmoteSpitter } from './DudeEmoteSpitter';
+import { SpriteConfig } from '@app/frontend-client/config/config';
 import { Constants } from '@app/frontend-client/config/constants';
-import { DudeName } from './DudeName';
+import { Timer } from '@app/frontend-client/helpers/timer';
+import { renderer } from '@app/frontend-client/main';
 import {
   DudeSpriteLayers,
   DudeSpriteTags,
   spriteProvider,
 } from '@app/frontend-client/sprite/spriteProvider';
-import { SpriteConfig } from '@app/frontend-client/config/config';
+import * as TWEEN from '@tweenjs/tween.js';
+import * as PIXI from 'pixi.js';
+import { World } from '../World';
+import { DudeEmoteSpitter } from './DudeEmoteSpitter';
+import { DudeMessage } from './DudeMessage';
+import { DudeName } from './DudeName';
+import { DudeSpriteContainer } from './DudeSpriteContainer';
+
+export type DudeProps = {
+  name?: string;
+  sprite?: SpriteConfig;
+  color?: string;
+  direction?: number;
+  scale?: number;
+  isAnonymous?: boolean;
+};
+
+type DudeState = Required<DudeProps>;
+
+type UserProps = {
+  color?: string;
+};
 
 export class Dude {
-  private currentScale: number = 4;
-
-  private direction: number = 1;
-
-  private spriteConfig: SpriteConfig = {
-    sprite: 'dude',
-    collider: {
-      x: 8,
-      y: 7,
-      w: 16,
-      h: 18,
-    },
-  };
-
-  private spriteSize: number = 32;
-
   private animationState?: DudeSpriteTags;
 
   private sprite?: DudeSpriteContainer;
 
-  private name: DudeName;
+  private name: DudeName = new DudeName();
 
-  private twitchColor: string = '#969696';
-  private userColor?: string;
+  private message: DudeMessage = new DudeMessage(() => {
+    const zIndex = World.zIndexDudeMax(this.container.zIndex);
+    this.container.zIndex = zIndex;
+  });
 
-  private message: DudeMessageBox = new DudeMessageBox();
-
-  public view: PIXI.Container = new PIXI.Container();
+  public container: PIXI.Container = new PIXI.Container();
 
   private velocity: PIXI.IPointData = {
     x: 0,
     y: 0,
   };
 
-  private gravity: number = 400;
+  private runSpeed: number = 0.05;
 
-  private landAnimationTime?: number;
-  private maxLandAnimationTime: number = 200;
-
-  private runIdleAnimationTime?: number;
-  private maxRunIdleAnimationTime?: number;
-
-  private maxOpacityTime: number = 5000;
-  private currentOpacityTime: number = this.maxOpacityTime;
-
-  public shouldBeDeleted: boolean = false;
-
-  public isDestroying: boolean = false;
+  private gravity: number = 0.2;
 
   private emoteSpitter: DudeEmoteSpitter = new DudeEmoteSpitter();
 
   private jumpSound: HTMLAudioElement;
 
   private get color(): string {
-    return this.userColor ?? this.twitchColor;
+    return this.userState.color ?? this.state.color;
   }
 
   private get isJumping(): boolean {
@@ -77,191 +68,239 @@ export class Dude {
     );
   }
 
-  constructor(name: string, spriteConfig?: SpriteConfig) {
-    this.spriteConfig = spriteConfig ?? this.spriteConfig;
+  private userState: UserProps = {};
 
-    const collider = this.spriteConfig.collider;
+  private state: DudeState = {
+    name: '',
+    sprite: {
+      name: 'dude',
+      w: 32,
+      h: 32,
+      collider: {
+        x: 8,
+        y: 7,
+        w: 16,
+        h: 18,
+      },
+    },
+    color: '#969696',
+    direction: 1,
+    scale: 4,
+    isAnonymous: false,
+  };
 
-    this.name = new DudeName(name);
-    this.name.view.position.y =
-      -(this.spriteSize / 2 - collider.y) * this.currentScale;
+  landTimer?: Timer;
 
-    this.view.sortableChildren = true;
-    this.emoteSpitter.view.zIndex = 1;
-    this.message.view.zIndex = 3;
-    this.message.view.position.y =
-      this.name.view.position.y - this.name.view.height - 6;
+  stateTimer?: Timer;
 
-    this.view.addChild(this.name.view);
-    this.view.addChild(this.emoteSpitter.view);
-    this.view.addChild(this.message.view);
+  spawnTween?: TWEEN.Tween<PIXI.Container>;
+
+  fadeTween?: TWEEN.Tween<PIXI.Container>;
+
+  scaleTween?: TWEEN.Tween<DudeState>;
+
+  constructor(props: DudeProps = {}) {
+    this.state = { ...this.state, ...props };
+
+    this.container.sortableChildren = true;
+    this.emoteSpitter.container.zIndex = 1;
+    this.message.container.zIndex = 2;
+
+    this.container.addChild(this.name.text);
+    this.container.addChild(this.emoteSpitter.container);
+    this.container.addChild(this.message.container);
 
     void this.playAnimation(DudeSpriteTags.Idle);
 
-    this.runIdleAnimationTime = performance.now();
-    this.maxRunIdleAnimationTime = Math.random() * 5000;
-
     this.jumpSound = new Audio('/client/sounds/jump.mp3');
     this.jumpSound.volume = 0.2;
+
+    this.stateTimer = new Timer(5000, () => {
+      if (!this.isJumping) {
+        this.playAnimation(DudeSpriteTags.Run);
+      }
+    });
   }
 
   spawn(isFalling: boolean = false): void {
-    const collider = this.spriteConfig.collider;
-    const { width, height } = renderer;
+    const collider = this.state.sprite.collider;
+    const fallingStartY = -(collider.y + collider.h - this.state.sprite.h / 2);
+    const spawnY = isFalling ? fallingStartY : renderer.height;
+    const spriteWidth = this.state.sprite.w * this.state.scale;
 
-    const spawnHeight = isFalling
-      ? -(collider.y + collider.h - this.spriteSize / 2)
-      : height;
+    const x = Math.random() * (renderer.width - spriteWidth) + spriteWidth / 2;
+    const y = spawnY * this.state.scale;
 
-    this.view.y = spawnHeight * this.currentScale;
-    this.view.x =
-      Math.random() * (width - this.spriteSize * this.currentScale) +
-      (this.spriteSize / 2) * this.currentScale;
+    this.container.x = x;
+    this.container.y = y;
 
-    this.direction = Math.random() > 0.5 ? 1 : -1;
+    this.state.direction = Math.random() > 0.5 ? 1 : -1;
+
+    if (!isFalling) {
+      const zIndex = World.zIndexDudeMin(this.container.zIndex);
+
+      this.container.zIndex = zIndex;
+      this.container.alpha = 0;
+
+      this.spawnTween = new TWEEN.Tween(this.container)
+        .to({ alpha: 1 }, 2000)
+        .start();
+    }
   }
 
-  destroy(): void {
-    this.isDestroying = true;
+  fade(onComplete?: () => void): void {
+    this.fadeTween = new TWEEN.Tween(this.container)
+      .to({ alpha: 0 }, 5000)
+      .onComplete(onComplete)
+      .start();
+  }
+
+  scale(onComplete?: () => void): void {
+    this.scaleTween = new TWEEN.Tween(this.state)
+      .to({ scale: 8 }, 2000)
+      .onComplete(onComplete)
+      .start();
   }
 
   jump(): void {
     if (!this.isJumping) {
-      this.velocity.x = this.direction * 100;
-      this.velocity.y = -400;
+      this.velocity.x = this.state.direction * 3.5;
+      this.velocity.y = -8;
 
       this.playAnimation(DudeSpriteTags.Jump);
 
-      this.jumpSound.play();
+      this.jumpSound.play().catch(() => {});
     }
   }
 
-  tint(twitchColor?: string, userColor?: string): void {
-    if (twitchColor) {
-      this.twitchColor = twitchColor;
-    }
+  setProps(props: DudeProps) {
+    this.state = { ...this.state, ...props };
+  }
 
-    if (userColor) {
-      this.userColor = userColor;
-    }
-
-    this.sprite?.tint(this.color);
+  setUserProps(props: UserProps) {
+    this.userState = { ...this.userState, ...props };
   }
 
   update(): void {
-    const now = performance.now();
+    this.landTimer?.tick();
+    this.stateTimer?.tick();
 
-    const collider = this.spriteConfig.collider;
+    this.fadeTween?.update();
+    this.spawnTween?.update();
+    this.scaleTween?.update();
 
-    if (
-      this.landAnimationTime &&
-      now - this.landAnimationTime > this.maxLandAnimationTime
-    ) {
-      this.playAnimation(DudeSpriteTags.Idle);
-      this.landAnimationTime = undefined;
+    const collider = this.state.sprite.collider;
+
+    this.name.update({
+      name: this.state.name,
+      isVisible: !this.state.isAnonymous,
+      position: {
+        y: -(this.state.sprite.h / 2 - collider.y) * this.state.scale,
+      },
+    });
+
+    this.message.update({
+      position: {
+        y: this.name.text.position.y - this.name.text.height - 6,
+      },
+    });
+
+    this.emoteSpitter.update({
+      position: {
+        y: this.message.container.position.y - this.message.container.height,
+      },
+    });
+
+    if (this.stateTimer?.isCompleted) {
+      this.stateTimer = new Timer(Math.random() * 5000, () => {
+        if (this.animationState == DudeSpriteTags.Idle) {
+          this.playAnimation(DudeSpriteTags.Run);
+        } else if (this.animationState == DudeSpriteTags.Run) {
+          this.playAnimation(DudeSpriteTags.Idle);
+        }
+      });
     }
 
-    if (
-      this.runIdleAnimationTime &&
-      this.maxRunIdleAnimationTime &&
-      now - this.runIdleAnimationTime > this.maxRunIdleAnimationTime &&
-      (this.animationState == DudeSpriteTags.Run ||
-        this.animationState == DudeSpriteTags.Idle)
-    ) {
-      if (this.animationState == DudeSpriteTags.Idle) {
-        this.playAnimation(DudeSpriteTags.Run);
-      } else {
-        this.playAnimation(DudeSpriteTags.Idle);
-      }
-
-      this.runIdleAnimationTime = now;
-      this.maxRunIdleAnimationTime = Math.random() * 5000;
+    if (this.animationState == DudeSpriteTags.Run) {
+      const speed = this.runSpeed * this.state.direction;
+      this.velocity.x = speed * Constants.fixedDeltaTime;
     }
 
-    this.velocity.y =
-      this.velocity.y + (this.gravity * Constants.fixedDeltaTime) / 1000;
+    this.velocity.y = this.velocity.y + this.gravity;
 
-    const newPosition = {
-      x:
-        this.view.position.x +
-        (this.velocity.x * Constants.fixedDeltaTime) / 1000,
-      y:
-        this.view.position.y +
-        (this.velocity.y * Constants.fixedDeltaTime) / 1000,
+    const position = {
+      x: this.container.position.x + this.velocity.x,
+      y: this.container.position.y + this.velocity.y,
     };
 
-    if (
-      newPosition.y +
-        (collider.y + collider.h - this.spriteSize / 2) * this.currentScale >
-      renderer.height
-    ) {
+    if (this.isOnGround(position.y)) {
       this.velocity.y = 0;
       this.velocity.x = 0;
 
-      newPosition.y =
-        renderer.height -
-        (collider.y + collider.h - this.spriteSize / 2) * this.currentScale;
+      position.y = renderer.height - this.anchorBottomDiff();
 
       if (this.animationState == DudeSpriteTags.Fall) {
         this.playAnimation(DudeSpriteTags.Land);
-        this.landAnimationTime = now;
+        this.landTimer = new Timer(200, () => {
+          this.playAnimation(DudeSpriteTags.Idle);
+        });
       }
     }
-
-    this.view.position.set(newPosition.x, newPosition.y);
 
     if (this.velocity.y > 0) {
       this.playAnimation(DudeSpriteTags.Fall);
     }
 
-    const width = renderer.width;
-
     if (this.animationState != DudeSpriteTags.Idle) {
-      this.view.position.x +=
-        (1 * this.direction * Constants.fixedDeltaTime * 60) / 1000;
+      const halfSpriteWidth = (collider.w / 2) * this.state.scale;
 
-      if (
-        this.view.x + (collider.w / 2) * this.currentScale >= width ||
-        this.view.x - (collider.w / 2) * this.currentScale <= 0
-      ) {
-        this.direction = -this.direction;
+      const left = this.container.x - halfSpriteWidth < 0;
+      const right = this.container.x + halfSpriteWidth > renderer.width;
+
+      if (left || right) {
+        this.state.direction = -this.state.direction;
         this.velocity.x = -this.velocity.x;
-        this.sprite?.view.scale.set(
-          this.direction * this.currentScale,
-          this.currentScale
-        );
+
+        if (left) {
+          position.x = halfSpriteWidth;
+        }
+
+        if (right) {
+          position.x = renderer.width - halfSpriteWidth;
+        }
       }
     }
 
-    if (this.isDestroying) {
-      if (this.currentOpacityTime > 0) {
-        this.currentOpacityTime -= Constants.fixedDeltaTime;
-        this.view.alpha = this.currentOpacityTime / this.maxOpacityTime;
-      } else {
-        this.shouldBeDeleted = true;
-      }
+    this.container.position.set(position.x, position.y);
+
+    if (this.sprite) {
+      this.sprite.update({
+        color: this.color,
+        scale: {
+          x: this.state.direction * this.state.scale,
+          y: this.state.scale
+        }
+      });
     }
-
-    this.sprite?.update((Constants.fixedDeltaTime / 1000) * 60);
-    this.emoteSpitter.update();
-
-    this.emoteSpitter.view.position.y =
-      this.message.view.position.y - this.message.view.height;
-
-    this.message.update(this);
   }
 
-  anonymous() {
-    this.name.view.visible = false;
+  anchorBottomDiff(): number {
+    const collider = this.state.sprite.collider;
+    return (
+      (collider.y + collider.h - this.state.sprite.h / 2) * this.state.scale
+    );
+  }
+
+  isOnGround(y: number): boolean {
+    return y + this.anchorBottomDiff() > renderer.height;
   }
 
   addMessage(message: string): void {
     this.message.add(message);
-
-    this.currentOpacityTime = this.maxOpacityTime;
-    this.view.alpha = 1;
-    this.name.view.visible = true;
-    this.isDestroying = false;
+    this.state.isAnonymous = false;
+    this.fadeTween?.stop();
+    this.fadeTween = undefined; // https://github.com/tweenjs/tween.js/issues/665
+    this.container.alpha = 1;
   }
 
   spitEmotes(emotes: string[]): void {
@@ -278,23 +317,15 @@ export class Dude {
     this.animationState = state;
 
     if (this.sprite) {
-      this.view.removeChild(this.sprite.view);
+      this.container.removeChild(this.sprite.container);
     }
 
-    const dudeSprite = spriteProvider.getSprite(
-      this.spriteConfig.sprite,
-      state
-    );
+    const dudeSprite = spriteProvider.getSprite(this.state.sprite.name, state);
     this.sprite = new DudeSpriteContainer({
       body: dudeSprite[DudeSpriteLayers.Body],
       eyes: dudeSprite[DudeSpriteLayers.Eyes],
     });
-    this.sprite.view.scale.set(
-      this.direction * this.currentScale,
-      this.currentScale
-    );
-    this.sprite.tint(this.color);
 
-    this.view.addChild(this.sprite.view);
+    this.container.addChild(this.sprite.container);
   }
 }

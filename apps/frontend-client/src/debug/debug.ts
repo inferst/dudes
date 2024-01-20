@@ -31,21 +31,31 @@ export class Debug {
     for (let i = 0; i < 1; i++) {
       setTimeout(() => {
         const keys = Object.keys(config.chatters);
-        const index = Math.round(Math.random() * keys.length);
-        const dude = new Dude('MikeRime', config.chatters[keys[index]]);
+        const index = Math.round(Math.random() * (keys.length - 1));
+        const dude = new Dude({
+          name: 'MikeRime',
+          sprite: config.chatters[keys[index]],
+        });
         dude.spawn(true);
 
         World.addDude('bot ' + i, dude);
+
+        // dude.fade();
 
         setInterval(() => {
           dude.addMessage(
             'Приветики! Пистолетики. А что это ты тут стримишь, а?'
           );
-        }, (i + 1) * 3000);
+        }, 3000);
+
         setInterval(() => {
           dude.jump();
-        }, (i + 1) * 5000);
-      }, 100 * i);
+        }, 3000);
+
+        setTimeout(() => {
+          dude.fade();
+        }, 10000);
+      }, 10 * i);
     }
   }
 }
