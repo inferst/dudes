@@ -12,6 +12,7 @@ import { SettingsRepository } from '../repositories/settings.repository';
 import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
 import { BotService } from './bot.service';
 import { ChatterEntity } from 'shared/src/dto/socket/chatters';
+import { ActionService } from './action.service';
 
 const CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
@@ -40,6 +41,7 @@ export class SocketService<
     private readonly botService: BotService,
     private readonly userRepository: UserRepository,
     private readonly settingsRepository: SettingsRepository,
+    private readonly actionService: ActionService,
     private readonly twitchApiClientFactory: TwitchApiClientFactory
   ) {}
 
@@ -113,41 +115,55 @@ export class SocketService<
 
     await tmiClient.connect();
 
-    tmiClient.on('chat', (_channel, tags: tmi.CommonUserstate, message) => {
-      let updatedMessage = message;
-      const emotes = [];
+    tmiClient.on(
+      'chat',
+      async (_channel, tags: tmi.CommonUserstate, message) => {
+        let updatedMessage = message;
+        const emotes = [];
 
-      const emotesArray = Object.entries(tags.emotes ?? {}).map((entity) => {
-        const range = entity[1][0].split('-');
-        const start = Number(range[0]);
-        const end = Number(range[1]) + 1;
+        const emotesArray = Object.entries(tags.emotes ?? {}).map((entity) => {
+          const range = entity[1][0].split('-');
+          const start = Number(range[0]);
+          const end = Number(range[1]) + 1;
 
-        return message.substring(start, end);
-      });
+          return message.substring(start, end);
+        });
 
-      for (const emote in tags.emotes) {
-        emotes.push(`https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`);
+        for (const emote in tags.emotes) {
+          emotes.push(`https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`);
+        }
+
+        for (const code of emotesArray ?? []) {
+          updatedMessage = updatedMessage.replaceAll(code, '');
+        }
+
+        updatedMessage = updatedMessage.replace(/\s+/g, ' ').trim();
+
+        if (tags['display-name'] && tags['user-id']) {
+          const data = {
+            name: tags['display-name'],
+            userId: tags['user-id'],
+            message: updatedMessage,
+            color: tags['color'],
+            emotes: emotes,
+          };
+
+          socket.emit('message', data);
+          socket.broadcast.to(userGuid).emit('message', data);
+
+          const action = await this.actionService.getUserAction(
+            user.id,
+            data.userId,
+            updatedMessage
+          );
+
+          if (action) {
+            socket.emit('action', action);
+            socket.broadcast.to(userGuid).emit('action', action);
+          }
+        }
       }
-
-      for (const code of emotesArray ?? []) {
-        updatedMessage = updatedMessage.replaceAll(code, '');
-      }
-
-      updatedMessage = updatedMessage.replace(/\s+/g, ' ').trim();
-
-      if (tags['display-name'] && tags['user-id']) {
-        const data = {
-          name: tags['display-name'],
-          userId: tags['user-id'],
-          message: updatedMessage,
-          color: tags['color'],
-          emotes: emotes,
-        };
-
-        socket.emit('message', data);
-        socket.broadcast.to(userGuid).emit('message', data);
-      }
-    });
+    );
 
     const twitchApiClient = await this.twitchApiClientFactory.createFromUserId(
       user.id

@@ -11,6 +11,7 @@ import { ActionController } from './controllers/action.controller';
 import { ActionRepository } from './repositories/action.repository';
 import { SettingsController } from './controllers/settings.controller';
 import { SettingsRepository } from './repositories/settings.repository';
+import { ActionService } from './services/action.service';
 
 @Module({
   imports: [],
@@ -25,6 +26,7 @@ import { SettingsRepository } from './repositories/settings.repository';
     BotService,
     EventsGateway,
     SocketService,
+    ActionService,
     UserRepository,
     RewardRepository,
     CommandRepository,

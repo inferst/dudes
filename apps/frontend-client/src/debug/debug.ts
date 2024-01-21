@@ -1,6 +1,6 @@
+import { app } from '@app/frontend-client/app/app';
+import { Dude } from '@app/frontend-client/app/entities/Dude';
 import { Text } from 'pixi.js';
-import { World } from '@app/frontend-client/world/World';
-import { Dude } from '@app/frontend-client/world/entities/Dude';
 import { config } from '../config/config';
 
 export class Debug {
@@ -12,7 +12,7 @@ export class Debug {
     this.view = new Text();
     this.view.position.set(10, 10);
 
-    World.stage.addChild(this.view);
+    app.stage.addChild(this.view);
 
     this.generateDudes();
   }
@@ -38,7 +38,7 @@ export class Debug {
         });
         dude.spawn(true);
 
-        World.addDude('bot ' + i, dude);
+        app.addDude('bot ' + i, dude);
 
         setInterval(() => {
           dude.addMessage(

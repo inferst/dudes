@@ -34,7 +34,7 @@ model Settings {
   userId Int
   user   User @relation(fields: [userId], references: [id])
   /// [SettingsData]
-  data   Json @db.JsonB() @default("{}")
+  data   Json @default("{}") @db.JsonB()
 }
 
 model Session {
@@ -53,6 +53,8 @@ model Command {
   isActive Boolean @default(false)
   text     String  @db.VarChar(255)
   cooldown Int     @default(0)
+  /// [CommandData]
+  data     Json    @default("{}") @db.JsonB()
 }
 
 model Action {
@@ -62,6 +64,8 @@ model Action {
   description String    @default("") @db.VarChar(255)
   command     Command[]
   reward      Reward[]
+  /// [ActionData]
+  data        Json      @default("{}") @db.JsonB()
 }
 
 model Reward {

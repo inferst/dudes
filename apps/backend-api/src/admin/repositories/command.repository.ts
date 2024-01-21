@@ -6,10 +6,22 @@ import { Prisma, Command } from '@prisma/client';
 export class CommandRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async getComomandsByUserId(userId: number): Promise<Command[]> {
+  public async getCommandsByUserId(userId: number): Promise<Command[]> {
     return this.prismaService.command.findMany({
       where: {
         userId: userId,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }
+
+  public async getActiveCommandsByUserId(userId: number): Promise<Command[]> {
+    return this.prismaService.command.findMany({
+      where: {
+        userId: userId,
+        isActive: true,
       },
       orderBy: {
         id: 'asc',

@@ -9,7 +9,7 @@ import {
 } from '@app/frontend-client/sprite/spriteProvider';
 import * as TWEEN from '@tweenjs/tween.js';
 import * as PIXI from 'pixi.js';
-import { World } from '../World';
+import { app } from '../app';
 import { DudeEmoteSpitter } from './DudeEmoteSpitter';
 import { DudeMessage } from './DudeMessage';
 import { DudeName } from './DudeName';
@@ -41,7 +41,7 @@ export class Dude {
   private name: DudeName = new DudeName();
 
   private message: DudeMessage = new DudeMessage(() => {
-    const zIndex = World.zIndexDudeMax(this.container.zIndex);
+    const zIndex = app.zIndexDudeMax(this.container.zIndex);
     this.container.zIndex = zIndex;
   });
 
@@ -126,7 +126,7 @@ export class Dude {
     this.state.direction = Math.random() > 0.5 ? 1 : -1;
 
     if (!isFalling) {
-      const zIndex = World.zIndexDudeMin(this.container.zIndex);
+      const zIndex = app.zIndexDudeMin(this.container.zIndex);
 
       this.container.zIndex = zIndex;
       this.container.alpha = 0;
