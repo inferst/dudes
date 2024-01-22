@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { InvalidTokenException } from '@app/backend-api/auth/exceptions';
 import { ConfigService } from '@app/backend-api/config/config.service';
+import { CommandRepository } from '../repositories/command.repository';
 
 export type AuthUserProps = {
   name: string;
@@ -31,7 +32,8 @@ export class AuthService {
   public constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private readonly commandRepository: CommandRepository
   ) {}
 
   public async validate(
@@ -52,6 +54,8 @@ export class AuthService {
       twitchLogin: result.login,
       tokenRevoked: false,
     });
+
+    await this.commandRepository.createDefaultCommands(userId);
 
     return {
       guid,

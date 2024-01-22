@@ -16,7 +16,9 @@ export default defineConfig({
     port: 4400,
     host: 'localhost',
   },
+
   plugins: [nxViteTsPaths()],
+
   build: {
     outDir: '../../dist/apps/frontend-client',
     reportCompressedSize: true,

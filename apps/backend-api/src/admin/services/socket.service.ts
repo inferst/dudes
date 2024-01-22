@@ -19,8 +19,8 @@ type ClientSocket = {
 };
 
 type Room = {
-  chatClient: ChatClient;
   clients: Socket[];
+  chatClient?: ChatClient;
 };
 
 @Injectable()
@@ -66,7 +66,7 @@ export class SocketService<
     if (clients.length > 0) {
       this.rooms.set(connectedClient.roomId, { ...room, clients });
     } else {
-      void room.chatClient.disconnect();
+      void room?.chatClient?.disconnect();
       this.rooms.delete(connectedClient.roomId);
       this.logger.log('Room disconnected with name: ' + connectedClient.roomId);
     }
@@ -105,8 +105,20 @@ export class SocketService<
       return;
     }
 
+    this.rooms.set(userGuid, {
+      clients: [socket],
+    });
+
+    this.logger.log('Room initialized with id: ' + userGuid);
+
     const chatClient = await this.chatClientFactory.createFromUser(user);
     await chatClient.connect();
+
+    const connectedRoom = this.rooms.get(userGuid);
+
+    if (connectedRoom) {
+      this.rooms.set(userGuid, { ...connectedRoom, chatClient });
+    }
 
     chatClient.onChat(async (data) => {
       const action = await this.actionService.getUserAction(
@@ -120,33 +132,23 @@ export class SocketService<
         socket.broadcast.to(userGuid).emit('action', action);
       }
 
-      let message = this.chatMessageService.stripEmotes(
-        data.message,
-        data.emotes
-      );
+      const message = this.chatMessageService.formatMessage(data.message);
 
-      message = this.chatMessageService.formatMessage(message);
-
-      if (message) {
+      if (message || data.emotes.length > 0) {
         socket.emit('message', { ...data, message });
         socket.broadcast.to(userGuid).emit('message', { ...data, message });
       }
     });
 
-    this.logger.log('Room initialize with name: ' + userGuid);
-
-    this.rooms.set(userGuid, {
-      chatClient: chatClient,
-      clients: [socket],
-    });
+    this.logger.log('Chat client initialized in room with id: ' + userGuid);
   }
 
   private async getUserByGuid(userGuid: string): Promise<User | null> {
     try {
       return await this.userRepository.getUserByGuid(userGuid);
-    } catch (e) {
+    } catch (error) {
       this.logger.error('Failed to fetch the user.', {
-        e,
+        e: error,
       });
     }
 

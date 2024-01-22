@@ -37,7 +37,7 @@ export class ActionService {
       return;
     }
 
-    let data = {};
+    let data = action.data;
 
     if (command.data.arguments && command.data.arguments.length > 0) {
       const argsMessage = message.split(command.text)[1];

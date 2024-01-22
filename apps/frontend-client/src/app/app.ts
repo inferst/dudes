@@ -6,6 +6,7 @@ import {
   SettingsEntity,
   UserActionEntity,
   isColorUserActionEntity,
+  isGrowUserActionEntity,
   isJumpUserActionEntity,
 } from '@shared';
 import { Container } from 'pixi.js';
@@ -85,6 +86,9 @@ export class App {
       if (color && color.isValid()) {
         dude.setUserProps({ color: action.data.color });
       }
+    } else if (isGrowUserActionEntity(action)) {
+      console.log(action);
+      dude.scale(action.data.scale);
     }
   }
 

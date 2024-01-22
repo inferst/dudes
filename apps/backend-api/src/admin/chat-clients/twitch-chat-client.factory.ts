@@ -8,6 +8,7 @@ import {
 } from '../api-clients/twitch-api-client';
 import { ChatClient } from './chat-client-factory';
 import { TwitchUserFilterService } from './twitch-user-filter.service';
+import { ChatMessageService } from '../services';
 
 const TWITCH_CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
@@ -17,7 +18,8 @@ export class TwitchChatClientFactory {
 
   public constructor(
     private readonly twitchApiClientFactory: TwitchApiClientFactory,
-    private readonly twitchUserFilterService: TwitchUserFilterService
+    private readonly twitchUserFilterService: TwitchUserFilterService,
+    private readonly chasMessageService: ChatMessageService
   ) {}
 
   public async createFromUser(user: User): Promise<ChatClient> {
@@ -43,7 +45,9 @@ export class TwitchChatClientFactory {
             return;
           }
 
-          const emotes = Object.entries(tags.emotes ?? {}).map((entity) => {
+          const emotes = tags.emotes ?? {};
+
+          const emoteNames = Object.entries(emotes).map((entity) => {
             const range = entity[1][0].split('-');
             const start = Number(range[0]);
             const end = Number(range[1]) + 1;
@@ -51,11 +55,13 @@ export class TwitchChatClientFactory {
             return message.substring(start, end);
           });
 
+          const emoteIds = Object.entries(emotes).map((entity) => entity[0]);
+
           listener({
             name: name,
             userId: userId,
-            emotes: emotes.map((emote) => this.getTwitchEmoteUrl(emote)),
-            message: message,
+            emotes: emoteIds.map((emote) => this.getTwitchEmoteUrl(emote)),
+            message: this.chasMessageService.stripEmotes(message, emoteNames),
             data: {
               color: tags['color'],
             },
@@ -107,6 +113,6 @@ export class TwitchChatClientFactory {
   }
 
   private getTwitchEmoteUrl(emote: string): string {
-    return `https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`;
+    return `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/static/light/3.0`;
   }
 }

@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import session from 'express-session';
@@ -42,8 +41,6 @@ async function bootstrap(): Promise<void> {
   app.useGlobalFilters(new ZodFilter());
 
   await app.listen(port);
-
-  Logger.log(`🚀 Backend is running on: http://localhost:${port}`);
 }
 
 void bootstrap();

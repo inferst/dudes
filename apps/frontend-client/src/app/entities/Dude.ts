@@ -33,6 +33,8 @@ type UserProps = {
 const jumpSound = new Audio('/client/sounds/jump.mp3');
 jumpSound.volume = 0.2;
 
+const DEFAULT_DUDE_SCALE = 4;
+
 export class Dude {
   private animationState?: DudeSpriteTags;
 
@@ -77,7 +79,7 @@ export class Dude {
     },
     color: '#969696',
     direction: 1,
-    scale: 4,
+    scale: DEFAULT_DUDE_SCALE,
     isAnonymous: false,
   };
 
@@ -144,9 +146,9 @@ export class Dude {
       .start();
   }
 
-  scale(onComplete?: () => void): void {
+  scale(value: number, onComplete?: () => void): void {
     this.scaleTween = new TWEEN.Tween(this.state)
-      .to({ scale: 8 }, 2000)
+      .to({ scale: DEFAULT_DUDE_SCALE * value }, 2000)
       .onComplete(onComplete)
       .start();
   }

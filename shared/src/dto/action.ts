@@ -12,6 +12,12 @@ export type ColorUserActionEntity = {
   };
 } & UserActionEntity;
 
+export type GrowUserActionEntity = {
+  data: {
+    scale: number;
+  };
+} & UserActionEntity;
+
 export const isJumpUserActionEntity = (
   entity: UserActionEntity
 ): entity is ColorUserActionEntity => entity.name == 'jump';
@@ -19,3 +25,7 @@ export const isJumpUserActionEntity = (
 export const isColorUserActionEntity = (
   entity: UserActionEntity
 ): entity is ColorUserActionEntity => entity.name == 'color';
+
+export const isGrowUserActionEntity = (
+  entity: UserActionEntity
+): entity is GrowUserActionEntity => entity.name == 'grow';
