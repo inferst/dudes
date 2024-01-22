@@ -1,14 +1,14 @@
 import { config } from '@app/frontend-client/config/config';
 import { Connection } from '@app/frontend-client/connection/connection';
 import {
+  ChatterEntity,
+  MessageEntity,
   SettingsEntity,
   UserActionEntity,
   isColorUserActionEntity,
   isJumpUserActionEntity,
 } from '@shared';
 import { Container } from 'pixi.js';
-import { ChatterEntity } from 'shared/src/dto/socket/chatters';
-import { MessageEntity } from 'shared/src/dto/socket/message';
 import tinycolor, { ColorInput } from 'tinycolor2';
 import { assetsLoader } from '../assets/assetsLoader';
 import { Dude, DudeProps } from './entities/Dude';
@@ -121,8 +121,8 @@ export class App {
       dude.spitEmotes(data.emotes);
     }
 
-    if (data.color) {
-      dude.setProps({ color: data.color });
+    if (data.data.color) {
+      dude.setProps({ color: data.data.color });
     }
   }
 

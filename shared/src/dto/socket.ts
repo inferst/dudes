@@ -1,6 +1,6 @@
-import { UserActionEntity } from '../action';
-import { SettingsEntity } from '../settings';
-import { ChatterEntity } from './chatters';
+import { UserActionEntity } from './action';
+import { SettingsEntity } from './settings';
+import { ChatterEntity } from './chatter';
 import { MessageEntity } from './message';
 
 export type ServerToClientsEvents = {
@@ -13,5 +13,3 @@ export type ServerToClientsEvents = {
 export interface ClientToServerEvents {
   initialize: (data: { roomId: string }) => void;
 }
-
-export * from './message';

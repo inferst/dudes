@@ -1,11 +1,11 @@
 import {
+  ChatterEntity,
   ClientToServerEvents,
   MessageEntity,
   ServerToClientsEvents,
   SettingsEntity,
   UserActionEntity
 } from '@shared';
-import { ChatterEntity } from 'shared/src/dto/socket/chatters';
 import { Socket, io } from 'socket.io-client';
 
 export class Connection {
