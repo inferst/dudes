@@ -52,6 +52,7 @@ export class ActionService {
 
     return {
       userId: messageUserId,
+      cooldown: command.cooldown,
       ...action,
       data: { ...action.data, ...data },
     };

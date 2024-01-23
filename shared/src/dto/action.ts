@@ -4,6 +4,7 @@ export type ActionEntity = Action;
 
 export type UserActionEntity = {
   userId: string;
+  cooldown: number;
 } & ActionEntity;
 
 export type ColorUserActionEntity = {
