@@ -46,13 +46,13 @@ export class Debug {
           );
         }, 3000);
 
-        setInterval(() => {
-          dude.jump();
-        }, 3000);
+        // setInterval(() => {
+        //   dude.jump();
+        // }, 3000);
 
         setTimeout(() => {
-          dude.fade();
-        }, 10000);
+          dude.scale({value: 4, duration: 10, cooldown: 0});
+        }, 4000);
       }, 100 * i);
     }
   }

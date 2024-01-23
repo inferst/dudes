@@ -16,6 +16,10 @@ export type SpriteConfig = {
     w: number;
     h: number;
   };
+  pivot: {
+    x: number,
+    y: number,
+  }
 };
 
 export const config: Config = {
@@ -30,6 +34,10 @@ export const config: Config = {
         w: 16,
         h: 20,
       },
+      pivot: {
+        x: 0,
+        y: 9,
+      }
     },
     St_zarus: {
       name: 'agent',
@@ -41,6 +49,10 @@ export const config: Config = {
         w: 16,
         h: 18,
       },
+      pivot: {
+        x: 0,
+        y: 9,
+      }
     },
     Duckate: {
       name: 'girl',
@@ -52,6 +64,10 @@ export const config: Config = {
         w: 16,
         h: 20,
       },
+      pivot: {
+        x: 0,
+        y: 9,
+      }
     },
     ArcticSpaceCat: {
       name: 'cat',
@@ -63,6 +79,10 @@ export const config: Config = {
         w: 16,
         h: 21,
       },
+      pivot: {
+        x: 0,
+        y: 9,
+      }
     },
     kryptamine90: {
       name: 'senior',
@@ -74,6 +94,10 @@ export const config: Config = {
         w: 16,
         h: 21,
       },
+      pivot: {
+        x: 0,
+        y: 9,
+      }
     },
   },
 };

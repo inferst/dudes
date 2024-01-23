@@ -32,7 +32,7 @@ export async function defaultGrowCommandSeed(
     await prisma.command.create({
       data: {
         text: `!grow`,
-        cooldown: 0,
+        cooldown: 20,
         isActive: true,
         action: {
           connect: {
@@ -46,6 +46,7 @@ export async function defaultGrowCommandSeed(
         },
         data: {
           action: {
+            duration: 10,
             scale: 2,
           },
           arguments: []

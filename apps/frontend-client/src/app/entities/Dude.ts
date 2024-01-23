@@ -76,6 +76,10 @@ export class Dude {
         w: 16,
         h: 18,
       },
+      pivot: {
+        x: 0,
+        y: 9,
+      },
     },
     color: '#969696',
     direction: 1,
@@ -86,6 +90,10 @@ export class Dude {
   landTimer?: Timer;
 
   stateTimer?: Timer;
+
+  scaleTimer?: Timer;
+
+  cooldownScaleTimer?: Timer;
 
   spawnTween?: TWEEN.Tween<PIXI.Container>;
 
@@ -146,11 +154,22 @@ export class Dude {
       .start();
   }
 
-  scale(value: number, onComplete?: () => void): void {
+  scale(options: { value: number; duration: number; cooldown: number }): void {
+    if (this.cooldownScaleTimer && !this.cooldownScaleTimer.isCompleted) {
+      return;
+    }
+
+    this.cooldownScaleTimer = new Timer(options.cooldown * 1000);
+
     this.scaleTween = new TWEEN.Tween(this.state)
-      .to({ scale: DEFAULT_DUDE_SCALE * value }, 2000)
-      .onComplete(onComplete)
+      .to({ scale: DEFAULT_DUDE_SCALE * options.value }, 2000)
       .start();
+
+    this.scaleTimer = new Timer(options.duration * 1000, () => {
+      this.scaleTween = new TWEEN.Tween(this.state)
+        .to({ scale: DEFAULT_DUDE_SCALE }, 2000)
+        .start();
+    });
   }
 
   jump(): void {
@@ -179,6 +198,9 @@ export class Dude {
   update(): void {
     this.landTimer?.tick();
     this.stateTimer?.tick();
+    this.scaleTimer?.tick();
+
+    this.cooldownScaleTimer?.tick();
 
     this.fadeTween?.update();
     this.spawnTween?.update();
@@ -190,7 +212,9 @@ export class Dude {
       name: this.state.name,
       isVisible: !this.state.isAnonymous,
       position: {
-        y: -(this.state.sprite.h / 2 - collider.y) * this.state.scale,
+        y:
+          -(this.state.sprite.h / 2 - collider.y + this.state.sprite.pivot.y) *
+          this.state.scale,
       },
     });
 
@@ -232,7 +256,7 @@ export class Dude {
       this.velocity.y = 0;
       this.velocity.x = 0;
 
-      position.y = renderer.height - this.anchorBottomDiff();
+      position.y = renderer.height;
 
       if (this.animationState == DudeSpriteTags.Fall) {
         this.playAnimation(DudeSpriteTags.Land);
@@ -280,15 +304,8 @@ export class Dude {
     }
   }
 
-  anchorBottomDiff(): number {
-    const collider = this.state.sprite.collider;
-    return (
-      (collider.y + collider.h - this.state.sprite.h / 2) * this.state.scale
-    );
-  }
-
   isOnGround(y: number): boolean {
-    return y + this.anchorBottomDiff() > renderer.height;
+    return y > renderer.height;
   }
 
   addMessage(message: string): void {
@@ -321,6 +338,11 @@ export class Dude {
       body: dudeSprite[DudeSpriteLayers.Body],
       eyes: dudeSprite[DudeSpriteLayers.Eyes],
     });
+
+    this.sprite.container.pivot.set(
+      this.state.sprite.pivot.x,
+      this.state.sprite.pivot.y
+    );
 
     this.container.addChild(this.sprite.container);
   }

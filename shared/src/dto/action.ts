@@ -14,13 +14,14 @@ export type ColorUserActionEntity = {
 
 export type GrowUserActionEntity = {
   data: {
+    duration: number,
     scale: number;
   };
 } & UserActionEntity;
 
 export const isJumpUserActionEntity = (
   entity: UserActionEntity
-): entity is ColorUserActionEntity => entity.name == 'jump';
+): entity is UserActionEntity => entity.name == 'jump';
 
 export const isColorUserActionEntity = (
   entity: UserActionEntity

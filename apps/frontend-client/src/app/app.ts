@@ -10,7 +10,7 @@ import {
   isJumpUserActionEntity,
 } from '@shared';
 import { Container } from 'pixi.js';
-import tinycolor, { ColorInput } from 'tinycolor2';
+import tinycolor from 'tinycolor2';
 import { assetsLoader } from '../assets/assetsLoader';
 import { Dude, DudeProps } from './entities/Dude';
 
@@ -80,15 +80,22 @@ export class App {
 
     if (isJumpUserActionEntity(action)) {
       dude.jump();
-    } else if (isColorUserActionEntity(action)) {
-      const color = tinycolor(action.data.color as ColorInput);
+    }
+
+    if (isColorUserActionEntity(action)) {
+      const color = tinycolor(action.data.color);
 
       if (color && color.isValid()) {
         dude.setUserProps({ color: action.data.color });
       }
-    } else if (isGrowUserActionEntity(action)) {
-      console.log(action);
-      dude.scale(action.data.scale);
+    }
+
+    if (isGrowUserActionEntity(action)) {
+      dude.scale({
+        value: action.data.scale,
+        duration: action.data.duration,
+        cooldown: action.cooldown
+      });
     }
   }
 
