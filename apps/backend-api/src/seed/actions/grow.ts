@@ -9,9 +9,6 @@ export async function growActionSeed(prisma: PrismaClient): Promise<void> {
       name: 'grow',
       title: 'Grow',
       description: 'Grow',
-      data: {
-        scale: 4,
-      },
     },
   });
 

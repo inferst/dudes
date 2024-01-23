@@ -44,6 +44,12 @@ export async function defaultGrowCommandSeed(
             id: user.id,
           },
         },
+        data: {
+          action: {
+            scale: 2,
+          },
+          arguments: []
+        }
       },
     });
   }
