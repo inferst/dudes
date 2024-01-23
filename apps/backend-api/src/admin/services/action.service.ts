@@ -37,7 +37,7 @@ export class ActionService {
       return;
     }
 
-    let data = action.data;
+    let data = {...action.data,  ...command.data.action};
 
     if (command.data.arguments && command.data.arguments.length > 0) {
       const argsMessage = message.split(command.text)[1];
@@ -47,7 +47,7 @@ export class ActionService {
         .map((argument, i) => [argument, args[i]])
         .filter((item) => item[1]);
 
-      data = { ...command.data.action, ...Object.fromEntries(entries) };
+      data = {...Object.fromEntries(entries) };
     }
 
     return {
