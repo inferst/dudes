@@ -6,7 +6,7 @@ import { AuthService } from '@app/backend-api/auth/services';
 import { HttpModule } from '@nestjs/axios';
 import { UserRepository } from '@app/backend-api/auth/repositories';
 import { TwitchStrategy } from '@app/backend-api/auth/strategies';
-import { CommandRepository } from './repositories/command.repository';
+import { SeedService } from './services/seed.service';
 
 @Module({
   imports: [HttpModule],
@@ -17,7 +17,7 @@ import { CommandRepository } from './repositories/command.repository';
     TwitchAuthGuard,
     AuthSerializer,
     UserRepository,
-    CommandRepository,
+    SeedService,
   ],
 })
 export class AuthModule {}

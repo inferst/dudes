@@ -15,7 +15,7 @@
     "shadcn-ui": "TS_NODE_PROJECT=tsconfig.base.json npx shadcn-ui@latest"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} apps/backend-api/prisma/seed.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} apps/backend-api/src/seed/seed.ts"
   },
   "private": true,
   "dependencies": {

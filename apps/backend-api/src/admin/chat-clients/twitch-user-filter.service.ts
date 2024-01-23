@@ -3,14 +3,16 @@ import { readFileSync } from 'fs';
 
 @Injectable()
 export class TwitchUserFilterService {
-  private bot: string[] = [];
+  private bot: Set<string> = new Set();
 
   public constructor() {
     const file = readFileSync('apps/backend-api/public/bot.txt');
-    this.bot = file.toString().split('\n');
+    for (const bot in file.toString().split('\n')) {
+      this.bot.add(bot);
+    }
   }
 
   public isBot(nick: string): boolean {
-    return this.bot.includes(nick);
+    return this.bot.has(nick);
   }
 }
