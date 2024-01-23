@@ -1,10 +1,11 @@
 import {
+  ChatterEntity,
   ClientToServerEvents,
   MessageEntity,
   ServerToClientsEvents,
   SettingsEntity,
+  UserActionEntity
 } from '@shared';
-import { ChatterEntity } from 'shared/src/dto/socket/chatters';
 import { Socket, io } from 'socket.io-client';
 
 export class Connection {
@@ -26,6 +27,10 @@ export class Connection {
 
   public onMessage(callback: (data: MessageEntity) => void): void {
     this.socket.on('message', callback);
+  }
+
+  public onAction(callback: (data: UserActionEntity) => void): void {
+    this.socket.on('action', callback);
   }
 
   public onSettings(callback: (data: SettingsEntity) => void): void {

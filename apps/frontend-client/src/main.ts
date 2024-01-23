@@ -1,6 +1,6 @@
-import { Debug } from './debug/debug';
-import { World } from './world/World';
 import { Renderer } from 'pixi.js';
+import { app } from './app/app';
+import { Debug } from './debug/debug';
 import './style.css';
 
 export const renderer = new Renderer({
@@ -21,7 +21,7 @@ const init = async (): Promise<void> => {
     renderer.resize(window.innerWidth, window.innerHeight);
   };
 
-  await World.init();
+  await app.init();
 
   let lastTime = performance.now();
   let lastFrame = -1;
@@ -49,8 +49,8 @@ const init = async (): Promise<void> => {
       lastFrame = currentTime - (delta % minElapsedMS);
       lastTime = currentTime;
 
-      World.update();
-      renderer.render(World.stage);
+      app.update();
+      renderer.render(app.stage);
     }
 
     requestAnimationFrame(animate);

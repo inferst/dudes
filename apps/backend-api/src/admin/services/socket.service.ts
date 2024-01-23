@@ -1,19 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Socket } from 'socket.io';
-import * as tmi from 'tmi.js';
 import { UserRepository } from '@app/backend-api/admin/repositories';
-import {
-  TwitchApiClientFactory,
-  TokenRevokedException,
-  TwitchApiClient,
-} from '@app/backend-api/admin/twitch-api-client';
+import { TwitchApiClientFactory } from '@app/backend-api/admin/api-clients/twitch-api-client';
+import { Injectable, Logger } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { SettingsRepository } from '../repositories/settings.repository';
 import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
-import { BotService } from './bot.service';
-import { ChatterEntity } from 'shared/src/dto/socket/chatters';
-
-const CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
+import { Socket } from 'socket.io';
+import {
+  ChatClient,
+  ChatClientFactory,
+} from '../chat-clients/chat-client-factory';
+import { SettingsRepository } from '../repositories/settings.repository';
+import { ActionService } from './action.service';
+import { TwitchUserFilterService } from '../chat-clients/twitch-user-filter.service';
+import { ChatMessageService } from './chat-message.service';
 
 type ClientSocket = {
   socket: Socket;
@@ -21,10 +19,8 @@ type ClientSocket = {
 };
 
 type Room = {
-  timerId: NodeJS.Timer;
-  tmi: tmi.Client;
-  twitchApi: TwitchApiClient;
   clients: Socket[];
+  chatClient?: ChatClient;
 };
 
 @Injectable()
@@ -37,9 +33,12 @@ export class SocketService<
   private readonly rooms: Map<string, Room> = new Map();
 
   public constructor(
-    private readonly botService: BotService,
+    private readonly chatClientFactory: ChatClientFactory,
+    private readonly botService: TwitchUserFilterService,
+    private readonly chatMessageService: ChatMessageService,
     private readonly userRepository: UserRepository,
     private readonly settingsRepository: SettingsRepository,
+    private readonly actionService: ActionService,
     private readonly twitchApiClientFactory: TwitchApiClientFactory
   ) {}
 
@@ -67,8 +66,7 @@ export class SocketService<
     if (clients.length > 0) {
       this.rooms.set(connectedClient.roomId, { ...room, clients });
     } else {
-      clearInterval(room.timerId);
-      void room.tmi.disconnect();
+      void room?.chatClient?.disconnect();
       this.rooms.delete(connectedClient.roomId);
       this.logger.log('Room disconnected with name: ' + connectedClient.roomId);
     }
@@ -107,104 +105,50 @@ export class SocketService<
       return;
     }
 
-    const tmiClient = new tmi.Client({
-      channels: [user.twitchLogin],
-    });
-
-    await tmiClient.connect();
-
-    tmiClient.on('chat', (_channel, tags: tmi.CommonUserstate, message) => {
-      let updatedMessage = message;
-      const emotes = [];
-
-      const emotesArray = Object.entries(tags.emotes ?? {}).map((entity) => {
-        const range = entity[1][0].split('-');
-        const start = Number(range[0]);
-        const end = Number(range[1]) + 1;
-
-        return message.substring(start, end);
-      });
-
-      for (const emote in tags.emotes) {
-        emotes.push(`https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`);
-      }
-
-      for (const code of emotesArray ?? []) {
-        updatedMessage = updatedMessage.replaceAll(code, '');
-      }
-
-      updatedMessage = updatedMessage.replace(/\s+/g, ' ').trim();
-
-      if (tags['display-name'] && tags['user-id']) {
-        const data = {
-          name: tags['display-name'],
-          userId: tags['user-id'],
-          message: updatedMessage,
-          color: tags['color'],
-          emotes: emotes,
-        };
-
-        socket.emit('message', data);
-        socket.broadcast.to(userGuid).emit('message', data);
-      }
-    });
-
-    const twitchApiClient = await this.twitchApiClientFactory.createFromUserId(
-      user.id
-    );
-
-    const timerId = setInterval(async () => {
-      try {
-        const chatters = await this.getChatters(user);
-
-        socket.emit('chatters', chatters);
-        socket.broadcast.to(userGuid).emit('chatters', chatters);
-      } catch (e) {
-        if (e instanceof TokenRevokedException) {
-          // Token is revoked, do nothing.
-          return;
-        }
-
-        this.logger.error('Failed to send chatters.', {
-          e,
-        });
-      }
-    }, CHATTERS_SEND_INTERVAL);
-
-    this.logger.log('Room initialize with name: ' + userGuid);
-
     this.rooms.set(userGuid, {
-      tmi: tmiClient,
       clients: [socket],
-      timerId,
-      twitchApi: twitchApiClient,
     });
-  }
 
-  private async getChatters(user: User): Promise<ChatterEntity[]> {
-    const room = this.rooms.get(user.guid);
+    this.logger.log('Room initialized with id: ' + userGuid);
 
-    if (!room) {
-      return [];
+    const chatClient = await this.chatClientFactory.createFromUser(user);
+    await chatClient.connect();
+
+    const connectedRoom = this.rooms.get(userGuid);
+
+    if (connectedRoom) {
+      this.rooms.set(userGuid, { ...connectedRoom, chatClient });
     }
 
-    const twitchApi = room.twitchApi;
-    const chatters = await twitchApi.getChatters(user.twitchId);
+    chatClient.onChat(async (data) => {
+      const action = await this.actionService.getUserAction(
+        user.id,
+        data.userId,
+        data.message
+      );
 
-    return chatters
-      .filter((chatter) => !this.botService.isBot(chatter.user_login))
-      .map((chatter) => ({
-        userId: chatter.user_id,
-        name: chatter.user_name,
-      }));
+      if (action) {
+        socket.emit('action', action);
+        socket.broadcast.to(userGuid).emit('action', action);
+      }
+
+      const message = this.chatMessageService.formatMessage(data.message);
+
+      if (message || data.emotes.length > 0) {
+        socket.emit('message', { ...data, message });
+        socket.broadcast.to(userGuid).emit('message', { ...data, message });
+      }
+    });
+
+    this.logger.log('Chat client initialized in room with id: ' + userGuid);
   }
 
   private async getUserByGuid(userGuid: string): Promise<User | null> {
     try {
       return await this.userRepository.getUserByGuid(userGuid);
-    } catch (e) {
+    } catch (error) {
       this.logger.error('Failed to fetch the user.', {
-        e,
+        e: error,
       });
     }
 

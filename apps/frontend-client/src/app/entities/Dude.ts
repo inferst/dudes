@@ -9,7 +9,7 @@ import {
 } from '@app/frontend-client/sprite/spriteProvider';
 import * as TWEEN from '@tweenjs/tween.js';
 import * as PIXI from 'pixi.js';
-import { World } from '../World';
+import { app } from '../app';
 import { DudeEmoteSpitter } from './DudeEmoteSpitter';
 import { DudeMessage } from './DudeMessage';
 import { DudeName } from './DudeName';
@@ -33,6 +33,8 @@ type UserProps = {
 const jumpSound = new Audio('/client/sounds/jump.mp3');
 jumpSound.volume = 0.2;
 
+const DEFAULT_DUDE_SCALE = 4;
+
 export class Dude {
   private animationState?: DudeSpriteTags;
 
@@ -41,7 +43,7 @@ export class Dude {
   private name: DudeName = new DudeName();
 
   private message: DudeMessage = new DudeMessage(() => {
-    const zIndex = World.zIndexDudeMax(this.container.zIndex);
+    const zIndex = app.zIndexDudeMax(this.container.zIndex);
     this.container.zIndex = zIndex;
   });
 
@@ -77,7 +79,7 @@ export class Dude {
     },
     color: '#969696',
     direction: 1,
-    scale: 4,
+    scale: DEFAULT_DUDE_SCALE,
     isAnonymous: false,
   };
 
@@ -126,7 +128,7 @@ export class Dude {
     this.state.direction = Math.random() > 0.5 ? 1 : -1;
 
     if (!isFalling) {
-      const zIndex = World.zIndexDudeMin(this.container.zIndex);
+      const zIndex = app.zIndexDudeMin(this.container.zIndex);
 
       this.container.zIndex = zIndex;
       this.container.alpha = 0;
@@ -144,9 +146,9 @@ export class Dude {
       .start();
   }
 
-  scale(onComplete?: () => void): void {
+  scale(value: number, onComplete?: () => void): void {
     this.scaleTween = new TWEEN.Tween(this.state)
-      .to({ scale: 8 }, 2000)
+      .to({ scale: DEFAULT_DUDE_SCALE * value }, 2000)
       .onComplete(onComplete)
       .start();
   }

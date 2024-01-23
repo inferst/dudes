@@ -16,7 +16,7 @@ export class CommandController {
   public async getCommands(
     @Auth() user: AuthUserProps
   ): Promise<CommandEntity[]> {
-    return this.commandRepository.getComomandsByUserId(user.userId);
+    return this.commandRepository.getCommandsByUserId(user.userId);
   }
 
   @Put('/:id')

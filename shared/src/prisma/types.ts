@@ -5,6 +5,13 @@ declare global {
       showAnonymousDudes?: boolean;
       fallingDudes?: boolean;
     };
+
+    type ActionData = Record<string, unknown>;
+
+    type CommandData = {
+      arguments: string[];
+      action: ActionData;
+    };
   }
 }
 
