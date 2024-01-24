@@ -1,19 +1,20 @@
 import { SpriteConfig } from '@app/frontend-client/config/config';
-import { Constants } from '@app/frontend-client/config/constants';
 import { Timer } from '@app/frontend-client/helpers/timer';
 import { renderer } from '@app/frontend-client/main';
 import {
   DudeSpriteLayers,
   DudeSpriteTags,
+  DudeTagAnimatedSprites,
   spriteProvider,
 } from '@app/frontend-client/sprite/spriteProvider';
 import * as TWEEN from '@tweenjs/tween.js';
 import * as PIXI from 'pixi.js';
-import { app } from '../app';
 import { DudeEmoteSpitter } from './DudeEmoteSpitter';
 import { DudeMessage } from './DudeMessage';
 import { DudeName } from './DudeName';
 import { DudeSpriteContainer } from './DudeSpriteContainer';
+import { dudesManager } from '../dudesManager';
+import { FIXED_DELTA_TIME } from '@app/frontend-client/config/constants';
 
 export type DudeProps = {
   name?: string;
@@ -36,18 +37,23 @@ jumpSound.volume = 0.2;
 const DEFAULT_DUDE_SCALE = 4;
 
 export class Dude {
+  public container: PIXI.Container = new PIXI.Container();
+
   private animationState?: DudeSpriteTags;
 
+  // TODO: Refactor sprite initializing, move logic to separate file
   private sprite?: DudeSpriteContainer;
+
+  private currentSpriteName: string = 'dude';
+
+  private tagSprites: DudeTagAnimatedSprites =
+    spriteProvider.createTagAnimatedSprites(this.currentSpriteName);
 
   private name: DudeName = new DudeName();
 
   private message: DudeMessage = new DudeMessage(() => {
-    const zIndex = app.zIndexDudeMax(this.container.zIndex);
-    this.container.zIndex = zIndex;
+    this.container.zIndex = dudesManager.zIndexDudeMax(this.container.zIndex);
   });
-
-  public container: PIXI.Container = new PIXI.Container();
 
   private velocity: PIXI.IPointData = {
     x: 0,
@@ -112,11 +118,11 @@ export class Dude {
     this.container.addChild(this.emoteSpitter.container);
     this.container.addChild(this.message.container);
 
-    void this.playAnimation(DudeSpriteTags.Idle);
+    void this.setAnimationState(DudeSpriteTags.Idle);
 
     this.stateTimer = new Timer(5000, () => {
       if (!this.isJumping) {
-        this.playAnimation(DudeSpriteTags.Run);
+        this.setAnimationState(DudeSpriteTags.Run);
       }
     });
   }
@@ -136,7 +142,7 @@ export class Dude {
     this.state.direction = Math.random() > 0.5 ? 1 : -1;
 
     if (!isFalling) {
-      const zIndex = app.zIndexDudeMin(this.container.zIndex);
+      const zIndex = dudesManager.zIndexDudeMin(this.container.zIndex);
 
       this.container.zIndex = zIndex;
       this.container.alpha = 0;
@@ -179,7 +185,7 @@ export class Dude {
       this.velocity.x = this.state.direction * 3.5;
       this.velocity.y = -8;
 
-      this.playAnimation(DudeSpriteTags.Jump);
+      this.setAnimationState(DudeSpriteTags.Jump);
 
       jumpSound.pause();
       jumpSound.currentTime = 0;
@@ -208,6 +214,18 @@ export class Dude {
 
     const collider = this.state.sprite.collider;
 
+    if (this.currentSpriteName != this.state.sprite.name) {
+      this.currentSpriteName = this.state.sprite.name;
+
+      this.tagSprites = spriteProvider.createTagAnimatedSprites(
+        this.currentSpriteName
+      );
+
+      if (this.animationState) {
+        this.setAnimationState(this.animationState, true);
+      }
+    }
+
     this.name.update({
       name: this.state.name,
       isVisible: !this.state.isAnonymous,
@@ -233,16 +251,16 @@ export class Dude {
     if (this.stateTimer?.isCompleted) {
       this.stateTimer = new Timer(Math.random() * 5000, () => {
         if (this.animationState == DudeSpriteTags.Idle) {
-          this.playAnimation(DudeSpriteTags.Run);
+          this.setAnimationState(DudeSpriteTags.Run);
         } else if (this.animationState == DudeSpriteTags.Run) {
-          this.playAnimation(DudeSpriteTags.Idle);
+          this.setAnimationState(DudeSpriteTags.Idle);
         }
       });
     }
 
     if (this.animationState == DudeSpriteTags.Run) {
       const speed = this.runSpeed * this.state.direction;
-      this.velocity.x = speed * Constants.fixedDeltaTime;
+      this.velocity.x = speed * FIXED_DELTA_TIME;
     }
 
     this.velocity.y = this.velocity.y + this.gravity;
@@ -259,16 +277,16 @@ export class Dude {
       position.y = renderer.height;
 
       if (this.animationState == DudeSpriteTags.Fall) {
-        this.playAnimation(DudeSpriteTags.Land);
+        this.setAnimationState(DudeSpriteTags.Land);
         this.landTimer = new Timer(200, () => {
-          this.playAnimation(DudeSpriteTags.Idle);
+          this.setAnimationState(DudeSpriteTags.Idle);
           this.isJumping = false;
         });
       }
     }
 
     if (this.velocity.y > 0) {
-      this.playAnimation(DudeSpriteTags.Fall);
+      this.setAnimationState(DudeSpriteTags.Fall);
     }
 
     if (this.animationState != DudeSpriteTags.Idle) {
@@ -322,8 +340,8 @@ export class Dude {
     }
   }
 
-  async playAnimation(state: DudeSpriteTags): Promise<void> {
-    if (this.animationState == state) {
+  async setAnimationState(state: DudeSpriteTags, force: boolean = false): Promise<void> {
+    if (this.animationState == state && !force) {
       return;
     }
 
@@ -333,10 +351,12 @@ export class Dude {
       this.container.removeChild(this.sprite.container);
     }
 
-    const dudeSprite = spriteProvider.getSprite(this.state.sprite.name, state);
+    // TODO: Refactor sprite initializing, move logic to separate file
+    const animatedSprite = this.tagSprites[this.animationState];
+
     this.sprite = new DudeSpriteContainer({
-      body: dudeSprite[DudeSpriteLayers.Body],
-      eyes: dudeSprite[DudeSpriteLayers.Eyes],
+      body: animatedSprite[DudeSpriteLayers.Body],
+      eyes: animatedSprite[DudeSpriteLayers.Eyes],
     });
 
     this.sprite.container.pivot.set(

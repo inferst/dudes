@@ -140,6 +140,11 @@ export class SocketService<
       }
     });
 
+    chatClient.onChatters(data => {
+      socket.emit('chatters', data);
+      socket.broadcast.to(userGuid).emit('chatters', data);
+    })
+
     this.logger.log('Chat client initialized in room with id: ' + userGuid);
   }
 

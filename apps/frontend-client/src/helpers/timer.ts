@@ -1,11 +1,11 @@
-import { Constants } from '../config/constants';
+import { FIXED_DELTA_TIME } from "../config/constants";
 
 export class Timer {
   public isCompleted: boolean = false;
 
   constructor(public current: number = 0, private onComplete?: () => void) {}
 
-  tick(delta: number = Constants.fixedDeltaTime) {
+  tick(delta: number = FIXED_DELTA_TIME) {
     if (this.isCompleted) {
       return;
     }

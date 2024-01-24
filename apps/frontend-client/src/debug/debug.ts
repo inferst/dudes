@@ -2,6 +2,7 @@ import { app } from '@app/frontend-client/app/app';
 import { Dude } from '@app/frontend-client/app/entities/Dude';
 import { Text } from 'pixi.js';
 import { config } from '../config/config';
+import { dudesManager } from '../app/dudesManager';
 
 export class Debug {
   private readonly logs: string[] = [];
@@ -38,7 +39,7 @@ export class Debug {
         });
         dude.spawn(true);
 
-        app.addDude('bot ' + i, dude);
+        dudesManager.add('bot ' + i, dude);
 
         setInterval(() => {
           dude.addMessage(

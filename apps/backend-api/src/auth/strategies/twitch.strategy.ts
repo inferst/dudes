@@ -7,7 +7,11 @@ import {
   AuthUserProps,
 } from '@app/backend-api/auth/services/auth.service';
 
-const SCOPE = ['channel:read:subscriptions', 'moderator:read:chatters'];
+const SCOPE = [
+  'channel:read:subscriptions',
+  'moderator:read:chatters',
+  'channel:manage:redemptions',
+];
 
 @Injectable()
 export class TwitchStrategy extends PassportStrategy(Oauth2Strategy, 'twitch') {

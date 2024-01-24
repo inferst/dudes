@@ -10,7 +10,7 @@ import { ChatClient } from './chat-client-factory';
 import { TwitchUserFilterService } from './twitch-user-filter.service';
 import { ChatMessageService } from '../services';
 
-const TWITCH_CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
+const TWITCH_CHATTERS_SEND_INTERVAL = 20 * 1000; // 1 minute.
 
 @Injectable()
 export class TwitchChatClientFactory {

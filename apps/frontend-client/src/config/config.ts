@@ -24,7 +24,7 @@ export type SpriteConfig = {
 
 export const config: Config = {
   chatters: {
-    nets1l: {
+    inferst: {
       name: 'sith',
       w: 32,
       h: 32,

@@ -1,4 +1,4 @@
-import { Constants } from '@app/frontend-client/config/constants';
+import { FIXED_DELTA_TIME } from '@app/frontend-client/config/constants';
 import { Point } from '@app/frontend-client/helpers/types';
 import { AnimatedSprite, Container } from 'pixi.js';
 
@@ -38,8 +38,8 @@ export class DudeSpriteContainer {
     this.body.tint = props.color;
     this.container.scale.set(props.scale.x, props.scale.y)
 
-    this.body.update(Constants.fixedDeltaTime * 0.06);
-    this.eyes.update(Constants.fixedDeltaTime * 0.06);
+    this.body.update(FIXED_DELTA_TIME * 0.06);
+    this.eyes.update(FIXED_DELTA_TIME * 0.06);
   }
 
   public tint(color: string): void {
