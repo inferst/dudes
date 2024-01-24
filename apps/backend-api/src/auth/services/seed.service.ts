@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
 import { User } from '@prisma/client';
-import { defaultJumpCommandSeed } from '@app/backend-api/seed/commands/jump';
-import { defaultColorCommandSeed } from '@app/backend-api/seed/commands/color';
-import { defaultGrowCommandSeed } from '@app/backend-api/seed/commands/grow';
+import { defaultJumpCommandSeed } from '@app/backend-api/database/seed/commands/jump';
+import { defaultColorCommandSeed } from '@app/backend-api/database/seed/commands/color';
+import { defaultGrowCommandSeed } from '@app/backend-api/database/seed/commands/grow';
 
 @Injectable()
 export class SeedService {
