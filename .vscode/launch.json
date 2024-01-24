@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Backend Api",
+      "type": "node",
+      "request": "attach",
+      "port": 9229
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Frontend Admin",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/apps/frontend-admin"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Frontend Client",
+      "url": "http://localhost:4300", // Put your session id here
+      "webRoot": "${workspaceFolder}/apps/frontend-admin"
+    }
+  ]
+}
