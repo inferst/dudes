@@ -27,10 +27,6 @@ class DudesManager {
 
   public subscribe(subscription: DudesManagerSubscription) {
     this.subscriptions.push(subscription);
-
-    setInterval(() => {
-      console.log(this.dudes);
-    }, 1000);
   }
 
   public update() {
