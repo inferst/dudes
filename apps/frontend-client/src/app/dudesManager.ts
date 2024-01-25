@@ -111,7 +111,7 @@ class DudesManager {
       props.sprite = sprite;
     }
 
-    let dude = this.dudes['sdfasdfsadf'];
+    let dude = this.dudes[data.userId];
 
     if (!dude) {
       const isFalling = app.settings.fallingDudes
