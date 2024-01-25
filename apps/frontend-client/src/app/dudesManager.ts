@@ -19,9 +19,9 @@ type DudesManagerSubscription = {
 const DUDE_DESPAWN_TIMER = 1000 * 60 * 5;
 
 class DudesManager {
-  private dudes: Record<string, Dude> = {};
+  private dudes: Record<string, Dude | undefined> = {};
 
-  private lastMessageTimes: Record<string, number> = {};
+  private lastMessageTimes: Record<string, number | undefined> = {};
 
   private subscriptions: DudesManagerSubscription[] = [];
 
@@ -31,15 +31,16 @@ class DudesManager {
 
   public update() {
     for (const id in this.dudes) {
-      this.dudes[id].update();
+      this.dudes[id]?.update();
     }
   }
 
   public processChatters(data: ChatterEntity[]) {
     for (const id in this.dudes) {
+      const lastMessageTime = this.lastMessageTimes[id];
       const spawnedRecently =
-        this.hasMessages(id) &&
-        performance.now() - this.lastMessageTimes[id] < DUDE_DESPAWN_TIMER;
+        !!lastMessageTime &&
+        performance.now() - lastMessageTime < DUDE_DESPAWN_TIMER;
 
       if (data.every((chatter) => chatter.userId != id) && !spawnedRecently) {
         const dude = this.dudes[id];
@@ -110,14 +111,14 @@ class DudesManager {
       props.sprite = sprite;
     }
 
-    const dude = this.dudes[data.userId];
+    let dude = this.dudes[data.userId];
 
     if (!dude) {
       const isFalling = app.settings.fallingDudes
         ? this.hasMessages(data.userId)
         : false;
 
-      const dude = new Dude(props);
+      dude = new Dude(props);
       dude.spawn(isFalling);
 
       this.add(data.userId, dude);
@@ -154,7 +155,7 @@ class DudesManager {
 
   public zIndexDudeMax(from: number) {
     return Object.values(this.dudes).reduce((zIndex, dude) => {
-      return zIndex <= dude.container.zIndex
+      return dude && zIndex <= dude.container.zIndex
         ? dude.container.zIndex + 1
         : zIndex;
     }, from);
@@ -162,7 +163,7 @@ class DudesManager {
 
   public zIndexDudeMin(from: number) {
     return Object.values(this.dudes).reduce((zIndex, dude) => {
-      return zIndex >= dude.container.zIndex
+      return dude && zIndex >= dude.container.zIndex
         ? dude.container.zIndex - 1
         : zIndex;
     }, from);
