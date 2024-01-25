@@ -1,4 +1,4 @@
-import { CreateRewardDto, RewardEntity, UpdateRewardDto } from '@shared';
+import { CreateTwitchRewardDto, RewardEntity, UpdateTwitchRewardDto } from '@shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '../api/api';
@@ -7,7 +7,7 @@ import { rewardsKeys } from '../queries/rewards';
 export const useUpdateRewardMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<RewardEntity, AxiosError, UpdateRewardDto, RewardEntity[]>(
+  return useMutation<RewardEntity, AxiosError, UpdateTwitchRewardDto, RewardEntity[]>(
     {
       mutationFn: api.updateReward,
       onMutate: async (data) => {
@@ -17,7 +17,7 @@ export const useUpdateRewardMutation = () => {
           rewardsKeys.list.queryKey
         );
 
-        queryClient.setQueryData<UpdateRewardDto[]>(
+        queryClient.setQueryData<UpdateTwitchRewardDto[]>(
           rewardsKeys.list.queryKey,
           (rewards) =>
             (rewards ?? []).map((reward) =>
@@ -28,7 +28,7 @@ export const useUpdateRewardMutation = () => {
         return prev;
       },
       onError: (_err, _commands, context) => {
-        queryClient.setQueryData<UpdateRewardDto[]>(
+        queryClient.setQueryData<UpdateTwitchRewardDto[]>(
           rewardsKeys.list.queryKey,
           context ?? []
         );
@@ -40,7 +40,7 @@ export const useUpdateRewardMutation = () => {
 export const useCreateRewardMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<RewardEntity, AxiosError, CreateRewardDto, RewardEntity[]>(
+  return useMutation<RewardEntity, AxiosError, CreateTwitchRewardDto, RewardEntity[]>(
     {
       mutationFn: api.createReward,
       onSuccess: (data, variables) => {

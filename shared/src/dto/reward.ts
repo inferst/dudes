@@ -1,12 +1,16 @@
-import { z } from 'zod';
-import {
-  createRewardDtoSchema,
-  updateRewardDtoSchema
-} from '../schema/reward';
 import { Reward } from '@prisma/client';
+import { z } from 'zod';
+import { createTwitchRewardDtoSchema, updateTwitchRewardDtoSchema } from '../schema/reward';
 
-export type UpdateRewardDto = z.infer<typeof updateRewardDtoSchema>;
+export type UpdateTwitchRewardDto = z.infer<typeof updateTwitchRewardDtoSchema>;
 
-export type CreateRewardDto = z.infer<typeof createRewardDtoSchema>;
+export type CreateTwitchRewardDto = z.infer<typeof createTwitchRewardDtoSchema>;
 
 export type RewardEntity = Reward;
+
+export type TwitchRewardEntity = {
+  title?: string;
+  cost?: number;
+  isDeleted: boolean;
+  isActive: boolean;
+} & RewardEntity;

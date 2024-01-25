@@ -29,7 +29,7 @@ export class Debug {
   }
 
   public generateDudes(): void {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 0; i++) {
       setTimeout(() => {
         const keys = Object.keys(config.chatters);
         const index = Math.round(Math.random() * (keys.length - 1));

@@ -3,9 +3,10 @@ import {
   useDeleteRewardMutation,
   useUpdateRewardMutation,
 } from '@app/frontend-admin/mutations/rewards';
+import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { useRewardsQuery } from '@app/frontend-admin/queries/rewards';
+import { DeleteDialog } from '../../common/DeleteDialog';
 import { Loader } from '../../common/Loader';
-import { Button } from '../../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Checkbox } from '../../ui/checkbox';
 import {
@@ -17,16 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { RewardForm } from './RewardForm';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '../../ui/dropdown-menu';
-import { Plus } from 'lucide-react';
-import { useActionsQuery } from '@app/frontend-admin/queries/actions';
-import { DeleteDialog } from '../../common/DeleteDialog';
+import { RewardForm, RewardFormInput } from './RewardForm';
 
 export function RewardsPage() {
   const actionsQuery = useActionsQuery();
@@ -51,30 +43,33 @@ export function RewardsPage() {
     }
   };
 
-  const handleIsPausedChange = (index: number, value: boolean) => {
-    const reward = rewards[index];
-
-    if (reward) {
-      updateMutation.mutate({ id: reward.id, isPaused: value });
-    }
-  };
-
   const handleDelete = (id: number) => {
     deleteMutation.mutate(id);
   };
 
-  const handleActionClick = (id: number) => {
-    const action = actions.find((action) => action.id === id);
+  const handleSave = (index: number, data: RewardFormInput) => {
+    const reward = rewards[index];
+
+    if (reward) {
+      updateMutation.mutate({
+        id: reward.id,
+        title: data.title,
+        cost: data.cost,
+      });
+    }
+  };
+
+  const handleCreate = (data: RewardFormInput) => {
+    const action = actions.find((action) => action.id === data.actionId);
+
+    console.log(data.actionId, actions);
 
     if (action) {
       createMutation.mutate({
-        actionId: id,
+        actionId: action.id,
         title: action.title,
-        description: action.description,
         isActive: true,
-        isPaused: false,
-        cost: 0,
-        cooldown: 0,
+        cost: data.cost ?? 0,
       });
     }
   };
@@ -82,28 +77,21 @@ export function RewardsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Channel points</CardTitle>
+        <CardTitle>Rewards</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="mb-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="default">
-                <Plus className="mr-2" />
-                Add new reward
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {actions.map((action) => (
-                <DropdownMenuItem
-                  key={action.id}
-                  onClick={() => handleActionClick(action.id)}
-                >
-                  {action.title}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* <Button variant="default">
+            <Plus className="mr-2" />
+            Add new reward
+          </Button> */}
+
+          <RewardForm
+            edit={false}
+            title={''}
+            cost={0}
+            onSave={(data) => handleCreate(data)}
+          ></RewardForm>
         </div>
 
         <Table>
@@ -111,10 +99,8 @@ export function RewardsPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Active</TableHead>
-              <TableHead className="w-[100px]">Paused</TableHead>
               <TableHead className="w-[100px]">Command</TableHead>
               <TableHead>Title</TableHead>
-              <TableHead>Description</TableHead>
               <TableHead className="w-40">Cost</TableHead>
               <TableHead>Edit</TableHead>
               <TableHead>Delete</TableHead>
@@ -132,21 +118,15 @@ export function RewardsPage() {
                     className="block"
                   ></Checkbox>
                 </TableCell>
-                <TableCell>
-                  <Checkbox
-                    onCheckedChange={(value: boolean) =>
-                      handleIsPausedChange(index, value)
-                    }
-                    checked={reward.isPaused}
-                    className="block"
-                  ></Checkbox>
-                </TableCell>
-                <TableCell>{reward.id}</TableCell>
+                <TableCell>{reward.actionId}</TableCell>
                 <TableCell>{reward.title}</TableCell>
-                <TableCell>{reward.description}</TableCell>
                 <TableCell>{reward.cost}</TableCell>
                 <TableCell>
-                  <RewardForm reward={reward}></RewardForm>
+                  <RewardForm
+                    title={reward.title}
+                    cost={reward.cost}
+                    onSave={(data) => handleSave(index, data)}
+                  ></RewardForm>
                 </TableCell>
                 <TableCell>
                   <DeleteDialog

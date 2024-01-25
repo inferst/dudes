@@ -1,7 +1,5 @@
 import {
-  CreateRewardDto,
-  RewardEntity,
-  UpdateRewardDto,
+  TwitchRewardEntity,
   UpdateCommandDto,
   CommandEntity,
   UserEntity,
@@ -9,6 +7,8 @@ import {
   CreateCommandDto,
   SettingsEntity,
   UpdateSettingsDto,
+  UpdateTwitchRewardDto,
+  CreateTwitchRewardDto,
 } from '@shared';
 import axios, { GenericAbortSignal } from 'axios';
 
@@ -28,25 +28,25 @@ export const api = {
 
     return data;
   },
-  getRewards: async ({ signal }: WithSignal): Promise<RewardEntity[]> => {
-    const { data } = await appAxios.get('/admin/reward/list', {
+  getRewards: async ({ signal }: WithSignal): Promise<TwitchRewardEntity[]> => {
+    const { data } = await appAxios.get('/admin/reward/twitch/list', {
       signal,
     });
 
     return data;
   },
-  updateReward: async (reward: UpdateRewardDto): Promise<RewardEntity> => {
-    const { data } = await appAxios.put('/admin/reward/' + reward.id, reward);
+  updateReward: async (reward: UpdateTwitchRewardDto): Promise<TwitchRewardEntity> => {
+    const { data } = await appAxios.put('/admin/reward/twitch/' + reward.id, reward);
 
     return data;
   },
-  createReward: async (reward: CreateRewardDto): Promise<RewardEntity> => {
-    const { data } = await appAxios.post('/admin/reward/', reward);
+  createReward: async (reward: CreateTwitchRewardDto): Promise<TwitchRewardEntity> => {
+    const { data } = await appAxios.post('/admin/reward/twitch', reward);
 
     return data;
   },
-  deleteReward: async (id: number): Promise<RewardEntity> => {
-    const { data } = await appAxios.delete('/admin/reward/' + id);
+  deleteReward: async (id: number): Promise<TwitchRewardEntity> => {
+    const { data } = await appAxios.delete('/admin/reward/twitch/' + id);
 
     return data;
   },

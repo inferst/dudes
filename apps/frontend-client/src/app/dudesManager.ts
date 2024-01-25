@@ -114,7 +114,7 @@ class DudesManager {
 
     if (!dude) {
       const isFalling = app.settings.fallingDudes
-        ? this.hasMessages(data.userId)
+        ? !this.hasMessages(data.userId)
         : false;
 
       const dude = new Dude(props);

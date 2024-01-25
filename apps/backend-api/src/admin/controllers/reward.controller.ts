@@ -13,70 +13,55 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import {
-  CreateRewardDto,
-  RewardEntity,
-  UpdateRewardDto,
-  createRewardDtoSchema,
-  updateRewardDtoSchema,
+  CreateTwitchRewardDto,
+  TwitchRewardEntity,
+  UpdateTwitchRewardDto,
+  createTwitchRewardDtoSchema,
+  updateTwitchRewardDtoSchema,
 } from '@shared';
-import { RewardRepository } from '../repositories/reward.repository';
+import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';
 
 @Controller('/reward')
 export class RewardController {
-  public constructor(private readonly rewardRepository: RewardRepository) {}
+  public constructor(
+    private readonly rewardRepository: TwitchRewardRepository
+  ) {}
 
-  @Get('/list')
+  @Get('/twitch/list')
   @UseGuards(AuthGuard)
   public async getRewards(
     @Auth() user: AuthUserProps
-  ): Promise<RewardEntity[]> {
-    return this.rewardRepository.getRewardsByUserId(user.userId);
+  ): Promise<TwitchRewardEntity[]> {
+    return this.rewardRepository.getRewards(user);
   }
 
-  @Put('/:id')
+  @Put('/twitch/:id')
   @UseGuards(AuthGuard)
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Auth() user: AuthUserProps,
-    @Body(new ZodPipe(updateRewardDtoSchema)) reward: UpdateRewardDto
-  ): Promise<RewardEntity> {
-    return this.rewardRepository.update(user.userId, id, reward);
+    @Body(new ZodPipe(updateTwitchRewardDtoSchema))
+    reward: UpdateTwitchRewardDto
+  ): Promise<TwitchRewardEntity> {
+    return this.rewardRepository.update(user, id, reward);
   }
 
-  @Delete('/:id')
+  @Delete('/twitch/:id')
   @UseGuards(AuthGuard)
   public async delete(
     @Param('id', ParseIntPipe) id: number,
     @Auth() user: AuthUserProps
-  ): Promise<RewardEntity> {
-    return this.rewardRepository.delete(user.userId, id);
+  ): Promise<void> {
+    await this.rewardRepository.delete(user, id);
   }
 
-  @Post()
+  @Post('/twitch')
   @UseGuards(AuthGuard)
   public async create(
-    @Body(new ZodPipe(createRewardDtoSchema)) data: CreateRewardDto,
+    @Body(new ZodPipe(createTwitchRewardDtoSchema)) data: CreateTwitchRewardDto,
     @Auth() user: AuthUserProps
-  ): Promise<RewardEntity> {
-    const reward: Prisma.RewardCreateInput = {
-      user: {
-        connect: {
-          id: user.userId,
-        },
-      },
-      action: {
-        connect: {
-          id: data.actionId,
-        },
-      },
-      title: data.title,
-      description: data.description,
-      cooldown: data.cooldown,
-      cost: data.cost,
-    };
-
-    return this.rewardRepository.create(reward);
+  ): Promise<TwitchRewardEntity> {
+    return this.rewardRepository.create(user, data);
   }
 }

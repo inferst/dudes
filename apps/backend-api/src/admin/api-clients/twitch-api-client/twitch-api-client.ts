@@ -1,10 +1,24 @@
-import { AxiosInstance } from 'axios';
+import { HttpException } from '@nestjs/common';
+import { AxiosInstance, isAxiosError } from 'axios';
 
-export type Chatter = {
+// TODO: move types to separate file
+
+export type TwitchChatter = {
   user_id: string;
   user_login: string;
   user_name: string;
 };
+
+export type TwitchCustomReward = {
+  id: string;
+  title: string;
+  cost: number;
+  is_enabled: boolean;
+};
+
+export type UpdateTwitchCustomReward = Partial<Omit<TwitchCustomReward, 'id'>>;
+
+export type CreateTwitchCustomReward = Omit<TwitchCustomReward, 'id'>;
 
 type PaginatedData<T> = {
   data: T;
@@ -13,18 +27,137 @@ type PaginatedData<T> = {
 export class TwitchApiClient {
   public constructor(private readonly client: AxiosInstance) {}
 
-  public async getChatters(broadcasterId: string): Promise<Chatter[]> {
-    const {
-      data: { data },
-    } = await this.client.get<PaginatedData<Chatter[]>>('/chat/chatters', {
-      params: {
-        // TODO: aggregate all element in memory in the future.
-        first: 1000,
-        broadcaster_id: broadcasterId,
-        moderator_id: broadcasterId,
-      },
-    });
+  private processErrorResponse(error: Error): void {
+    if (isAxiosError(error)) {
+      const response = error.response;
 
-    return data;
+      if (response) {
+        throw new HttpException(response.data['message'], response.status);
+      }
+    }
+  }
+
+  public async getChatters(broadcasterId: string): Promise<TwitchChatter[]> {
+    try {
+      const {
+        data: { data },
+      } = await this.client.get<PaginatedData<TwitchChatter[]>>(
+        '/chat/chatters',
+        {
+          params: {
+            // TODO: aggregate all element in memory in the future.
+            first: 1000,
+            broadcaster_id: broadcasterId,
+            moderator_id: broadcasterId,
+          },
+        }
+      );
+
+      return data;
+    } catch (err) {
+      this.processErrorResponse(err);
+      throw err;
+    }
+  }
+
+  public async getCustomRewards(
+    broadcasterId: string
+  ): Promise<TwitchCustomReward[]> {
+    try {
+      const {
+        data: { data },
+      } = await this.client.get<PaginatedData<TwitchCustomReward[]>>(
+        '/channel_points/custom_rewards',
+        {
+          params: {
+            broadcaster_id: broadcasterId,
+            only_manageable_rewards: true,
+          },
+        }
+      );
+
+      return data;
+    } catch (err) {
+      this.processErrorResponse(err);
+      throw err;
+    }
+  }
+
+  public async updateCustomReward(
+    broadcasterId: string,
+    rewardId: string,
+    reward: UpdateTwitchCustomReward
+  ): Promise<TwitchCustomReward> {
+    try {
+      const {
+        data: { data },
+      } = await this.client.patch<PaginatedData<TwitchCustomReward[]>>(
+        '/channel_points/custom_rewards',
+        {
+          ...reward,
+        },
+        {
+          params: {
+            broadcaster_id: broadcasterId,
+            id: rewardId,
+          },
+        }
+      );
+
+      return data[0];
+    } catch (err) {
+      this.processErrorResponse(err);
+      throw err;
+    }
+  }
+
+  public async createCustomReward(
+    broadcasterId: string,
+    reward: CreateTwitchCustomReward
+  ): Promise<TwitchCustomReward> {
+    try {
+      const {
+        data: { data },
+      } = await this.client.post<PaginatedData<TwitchCustomReward[]>>(
+        '/channel_points/custom_rewards',
+        {
+          ...reward,
+        },
+        {
+          params: {
+            broadcaster_id: broadcasterId,
+          },
+        }
+      );
+
+      return data[0];
+    } catch (err) {
+      this.processErrorResponse(err);
+      throw err;
+    }
+  }
+
+  public async deleteCustomReward(
+    broadcasterId: string,
+    rewardId: string
+  ): Promise<void> {
+    try {
+      const {
+        data: { data },
+      } = await this.client.delete<PaginatedData<void>>(
+        '/channel_points/custom_rewards',
+        {
+          params: {
+            broadcaster_id: broadcasterId,
+            id: rewardId,
+          },
+        }
+      );
+
+      return data;
+    } catch (err) {
+      this.processErrorResponse(err);
+      throw err;
+    }
   }
 }
