@@ -2,6 +2,7 @@ import { app } from '@app/frontend-client/app/app';
 import { Dude } from '@app/frontend-client/app/entities/Dude';
 import { Text } from 'pixi.js';
 import { config } from '../config/config';
+import { dudesManager } from '../app/dudesManager';
 
 export class Debug {
   private readonly logs: string[] = [];
@@ -28,7 +29,7 @@ export class Debug {
   }
 
   public generateDudes(): void {
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 10; i++) {
       setTimeout(() => {
         const keys = Object.keys(config.chatters);
         const index = Math.round(Math.random() * (keys.length - 1));
@@ -38,22 +39,22 @@ export class Debug {
         });
         dude.spawn(true);
 
-        app.addDude('bot ' + i, dude);
-
-        setInterval(() => {
-          dude.addMessage(
-            'Приветики! Пистолетики. А что это ты тут стримишь, а?'
-          );
-        }, 3000);
+        dudesManager.add('bot ' + i, dude);
 
         // setInterval(() => {
-        //   dude.jump();
+        //   dude.addMessage(
+        //     'Приветики! Пистолетики. А что это ты тут стримишь, а?'
+        //   );
         // }, 3000);
+
+        setInterval(() => {
+          dude.jump();
+        }, i * 3000);
 
         setTimeout(() => {
           dude.scale({value: 4, duration: 10, cooldown: 0});
         }, 4000);
-      }, 100 * i);
+      }, 25 * i);
     }
   }
 }

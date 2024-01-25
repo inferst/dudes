@@ -1,3 +1,1 @@
-export const Constants = {
-  fixedDeltaTime: 0.02 * 1000,
-};
+export const FIXED_DELTA_TIME = 0.02 * 1000;

@@ -6,9 +6,11 @@ export class TwitchUserFilterService {
   private bot: Set<string> = new Set();
 
   public constructor() {
-    const file = readFileSync('apps/backend-api/public/bot.txt');
-    for (const bot in file.toString().split('\n')) {
-      this.bot.add(bot);
+    const file = readFileSync('apps/backend-api/public/bots.json');
+    const json = JSON.parse(file.toString());
+
+    for (const bot of json['bots']) {
+      this.bot.add(bot[0]);
     }
   }
 

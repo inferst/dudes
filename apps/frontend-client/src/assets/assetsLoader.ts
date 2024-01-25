@@ -1,19 +1,19 @@
 import * as PIXI from 'pixi.js';
 import { manifest } from './manifest';
 
-interface AsepriteFrameData extends PIXI.ISpritesheetFrameData {
+export interface AsepriteFrameData extends PIXI.ISpritesheetFrameData {
   duration: number;
 }
 
-interface AsepriteData extends PIXI.ISpritesheetData {
-  frames: PIXI.utils.Dict<AsepriteFrameData>;
+export interface AsepriteData extends PIXI.ISpritesheetData {
+  frames: Record<string, AsepriteFrameData>;
   duration: number;
 }
 
 export class AssetsLoader {
   private isLoaded: boolean = false;
 
-  public sheets: PIXI.utils.Dict<PIXI.Spritesheet<AsepriteData>> = {};
+  public sheets: Record<string, PIXI.Spritesheet<AsepriteData>> = {};
 
   async load(): Promise<void> {
     if (!this.isLoaded) {

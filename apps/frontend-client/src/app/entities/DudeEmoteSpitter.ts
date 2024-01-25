@@ -1,7 +1,7 @@
 import { Container, Sprite } from 'pixi.js';
-import { Constants } from '@app/frontend-client/config/constants';
 import { Point } from '@app/frontend-client/helpers/types';
 import { Timer } from '@app/frontend-client/helpers/timer';
+import { FIXED_DELTA_TIME } from '@app/frontend-client/config/constants';
 
 export type DudeEmoteSpitterProps = {
   position: Point;
@@ -41,12 +41,12 @@ export class DudeEmoteSpitter {
     this.container.position.y = props.position.y ?? this.container.position.y;
 
     for (const child of this.container.children) {
-      child.position.y -= (Constants.fixedDeltaTime * this.moveSpeed) / 1000;
-      child.scale.x += (Constants.fixedDeltaTime * this.scaleSpeed) / 1000;
-      child.scale.y += (Constants.fixedDeltaTime * this.scaleSpeed) / 1000;
+      child.position.y -= (FIXED_DELTA_TIME * this.moveSpeed) / 1000;
+      child.scale.x += (FIXED_DELTA_TIME * this.scaleSpeed) / 1000;
+      child.scale.y += (FIXED_DELTA_TIME * this.scaleSpeed) / 1000;
 
       if (child.scale.x > 1) {
-        child.alpha -= (Constants.fixedDeltaTime * this.alphaSpeed) / 1000;
+        child.alpha -= (FIXED_DELTA_TIME * this.alphaSpeed) / 1000;
       }
 
       if (child.alpha <= 0) {
