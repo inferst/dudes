@@ -39,35 +39,6 @@ const DEFAULT_DUDE_SCALE = 4;
 export class Dude {
   public container: PIXI.Container = new PIXI.Container();
 
-  private animationState?: DudeSpriteTags;
-
-  // TODO: Refactor sprite initializing, move logic to separate file
-  private sprite?: DudeSpriteContainer;
-
-  private currentSpriteName: string = 'dude';
-
-  private tagSprites: DudeTagAnimatedSprites =
-    spriteProvider.createTagAnimatedSprites(this.currentSpriteName);
-
-  private name: DudeName = new DudeName();
-
-  private message: DudeMessage = new DudeMessage(() => {
-    this.container.zIndex = dudesManager.zIndexDudeMax(this.container.zIndex);
-  });
-
-  private velocity: PIXI.IPointData = {
-    x: 0,
-    y: 0,
-  };
-
-  private runSpeed: number = 0.05;
-
-  private gravity: number = 0.2;
-
-  private emoteSpitter: DudeEmoteSpitter = new DudeEmoteSpitter();
-
-  private isJumping: boolean = false;
-
   private userState: UserProps = {};
 
   private state: DudeState = {
@@ -93,6 +64,35 @@ export class Dude {
     isAnonymous: false,
   };
 
+  private animationState?: DudeSpriteTags;
+
+  // TODO: Refactor sprite initializing, move logic to separate file
+  private sprite?: DudeSpriteContainer;
+
+  private tagSprites: DudeTagAnimatedSprites =
+    spriteProvider.createTagAnimatedSprites(this.state.sprite.name);
+
+  private name: DudeName = new DudeName();
+
+  private message: DudeMessage = new DudeMessage(() => {
+    this.container.zIndex = dudesManager.zIndexDudeMax(this.container.zIndex);
+  });
+
+  private emoteSpitter: DudeEmoteSpitter = new DudeEmoteSpitter();
+
+  private velocity: PIXI.IPointData = {
+    x: 0,
+    y: 0,
+  };
+
+  private runSpeed: number = 0.05;
+
+  private gravity: number = 0.2;
+
+  private isJumping: boolean = false;
+
+  private isDespawned: boolean = false;
+
   landTimer?: Timer;
 
   stateTimer?: Timer;
@@ -108,8 +108,6 @@ export class Dude {
   scaleTween?: TWEEN.Tween<DudeState>;
 
   constructor(props: DudeProps = {}) {
-    this.state = { ...this.state, ...props };
-
     this.container.sortableChildren = true;
     this.emoteSpitter.container.zIndex = 1;
     this.message.container.zIndex = 2;
@@ -119,6 +117,12 @@ export class Dude {
     this.container.addChild(this.message.container);
 
     void this.setAnimationState(DudeSpriteTags.Idle);
+
+    if (props.sprite) {
+      this.setSprite(props.sprite);
+    }
+
+    this.state = { ...this.state, ...props };
 
     this.stateTimer = new Timer(5000, () => {
       if (!this.isJumping) {
@@ -153,10 +157,13 @@ export class Dude {
     }
   }
 
-  fade(onComplete?: () => void): void {
+  despawn(onComplete?: () => void): void {
     this.fadeTween = new TWEEN.Tween(this.container)
       .to({ alpha: 0 }, 5000)
-      .onComplete(onComplete)
+      .onComplete(() => {
+        this.isDespawned = true;
+        onComplete && onComplete();
+      })
       .start();
   }
 
@@ -179,6 +186,10 @@ export class Dude {
   }
 
   jump(): void {
+    if (this.isDespawned) {
+      return;
+    }
+
     if (!this.isJumping) {
       this.isJumping = true;
 
@@ -193,7 +204,21 @@ export class Dude {
     }
   }
 
+  setSprite(sprite: SpriteConfig) {
+    if (sprite.name && sprite.name != this.state.sprite.name) {
+      this.tagSprites = spriteProvider.createTagAnimatedSprites(sprite.name);
+
+      if (this.animationState) {
+        this.setAnimationState(this.animationState, true);
+      }
+    }
+  }
+
   setProps(props: DudeProps) {
+    if (props.sprite) {
+      this.setSprite(props.sprite);
+    }
+
     this.state = { ...this.state, ...props };
   }
 
@@ -202,6 +227,10 @@ export class Dude {
   }
 
   update(): void {
+    if (this.isDespawned) {
+      return;
+    }
+
     this.landTimer?.tick();
     this.stateTimer?.tick();
     this.scaleTimer?.tick();
@@ -213,18 +242,6 @@ export class Dude {
     this.scaleTween?.update();
 
     const collider = this.state.sprite.collider;
-
-    if (this.currentSpriteName != this.state.sprite.name) {
-      this.currentSpriteName = this.state.sprite.name;
-
-      this.tagSprites = spriteProvider.createTagAnimatedSprites(
-        this.currentSpriteName
-      );
-
-      if (this.animationState) {
-        this.setAnimationState(this.animationState, true);
-      }
-    }
 
     this.name.update({
       name: this.state.name,
@@ -313,7 +330,9 @@ export class Dude {
 
     if (this.sprite) {
       this.sprite.update({
-        color: this.userState.color ?? this.state.color,
+        color: {
+          [DudeSpriteLayers.Body]: this.userState.color ?? this.state.color,
+        },
         scale: {
           x: this.state.direction * this.state.scale,
           y: this.state.scale,
@@ -340,7 +359,10 @@ export class Dude {
     }
   }
 
-  async setAnimationState(state: DudeSpriteTags, force: boolean = false): Promise<void> {
+  async setAnimationState(
+    state: DudeSpriteTags,
+    force: boolean = false
+  ): Promise<void> {
     if (this.animationState == state && !force) {
       return;
     }
@@ -352,12 +374,9 @@ export class Dude {
     }
 
     // TODO: Refactor sprite initializing, move logic to separate file
-    const animatedSprite = this.tagSprites[this.animationState];
+    const layerAnimatedSprites = this.tagSprites[this.animationState];
 
-    this.sprite = new DudeSpriteContainer({
-      body: animatedSprite[DudeSpriteLayers.Body],
-      eyes: animatedSprite[DudeSpriteLayers.Eyes],
-    });
+    this.sprite = new DudeSpriteContainer(layerAnimatedSprites);
 
     this.sprite.container.pivot.set(
       this.state.sprite.pivot.x,

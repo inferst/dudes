@@ -49,7 +49,7 @@ class DudesManager {
         const dude = this.dudes[id];
 
         if (dude) {
-          dude.fade(() => {
+          dude.despawn(() => {
             this.delete(id, dude);
           });
         }
@@ -113,8 +113,6 @@ class DudesManager {
     if (sprite) {
       props.sprite = sprite;
     }
-
-    console.log(props);
 
     const dude = this.dudes[data.userId];
 

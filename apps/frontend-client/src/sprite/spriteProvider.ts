@@ -4,12 +4,13 @@ import {
 } from '@app/frontend-client/assets/assetsLoader';
 import * as PIXI from 'pixi.js';
 
-export type DudeLayerAnimatedSprites = {
-  [layer in DudeSpriteLayers]: PIXI.AnimatedSprite;
+export type DudeLayerAnimatedSprite = {
+  layer: DudeSpriteLayers,
+  sprite: PIXI.AnimatedSprite;
 };
 
 export type DudeTagAnimatedSprites = {
-  [tag in DudeSpriteTags]: DudeLayerAnimatedSprites;
+  [tag in DudeSpriteTags]: DudeLayerAnimatedSprite[];
 };
 
 export enum DudeSpriteLayers {
@@ -37,7 +38,7 @@ export class SpriteProvider {
   public createLayerAnimatedSprites(
     sheet: PIXI.Spritesheet<AsepriteData>,
     frameTag: FrameTag
-  ): DudeLayerAnimatedSprites {
+  ): DudeLayerAnimatedSprite[] {
     const layers = sheet.data.meta.layers;
 
     if (layers) {
@@ -56,13 +57,11 @@ export class SpriteProvider {
         }
       }
 
-      const entries = Object.entries(textures).map((entry) => {
+      return Object.entries(textures).map((entry) => {
         const sprite = new PIXI.AnimatedSprite(entry[1]);
         sprite.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-        return [entry[0], sprite];
+        return {layer: entry[0] as DudeSpriteLayers, sprite};
       });
-
-      return Object.fromEntries(entries);
     }
 
     throw Error("Sprite sheet doesn't have layers");
@@ -87,7 +86,7 @@ export class SpriteProvider {
   public getAnimatedSprite(
     sheetName: string,
     tagName: DudeSpriteTags
-  ): DudeLayerAnimatedSprites {
+  ): DudeLayerAnimatedSprite[] {
     if (!sheetName) {
       throw Error('Sheet is not defined');
     }
