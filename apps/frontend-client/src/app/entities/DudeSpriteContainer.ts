@@ -43,7 +43,14 @@ export class DudeSpriteContainer {
       if (props.color) {
         for (const colorLayer in props.color) {
           if (colorLayer == layer.layer) {
-            layer.sprite.tint = props.color[colorLayer] ?? 0xffffff;
+            const color = props.color[colorLayer];
+            if (color == 'transparent') {
+              layer.sprite.visible = false;
+            } else {
+              layer.sprite.visible = true;
+            }
+
+            layer.sprite.tint = color ?? 0xffffff;
           }
         }
       }
