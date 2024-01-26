@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { TwitchHttpException } from '@app/backend-api/auth/exceptions/twitch-http.exception';
 import { AxiosInstance, isAxiosError } from 'axios';
 
 // TODO: move types to separate file
@@ -32,7 +32,10 @@ export class TwitchApiClient {
       const response = error.response;
 
       if (response) {
-        throw new HttpException(response.data['message'], response.status);
+        throw new TwitchHttpException(
+          response.data['message'],
+          response.status
+        );
       }
     }
   }

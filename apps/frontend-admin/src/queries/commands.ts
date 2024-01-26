@@ -12,5 +12,4 @@ export const commandsKeys = createQueryKeys('commands', {
 export const useCommndsQuery = () =>
   useApiQuery({
     ...commandsKeys.list,
-    initialData: [],
   });

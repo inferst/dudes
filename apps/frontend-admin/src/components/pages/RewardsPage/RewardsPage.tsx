@@ -18,7 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { RewardForm, RewardFormInput } from './RewardForm';
+import { EditRewardForm, EditRewardFormInput } from './EditRewardForm';
+import { AddRewardForm, AddRewardFormInput } from './AddRewardForm';
 
 export function RewardsPage() {
   const actionsQuery = useActionsQuery();
@@ -31,8 +32,12 @@ export function RewardsPage() {
   const createMutation = useCreateRewardMutation();
   const deleteMutation = useDeleteRewardMutation();
 
-  if (rewardsQuery.isLoading) {
+  if (rewardsQuery.isLoading || actionsQuery.isLoading) {
     return <Loader />;
+  }
+
+  if (rewardsQuery.isError || actionsQuery.isError) {
+    return;
   }
 
   const handleIsActiveChange = (index: number, value: boolean) => {
@@ -47,7 +52,7 @@ export function RewardsPage() {
     deleteMutation.mutate(id);
   };
 
-  const handleSave = (index: number, data: RewardFormInput) => {
+  const handleSave = (index: number, data: EditRewardFormInput) => {
     const reward = rewards[index];
 
     if (reward) {
@@ -59,20 +64,23 @@ export function RewardsPage() {
     }
   };
 
-  const handleCreate = (data: RewardFormInput) => {
-    const action = actions.find((action) => action.id === data.actionId);
-
-    console.log(data.actionId, actions);
+  const handleAdd = (data: AddRewardFormInput) => {
+    const action = actions.find(
+      (action) => action.id === Number(data.actionId)
+    );
 
     if (action) {
       createMutation.mutate({
         actionId: action.id,
-        title: action.title,
+        title: data.title,
         isActive: true,
-        cost: data.cost ?? 0,
+        cost: data.cost,
       });
     }
   };
+
+  const getActionTitle = (id: number) =>
+    actions.find((action) => action.id === id)?.title;
 
   return (
     <Card>
@@ -81,17 +89,12 @@ export function RewardsPage() {
       </CardHeader>
       <CardContent>
         <div className="mb-6">
-          {/* <Button variant="default">
-            <Plus className="mr-2" />
-            Add new reward
-          </Button> */}
-
-          <RewardForm
-            edit={false}
-            title={''}
-            cost={0}
-            onSave={(data) => handleCreate(data)}
-          ></RewardForm>
+          {actions.length > 0 && (
+            <AddRewardForm
+              actions={actions}
+              onSave={(data) => handleAdd(data)}
+            ></AddRewardForm>
+          )}
         </div>
 
         <Table>
@@ -99,7 +102,7 @@ export function RewardsPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Active</TableHead>
-              <TableHead className="w-[100px]">Command</TableHead>
+              <TableHead className="w-[100px]">Action</TableHead>
               <TableHead>Title</TableHead>
               <TableHead className="w-40">Cost</TableHead>
               <TableHead>Edit</TableHead>
@@ -110,23 +113,27 @@ export function RewardsPage() {
             {rewards.map((reward, index) => (
               <TableRow key={reward.id}>
                 <TableCell>
-                  <Checkbox
-                    onCheckedChange={(value: boolean) =>
-                      handleIsActiveChange(index, value)
-                    }
-                    checked={reward.isActive}
-                    className="block"
-                  ></Checkbox>
+                  {!reward.isDeleted && (
+                    <Checkbox
+                      onCheckedChange={(value: boolean) =>
+                        handleIsActiveChange(index, value)
+                      }
+                      checked={reward.isActive}
+                      className="block"
+                    ></Checkbox>
+                  )}
                 </TableCell>
-                <TableCell>{reward.actionId}</TableCell>
+                <TableCell>{getActionTitle(reward.actionId)}</TableCell>
                 <TableCell>{reward.title}</TableCell>
                 <TableCell>{reward.cost}</TableCell>
                 <TableCell>
-                  <RewardForm
-                    title={reward.title}
-                    cost={reward.cost}
-                    onSave={(data) => handleSave(index, data)}
-                  ></RewardForm>
+                  {!reward.isDeleted && reward.title && reward.cost && (
+                    <EditRewardForm
+                      title={reward.title}
+                      cost={reward.cost}
+                      onSave={(data) => handleSave(index, data)}
+                    ></EditRewardForm>
+                  )}
                 </TableCell>
                 <TableCell>
                   <DeleteDialog

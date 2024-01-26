@@ -16,7 +16,7 @@ export function Header() {
     <header className="py-2 border-b border-border/60">
       <div className="container flex items-center">
         <div className="flex items-center">
-          <div className="text-primary w-10 h-10 rounded-sm overflow-hidden mr-2">
+          <div className="text-primary w-10 h-10 rounded-sm overflow-hidden mr-2 ml-3">
             <img src={user?.picture} alt={user?.name} />
           </div>
 
@@ -28,7 +28,7 @@ export function Header() {
               <AvatarImage src={user?.picture} alt={user?.name} />
               <AvatarFallback>{user?.name[0]}</AvatarFallback>
             </Avatar>
-            <div className="p-2">
+            <div className="ml-2 my-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size={'sm'}>

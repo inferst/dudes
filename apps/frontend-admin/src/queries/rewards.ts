@@ -12,5 +12,4 @@ export const rewardsKeys = createQueryKeys('rewards', {
 export const useRewardsQuery = () =>
   useApiQuery({
     ...rewardsKeys.list,
-    initialData: [],
   });
