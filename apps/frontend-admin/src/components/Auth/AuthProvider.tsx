@@ -6,7 +6,6 @@ import { Loader } from '../common/Loader';
 
 type AuthContext = {
   user?: UserEntity;
-  isAuthorized: boolean;
 };
 
 export const AuthContext = createContext<AuthContext | undefined>(undefined);
@@ -18,11 +17,18 @@ type AuthProviderProps = {
 export function AuthProvider({ children }: AuthProviderProps) {
   const {
     isLoading,
+    isError,
     data: user,
+    error,
   } = useApiQuery({
     queryKey: ['admin/user'],
     queryFn: api.getUser,
   });
+
+  // TODO: implement error boundary component
+  if (isError) {
+    return error.message;
+  }
 
   if (isLoading) {
     return (
@@ -33,7 +39,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthorized: !!user }}>
+    <AuthContext.Provider value={{ user }}>
       {children}
     </AuthContext.Provider>
   );
