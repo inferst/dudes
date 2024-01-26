@@ -46,6 +46,7 @@ export class AuthController {
 
     if (user?.accessToken) {
       await this.authService.logout(user.accessToken);
+
       req.session.destroy((err) => {
         if (!err || Object.keys(err).length === 0) {
           // By some reason it returns an error with an empty object
@@ -59,6 +60,7 @@ export class AuthController {
       });
     }
 
+    res.clearCookie('connect.sid');
     res.redirect(`${this.configService.adminUrl}/login`);
   }
 }

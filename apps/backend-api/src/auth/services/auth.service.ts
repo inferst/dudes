@@ -12,6 +12,7 @@ export type AuthUserProps = {
   twitchId: string;
   userId: number;
   guid: string;
+  accessToken: string;
 };
 
 type WithData<T> = {
@@ -59,6 +60,7 @@ export class AuthService {
       twitchId: user.twitchId,
       picture: result.profile_image_url,
       name: result.display_name,
+      accessToken,
     };
   }
 

@@ -1,4 +1,3 @@
-import { AuthProvider } from '@app/frontend-admin/components/Auth/AuthProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from './components/ui/toaster';
@@ -18,9 +17,7 @@ export function App() {
     <>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <Routes />
-          </AuthProvider>
+          <Routes />
         </QueryClientProvider>
       </BrowserRouter>
       <Toaster />
