@@ -5,6 +5,10 @@ import {
 } from '@app/frontend-admin/mutations/rewards';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { useRewardsQuery } from '@app/frontend-admin/queries/rewards';
+import {
+  ActionEntity,
+  TwitchRewardEntity
+} from '@shared';
 import { DeleteDialog } from '../../common/DeleteDialog';
 import { Loader } from '../../common/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
@@ -18,8 +22,8 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { EditRewardForm, EditRewardFormInput } from './EditRewardForm';
 import { AddRewardForm, AddRewardFormInput } from './AddRewardForm';
+import { EditRewardForm, EditRewardFormInput } from './EditRewardForm';
 
 export function RewardsPage() {
   const actionsQuery = useActionsQuery();
@@ -60,6 +64,7 @@ export function RewardsPage() {
         id: reward.id,
         title: data.title,
         cost: data.cost,
+        data: data.data,
       });
     }
   };
@@ -75,12 +80,29 @@ export function RewardsPage() {
         title: data.title,
         isActive: true,
         cost: data.cost,
+        data: data.data,
       });
     }
   };
 
-  const getActionTitle = (id: number) =>
-    actions.find((action) => action.id === id)?.title;
+  const getAction = (id: number): ActionEntity | undefined =>
+    actions.find((action) => action.id === id);
+
+  const rewardForm = (reward: TwitchRewardEntity, index: number) => {
+    const action = actions.find((action) => action.id === reward.actionId);
+
+    if (action && reward.title && reward.cost) {
+      return (
+        <EditRewardForm
+          title={reward.title}
+          cost={reward.cost}
+          action={action}
+          data={reward.data}
+          onSave={(data) => handleSave(index, data)}
+        ></EditRewardForm>
+      );
+    }
+  };
 
   return (
     <Card>
@@ -123,18 +145,10 @@ export function RewardsPage() {
                     ></Checkbox>
                   )}
                 </TableCell>
-                <TableCell>{getActionTitle(reward.actionId)}</TableCell>
+                <TableCell>{getAction(reward.actionId)?.title}</TableCell>
                 <TableCell>{reward.title}</TableCell>
                 <TableCell>{reward.cost}</TableCell>
-                <TableCell>
-                  {!reward.isDeleted && reward.title && reward.cost && (
-                    <EditRewardForm
-                      title={reward.title}
-                      cost={reward.cost}
-                      onSave={(data) => handleSave(index, data)}
-                    ></EditRewardForm>
-                  )}
-                </TableCell>
+                <TableCell>{rewardForm(reward, index)}</TableCell>
                 <TableCell>
                   <DeleteDialog
                     onDelete={() => handleDelete(reward.id)}

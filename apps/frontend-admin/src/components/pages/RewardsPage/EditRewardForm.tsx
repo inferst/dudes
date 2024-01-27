@@ -1,9 +1,9 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateTwitchRewardFormSchema } from '@shared';
+import { ActionEntity, getUpdateTwitchRewardFormSchema } from '@shared';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { Button } from '../../ui/button';
 import {
   Dialog,
@@ -17,26 +17,34 @@ import {
 import { Form } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
+import {
+  RewardActionDataForm,
+  RewardActionDataInput,
+} from './RewardActionDataForm';
 
 export type EditRewardFormInput = {
   title: string;
   cost: number;
-};
+} & RewardActionDataInput;
 
 export type EditRewardFormProps = {
+  action: ActionEntity;
   onSave: (data: EditRewardFormInput) => void;
 } & EditRewardFormInput;
 
 export function EditRewardForm(props: EditRewardFormProps) {
-  const { title, cost, onSave } = props;
+  const { title, cost, action, data, onSave } = props;
 
   const [open, setOpen] = useState(false);
 
+  const schema = getUpdateTwitchRewardFormSchema(action);
+
   const form = useForm<EditRewardFormInput>({
-    resolver: zodResolver(updateTwitchRewardFormSchema),
-    defaultValues: {
+    resolver: zodResolver(schema),
+    values: {
       title,
       cost,
+      data,
     },
   });
 
@@ -111,6 +119,10 @@ export function EditRewardForm(props: EditRewardFormProps) {
                   )}
                 />
               </div>
+              <RewardActionDataForm
+                action={action}
+                form={form as unknown as UseFormReturn<RewardActionDataInput>}
+              />
             </div>
             <DialogFooter>
               <Button type="submit">Save changes</Button>

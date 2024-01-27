@@ -1,9 +1,9 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createTwitchRewardFormSchema } from '@shared';
+import { ActionEntity, getCreateTwitchRewardFormSchema } from '@shared';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { Button } from '../../ui/button';
 import {
   Dialog,
@@ -25,20 +25,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../ui/select';
-
-export type RewardFormAction = {
-  id: number;
-  title: string;
-};
+import {
+  RewardActionDataForm,
+  RewardActionDataInput,
+} from './RewardActionDataForm';
 
 export type AddRewardFormInput = {
   actionId: number;
   title: string;
   cost: number;
-};
+} & RewardActionDataInput;
 
 export type AddRewardFormProps = {
-  actions: RewardFormAction[];
+  actions: ActionEntity[];
   onSave: (data: AddRewardFormInput) => void;
 };
 
@@ -46,14 +45,15 @@ export function AddRewardForm(props: AddRewardFormProps) {
   const { actions, onSave } = props;
 
   const [open, setOpen] = useState(false);
+  const [action, setAction] = useState(actions[0]);
 
-  const actionId = actions[0].id ?? -1;
+  const schema = getCreateTwitchRewardFormSchema(action);
 
   const form = useForm<AddRewardFormInput>({
-    resolver: zodResolver(createTwitchRewardFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       title: '',
-      actionId,
+      actionId: action.id,
     },
   });
 
@@ -62,6 +62,7 @@ export function AddRewardForm(props: AddRewardFormProps) {
   const onSubmit = (data: AddRewardFormInput) => {
     onSave(data);
     setOpen(false);
+    form.reset();
   };
 
   const handleOpenChange = (value: boolean) => {
@@ -99,9 +100,14 @@ export function AddRewardForm(props: AddRewardFormProps) {
                       <div className="col-span-3">
                         <Select
                           value={field.value?.toString()}
-                          onValueChange={(value) =>
-                            field.onChange(Number(value))
-                          }
+                          onValueChange={(value) => {
+                            field.onChange(Number(value));
+                            setAction(
+                              actions.find(
+                                (action) => action.id === Number(value)
+                              ) as ActionEntity
+                            );
+                          }}
                         >
                           <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Select an action" />
@@ -167,6 +173,10 @@ export function AddRewardForm(props: AddRewardFormProps) {
                   )}
                 />
               </div>
+              <RewardActionDataForm
+                action={action}
+                form={form as unknown as UseFormReturn<RewardActionDataInput>}
+              />
             </div>
             <DialogFooter>
               <Button type="submit">Add reward</Button>

@@ -61,12 +61,15 @@ export class TwitchRewardRepository {
     rewardId: number,
     data: UpdateTwitchRewardDto
   ): Promise<TwitchRewardEntity> {
-    const reward = await this.prismaService.reward.findFirst({
+    const reward = await this.prismaService.reward.update({
       where: {
         id: rewardId,
         userId: user.userId,
         platformId: TWITCH_PLATFORM_ID,
       },
+      data: {
+        data: data.data
+      }
     });
 
     if (!reward) {

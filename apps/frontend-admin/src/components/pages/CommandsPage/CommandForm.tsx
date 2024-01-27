@@ -1,9 +1,9 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateCommandFormSchema } from '@shared';
+import { ActionEntity, getUpdateCommandFormSchema } from '@shared';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { Button } from '../../ui/button';
 import {
   Dialog,
@@ -17,28 +17,31 @@ import {
 import { Form } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
+import { RewardActionDataForm, RewardActionDataInput } from '../RewardsPage/RewardActionDataForm';
 
 export type CommandFormInput = {
   text: string;
   cooldown: number;
-};
+} & RewardActionDataInput;
 
 type CommandFormProps = {
-  text: string;
-  cooldown: number;
+  action: ActionEntity;
   onSave: (data: CommandFormInput) => void;
-};
+} & CommandFormInput;
 
 export function CommandForm(props: CommandFormProps) {
-  const { text, cooldown, onSave } = props;
+  const { text, cooldown, data, action, onSave } = props;
 
   const [open, setOpen] = useState(false);
 
+  const schema = getUpdateCommandFormSchema(action);
+
   const form = useForm<CommandFormInput>({
-    resolver: zodResolver(updateCommandFormSchema),
-    defaultValues: {
+    resolver: zodResolver(schema),
+    values: {
       text,
       cooldown,
+      data,
     },
   });
 
@@ -115,6 +118,10 @@ export function CommandForm(props: CommandFormProps) {
                   )}
                 />
               </div>
+              <RewardActionDataForm
+                action={action}
+                form={form as unknown as UseFormReturn<RewardActionDataInput>}
+              />
             </div>
             <DialogFooter>
               <Button type="submit">Save changes</Button>

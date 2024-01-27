@@ -28,6 +28,7 @@ import { Button } from '../../ui/button';
 import { Plus } from 'lucide-react';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { DeleteDialog } from '../../common/DeleteDialog';
+import { CommandEntity } from '@shared';
 
 export function CommandsPage() {
   const actionsQuery = useActionsQuery();
@@ -60,6 +61,7 @@ export function CommandsPage() {
         id: command.id,
         text: data.text,
         cooldown: data.cooldown,
+        data: data.data,
       });
     }
   };
@@ -78,6 +80,22 @@ export function CommandsPage() {
         isActive: true,
         cooldown: 0,
       });
+    }
+  };
+
+  const commandForm = (command: CommandEntity, index: number) => {
+    const action = actions.find((action) => action.id === command.actionId);
+
+    if (action) {
+      return (
+        <CommandForm
+          text={command.text}
+          cooldown={command.cooldown}
+          action={action}
+          data={command.data}
+          onSave={(data) => handleCommandSave(index, data)}
+        ></CommandForm>
+      );
     }
   };
 
@@ -132,13 +150,7 @@ export function CommandsPage() {
                 </TableCell>
                 <TableCell>{command.text}</TableCell>
                 <TableCell>{command.cooldown}</TableCell>
-                <TableCell>
-                  <CommandForm
-                    text={command.text}
-                    cooldown={command.cooldown}
-                    onSave={(data) => handleCommandSave(index, data)}
-                  ></CommandForm>
-                </TableCell>
+                <TableCell>{commandForm(command, index)}</TableCell>
                 <TableCell>
                   <DeleteDialog
                     onDelete={() => handleDelete(command.id)}
