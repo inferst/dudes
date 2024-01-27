@@ -83,4 +83,6 @@ model Reward {
   platformId       Int
   platform         Platform @relation(fields: [platformId], references: [id])
   platformRewardId String
+  /// [RewardData]
+  data             Json     @default("{}") @db.JsonB()
 }

@@ -126,9 +126,7 @@ class DudesManager {
       dude.setProps(props);
     }
 
-    if (!this.hasMessages(data.userId)) {
-      this.lastMessageTimes[data.userId] = performance.now();
-    }
+    this.lastMessageTimes[data.userId] = performance.now();
 
     if (data.message) {
       dude.addMessage(data.message);

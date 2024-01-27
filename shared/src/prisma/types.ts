@@ -12,6 +12,11 @@ declare global {
       arguments: string[];
       action: ActionData;
     };
+
+    type RewardData = {
+      arguments: string[];
+      action: ActionData;
+    };
   }
 }
 

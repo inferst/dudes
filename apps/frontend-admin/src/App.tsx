@@ -4,7 +4,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import { BrowserRouter, useNavigate } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from './components/ui/toaster';
 import { Routes } from './routes';
 import { isAxiosError } from 'axios';
@@ -13,7 +13,6 @@ import { useToast } from './components/ui/use-toast';
 
 export function App() {
   const { toast } = useToast();
-  // const navigate = useNavigate();
 
   const queryClient = useMemo(() => {
     return new QueryClient({
@@ -27,7 +26,7 @@ export function App() {
         onError: (error) => {
           if (isAxiosError(error)) {
             const message = error.response?.data.message;
-            toast({title: message});
+            toast({ title: message, variant: 'destructive' });
             console.error(message);
           }
         },
@@ -36,7 +35,7 @@ export function App() {
         onError: (error) => {
           if (isAxiosError(error)) {
             const message = error.response?.data.message;
-            toast({title: message});
+            toast({ title: message, variant: 'destructive' });
             console.error(message);
           }
         },

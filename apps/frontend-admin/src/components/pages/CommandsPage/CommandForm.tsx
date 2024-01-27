@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../../ui/dialog';
-import { Form, FormField } from '../../ui/form';
+import { Form } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 
@@ -36,7 +36,7 @@ export function CommandForm(props: CommandFormProps) {
 
   const form = useForm<CommandFormInput>({
     resolver: zodResolver(updateCommandFormSchema),
-    values: {
+    defaultValues: {
       text,
       cooldown,
     },
@@ -49,8 +49,16 @@ export function CommandForm(props: CommandFormProps) {
     setOpen(false);
   };
 
+  const handleOpenChange = (value: boolean) => {
+    if (!value) {
+      form.reset();
+    }
+
+    setOpen(value);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="secondary">Edit</Button>
       </DialogTrigger>
@@ -65,63 +73,47 @@ export function CommandForm(props: CommandFormProps) {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <FormField
-                  control={form.control}
+                <Label htmlFor="command-text" className="text-right">
+                  Text
+                </Label>
+                <Input
+                  id="command-text"
+                  className="col-span-3"
+                  {...form.register('text')}
+                />
+                <ErrorMessage
+                  errors={form.formState.errors}
                   name="text"
-                  render={({ field }) => (
-                    <>
-                      <Label htmlFor="command-text" className="text-right">
-                        Text
-                      </Label>
-                      <Input
-                        id="command-text"
-                        className="col-span-3"
-                        {...field}
-                      />
-                      <ErrorMessage
-                        errors={form.formState.errors}
-                        name="text"
-                        render={({ message }) => (
-                          <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
-                            {message}
-                          </p>
-                        )}
-                      />
-                    </>
+                  render={({ message }) => (
+                    <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
+                      {message}
+                    </p>
                   )}
-                ></FormField>
+                />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <FormField
-                  control={form.control}
+                <Label htmlFor="command-cooldown" className="text-right">
+                  Cooldown
+                </Label>
+                <Input
+                  id="command-cooldown"
+                  type="number"
+                  min={0}
+                  className="col-span-3"
+                  {...form.register('cooldown', {
+                    setValueAs: (value) =>
+                      value === '' ? 0 : parseInt(value, 10),
+                  })}
+                />
+                <ErrorMessage
+                  errors={form.formState.errors}
                   name="cooldown"
-                  render={({ field }) => (
-                    <>
-                      <Label htmlFor="command-cooldown" className="text-right">
-                        Cooldown
-                      </Label>
-                      <Input
-                        id="command-cooldown"
-                        type="number"
-                        min={0}
-                        className="col-span-3"
-                        {...field}
-                        onChange={(event) =>
-                          field.onChange(+event.target.value)
-                        }
-                      />
-                      <ErrorMessage
-                        errors={form.formState.errors}
-                        name="cooldown"
-                        render={({ message }) => (
-                          <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
-                            {message}
-                          </p>
-                        )}
-                      />
-                    </>
+                  render={({ message }) => (
+                    <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
+                      {message}
+                    </p>
                   )}
-                ></FormField>
+                />
               </div>
             </div>
             <DialogFooter>

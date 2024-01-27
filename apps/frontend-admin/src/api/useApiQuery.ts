@@ -1,7 +1,7 @@
 import { DefaultError, QueryKey } from '@tanstack/query-core';
 import { QueryClient, UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const errorCodes = [401, 403];
@@ -16,28 +16,19 @@ export const useApiQuery = <
   queryClient?: QueryClient
 ) => {
   const navigate = useNavigate();
-  const query = useQuery({ ...options }, queryClient);
+  const query = useQuery(options, queryClient);
 
-  const redirect = useMemo(() => {
+  useEffect(() => {
     if (isAxiosError(query.error)) {
       if (query.error.response) {
         const type = query.error.response.data.type as string;
 
         if (!type && errorCodes.includes(query.error.response.status)) {
-          return true;
+          navigate('/admin/login');
         }
       }
     }
-
-    return false;
-  }, [query.error]);
-
-  // TODO: move redirect to global query client
-  useEffect(() => {
-    if (redirect) {
-      navigate('/admin/login');
-    }
-  }, [redirect, navigate]);
+  }, [query.error, navigate]);
 
   return query;
 };

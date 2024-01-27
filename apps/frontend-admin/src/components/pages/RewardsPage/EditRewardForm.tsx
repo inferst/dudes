@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../../ui/dialog';
-import { Form, FormField } from '../../ui/form';
+import { Form } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 
@@ -34,7 +34,7 @@ export function EditRewardForm(props: EditRewardFormProps) {
 
   const form = useForm<EditRewardFormInput>({
     resolver: zodResolver(updateTwitchRewardFormSchema),
-    values: {
+    defaultValues: {
       title,
       cost,
     },
@@ -47,8 +47,16 @@ export function EditRewardForm(props: EditRewardFormProps) {
     setOpen(false);
   };
 
+  const handleOpenChange = (value: boolean) => {
+    if (!value) {
+      form.reset();
+    }
+
+    setOpen(value);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="secondary">Edit</Button>
       </DialogTrigger>
@@ -63,61 +71,45 @@ export function EditRewardForm(props: EditRewardFormProps) {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <FormField
-                  control={form.control}
+                <Label htmlFor="reward-text" className="text-right">
+                  Title
+                </Label>
+                <Input
+                  id="reward-text"
+                  className="col-span-3"
+                  {...form.register('title')}
+                />
+                <ErrorMessage
+                  errors={form.formState.errors}
                   name="title"
-                  render={({ field }) => (
-                    <>
-                      <Label htmlFor="reward-text" className="text-right">
-                        Title
-                      </Label>
-                      <Input
-                        id="reward-text"
-                        className="col-span-3"
-                        {...field}
-                      />
-                      <ErrorMessage
-                        errors={form.formState.errors}
-                        name="title"
-                        render={({ message }) => (
-                          <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
-                            {message}
-                          </p>
-                        )}
-                      />
-                    </>
+                  render={({ message }) => (
+                    <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
+                      {message}
+                    </p>
                   )}
-                ></FormField>
+                />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <FormField
-                  control={form.control}
+                <Label htmlFor="reward-cost" className="text-right">
+                  Cost
+                </Label>
+                <Input
+                  id="reward-cost"
+                  className="col-span-3"
+                  {...form.register('cost', {
+                    setValueAs: (value) =>
+                      value === '' ? undefined : parseInt(value, 10),
+                  })}
+                />
+                <ErrorMessage
+                  errors={form.formState.errors}
                   name="cost"
-                  render={({ field }) => (
-                    <>
-                      <Label htmlFor="reward-cost" className="text-right">
-                        Cost
-                      </Label>
-                      <Input
-                        id="reward-cost"
-                        className="col-span-3"
-                        {...field}
-                        onChange={(event) =>
-                          field.onChange(+event.target.value)
-                        }
-                      />
-                      <ErrorMessage
-                        errors={form.formState.errors}
-                        name="cost"
-                        render={({ message }) => (
-                          <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
-                            {message}
-                          </p>
-                        )}
-                      />
-                    </>
+                  render={({ message }) => (
+                    <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
+                      {message}
+                    </p>
                   )}
-                ></FormField>
+                />
               </div>
             </div>
             <DialogFooter>

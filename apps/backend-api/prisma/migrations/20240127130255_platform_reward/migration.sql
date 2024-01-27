@@ -18,6 +18,7 @@ DROP COLUMN "description",
 DROP COLUMN "isActive",
 DROP COLUMN "isPaused",
 DROP COLUMN "title",
+ADD COLUMN     "data" JSONB NOT NULL DEFAULT '{}',
 ADD COLUMN     "platformId" INTEGER NOT NULL,
 ADD COLUMN     "platformRewardId" TEXT NOT NULL;
 
