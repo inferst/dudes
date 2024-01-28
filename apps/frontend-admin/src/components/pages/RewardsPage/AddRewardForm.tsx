@@ -30,15 +30,15 @@ import {
   SelectValue,
 } from '../../ui/select';
 import {
-  RewardActionDataForm,
-  RewardActionDataInput,
-} from './RewardActionDataForm';
+  ActionDataForm,
+  ActionDataInput,
+} from '../../common/form/ActionDataForm';
 
 export type AddRewardFormInput = {
   actionId: number;
   title: string;
   cost: number;
-} & RewardActionDataInput;
+} & ActionDataInput;
 
 export type AddRewardFormProps = {
   actions: ActionEntity[];
@@ -180,9 +180,9 @@ export function AddRewardForm(props: AddRewardFormProps) {
                   )}
                 />
               </div>
-              <RewardActionDataForm
+              <ActionDataForm
                 action={action}
-                form={form as unknown as UseFormReturn<RewardActionDataInput>}
+                form={form as unknown as UseFormReturn<ActionDataInput>}
               />
             </div>
             <DialogFooter>

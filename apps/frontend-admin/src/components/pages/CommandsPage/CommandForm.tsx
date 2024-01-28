@@ -22,14 +22,14 @@ import { Form } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import {
-  RewardActionDataForm,
-  RewardActionDataInput,
-} from '../RewardsPage/RewardActionDataForm';
+  ActionDataForm,
+  ActionDataInput,
+} from '../../common/form/ActionDataForm';
 
 export type CommandFormInput = {
   text: string;
   cooldown: number;
-} & RewardActionDataInput;
+} & ActionDataInput;
 
 type CommandFormProps = {
   action: ActionEntity;
@@ -125,9 +125,9 @@ export function CommandForm(props: CommandFormProps) {
                   )}
                 />
               </div>
-              <RewardActionDataForm
+              <ActionDataForm
                 action={action}
-                form={form as unknown as UseFormReturn<RewardActionDataInput>}
+                form={form as unknown as UseFormReturn<ActionDataInput>}
               />
             </div>
             <DialogFooter>

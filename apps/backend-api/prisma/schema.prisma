@@ -53,7 +53,7 @@ model Command {
   isActive Boolean @default(false)
   text     String  @db.VarChar(255)
   cooldown Int     @default(0)
-  /// [CommandData]
+  /// [ActionableData]
   data     Json    @default("{}") @db.JsonB()
 }
 
@@ -83,6 +83,6 @@ model Reward {
   platformId       Int
   platform         Platform @relation(fields: [platformId], references: [id])
   platformRewardId String
-  /// [RewardData]
+  /// [ActionableData]
   data             Json     @default("{}") @db.JsonB()
 }

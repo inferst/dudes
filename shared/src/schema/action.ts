@@ -8,13 +8,12 @@ import {
 export const colorActionData = {
   data: z.union([
     z.object({
-      action: z.object({
-        color: z.string().optional(),
-      }),
+      arguments: z.array(z.literal('color')).min(1).max(1),
     }),
     z.object({
-      // TODO: Implement arguments option in user interface
-      arguments: z.array(z.literal('color')).max(1),
+      action: z.object({
+        color: z.string().min(1),
+      }),
     }),
   ]),
 };

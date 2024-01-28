@@ -8,12 +8,7 @@ declare global {
 
     type ActionData = Record<string, string | number | undefined>;
 
-    type CommandData = {
-      arguments: string[];
-      action: ActionData;
-    };
-
-    type RewardData = {
+    type ActionableData = {
       arguments: string[];
       action: ActionData;
     };

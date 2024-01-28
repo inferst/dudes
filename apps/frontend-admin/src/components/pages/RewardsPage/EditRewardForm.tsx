@@ -22,14 +22,14 @@ import { Form } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import {
-  RewardActionDataForm,
-  RewardActionDataInput,
-} from './RewardActionDataForm';
+  ActionDataForm,
+  ActionDataInput,
+} from '../../common/form/ActionDataForm';
 
 export type EditRewardFormInput = {
   title: string;
   cost: number;
-} & RewardActionDataInput;
+} & ActionDataInput;
 
 export type EditRewardFormProps = {
   action: ActionEntity;
@@ -126,9 +126,9 @@ export function EditRewardForm(props: EditRewardFormProps) {
                   )}
                 />
               </div>
-              <RewardActionDataForm
+              <ActionDataForm
                 action={action}
-                form={form as unknown as UseFormReturn<RewardActionDataInput>}
+                form={form as unknown as UseFormReturn<ActionDataInput>}
               />
             </div>
             <DialogFooter>

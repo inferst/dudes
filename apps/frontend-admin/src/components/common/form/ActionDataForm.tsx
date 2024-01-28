@@ -1,23 +1,22 @@
+import { ErrorMessage } from '@hookform/error-message';
 import {
   ActionEntity,
-  TwitchRewardEntity,
   isColorUserActionEntity,
   isGrowUserActionEntity,
-  isJumpUserActionEntity,
 } from '@shared';
-import { Label } from '../../ui/label';
-import { Input } from '../../ui/input';
-import { ErrorMessage } from '@hookform/error-message';
 import { UseFormReturn } from 'react-hook-form';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { ColorActionDataForm } from './ColorActionDataForm';
 
-export type RewardActionDataInput = { data: TwitchRewardEntity['data'] };
+export type ActionDataInput = { data: PrismaJson.ActionableData };
 
-export type RewardActionDataFormProps = {
+export type ActionDataFormProps = {
   action: ActionEntity;
-  form: UseFormReturn<RewardActionDataInput>;
+  form: UseFormReturn<ActionDataInput>;
 };
 
-export function RewardActionDataForm(props: RewardActionDataFormProps) {
+export function ActionDataForm(props: ActionDataFormProps) {
   const { action, form } = props;
 
   if (isGrowUserActionEntity(action)) {
@@ -31,7 +30,8 @@ export function RewardActionDataForm(props: RewardActionDataFormProps) {
             id="reward-duration"
             className="col-span-3"
             {...form.register('data.action.duration', {
-              setValueAs: (value) => (value === '' ? undefined : parseInt(value, 10)),
+              setValueAs: (value) =>
+                value === '' ? undefined : parseInt(value, 10),
             })}
           />
           <ErrorMessage
@@ -70,32 +70,8 @@ export function RewardActionDataForm(props: RewardActionDataFormProps) {
     );
   }
 
-  if (isJumpUserActionEntity(action)) {
-    return;
-  }
-
   if (isColorUserActionEntity(action)) {
-    return (
-      <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="reward-color" className="text-right">
-          Color
-        </Label>
-        <Input
-          id="reward-color"
-          className="col-span-3"
-          {...form.register('data.action.color')}
-        />
-        <ErrorMessage
-          errors={form.formState.errors}
-          name="data.action.color"
-          render={({ message }) => (
-            <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
-              {message}
-            </p>
-          )}
-        />
-      </div>
-    );
+    return <ColorActionDataForm form={form} />;
   }
 
   return;
