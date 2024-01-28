@@ -12,22 +12,12 @@ import {
 import { CommandForm, CommandFormInput } from './CommandForm';
 
 import {
-  useCreateCommandMutation,
-  useDeleteCommandMutation,
-  useUpdateCommandMutation,
+  useUpdateCommandMutation
 } from '@app/frontend-admin/mutations/commands';
-import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
-import { Loader } from '../../common/Loader';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '../../ui/dropdown-menu';
-import { Button } from '../../ui/button';
-import { Plus } from 'lucide-react';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
-import { DeleteDialog } from '../../common/DeleteDialog';
+import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
+import { CommandEntity } from '@shared';
+import { Loader } from '../../common/Loader';
 
 export function CommandsPage() {
   const actionsQuery = useActionsQuery();
@@ -37,8 +27,6 @@ export function CommandsPage() {
   const actions = actionsQuery.data ?? [];
 
   const updateMutation = useUpdateCommandMutation();
-  const createMutation = useCreateCommandMutation();
-  const deleteMutation = useDeleteCommandMutation();
 
   if (commandsQuery.isLoading || actionsQuery.isLoading) {
     return <Loader />;
@@ -60,24 +48,24 @@ export function CommandsPage() {
         id: command.id,
         text: data.text,
         cooldown: data.cooldown,
+        data: data.data,
       });
     }
   };
 
-  const handleDelete = (id: number) => {
-    deleteMutation.mutate(id);
-  };
-
-  const handleActionClick = (id: number) => {
-    const action = actions.find((action) => action.id === id);
+  const commandForm = (command: CommandEntity, index: number) => {
+    const action = actions.find((action) => action.id === command.actionId);
 
     if (action) {
-      createMutation.mutate({
-        actionId: id,
-        text: '!' + action.name,
-        isActive: true,
-        cooldown: 0,
-      });
+      return (
+        <CommandForm
+          text={command.text}
+          cooldown={command.cooldown}
+          action={action}
+          data={command.data}
+          onSave={(data) => handleCommandSave(index, data)}
+        ></CommandForm>
+      );
     }
   };
 
@@ -87,26 +75,6 @@ export function CommandsPage() {
         <CardTitle>Commands</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="default">
-                <Plus className="mr-2" />
-                Add new command
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {actions.map((action) => (
-                <DropdownMenuItem
-                  key={action.id}
-                  onClick={() => handleActionClick(action.id)}
-                >
-                  {action.title}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
         <Table>
           <TableCaption>A list of dude commands</TableCaption>
           <TableHeader>
@@ -115,7 +83,6 @@ export function CommandsPage() {
               <TableHead>Command</TableHead>
               <TableHead>Cooldown</TableHead>
               <TableHead className="w-40">Edit</TableHead>
-              <TableHead>Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -132,18 +99,7 @@ export function CommandsPage() {
                 </TableCell>
                 <TableCell>{command.text}</TableCell>
                 <TableCell>{command.cooldown}</TableCell>
-                <TableCell>
-                  <CommandForm
-                    text={command.text}
-                    cooldown={command.cooldown}
-                    onSave={(data) => handleCommandSave(index, data)}
-                  ></CommandForm>
-                </TableCell>
-                <TableCell>
-                  <DeleteDialog
-                    onDelete={() => handleDelete(command.id)}
-                  ></DeleteDialog>
-                </TableCell>
+                <TableCell>{commandForm(command, index)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

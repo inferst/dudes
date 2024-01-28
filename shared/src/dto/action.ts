@@ -7,13 +7,19 @@ export type UserActionEntity = {
   cooldown: number;
 } & ActionEntity;
 
+export type JumpUserActionEntity = {
+  name: 'jump',
+} & UserActionEntity;
+
 export type ColorUserActionEntity = {
+  name: 'color',
   data: {
     color: string;
   };
 } & UserActionEntity;
 
 export type GrowUserActionEntity = {
+  name: 'grow',
   data: {
     duration: number,
     scale: number;
@@ -21,13 +27,13 @@ export type GrowUserActionEntity = {
 } & UserActionEntity;
 
 export const isJumpUserActionEntity = (
-  entity: UserActionEntity
-): entity is UserActionEntity => entity.name == 'jump';
+  entity: ActionEntity
+): entity is JumpUserActionEntity => entity.name == 'jump';
 
 export const isColorUserActionEntity = (
-  entity: UserActionEntity
+  entity: ActionEntity
 ): entity is ColorUserActionEntity => entity.name == 'color';
 
 export const isGrowUserActionEntity = (
-  entity: UserActionEntity
+  entity: ActionEntity
 ): entity is GrowUserActionEntity => entity.name == 'grow';

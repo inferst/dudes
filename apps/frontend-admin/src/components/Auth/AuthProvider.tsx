@@ -31,16 +31,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader></Loader>
-      </div>
-    );
+    return <Loader></Loader>;
   }
 
   return (
-    <AuthContext.Provider value={{ user }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
   );
 }

@@ -53,7 +53,7 @@ model Command {
   isActive Boolean @default(false)
   text     String  @db.VarChar(255)
   cooldown Int     @default(0)
-  /// [CommandData]
+  /// [ActionableData]
   data     Json    @default("{}") @db.JsonB()
 }
 
@@ -68,16 +68,21 @@ model Action {
   data        Json      @default("{}") @db.JsonB()
 }
 
+model Platform {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique @db.VarChar(255)
+  rewards Reward[]
+}
+
 model Reward {
-  id          Int     @id @default(autoincrement())
-  actionId    Int
-  action      Action  @relation(fields: [actionId], references: [id])
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id])
-  title       String  @db.VarChar(255)
-  description String  @default("") @db.VarChar(255)
-  cost        Int     @default(0)
-  cooldown    Int     @default(0)
-  isActive    Boolean @default(true)
-  isPaused    Boolean @default(false)
+  id               Int      @id @default(autoincrement())
+  actionId         Int
+  action           Action   @relation(fields: [actionId], references: [id])
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id])
+  platformId       Int
+  platform         Platform @relation(fields: [platformId], references: [id])
+  platformRewardId String
+  /// [ActionableData]
+  data             Json     @default("{}") @db.JsonB()
 }

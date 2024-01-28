@@ -6,6 +6,7 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 import { ConfigService } from '@app/backend-api/config/config.service';
 import { ZodFilter } from './filters/zod.filter';
+import { TwitchHttpExceptionFilter } from './auth/filters/twitch-http-exception.filter';
 
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 days.
 const SESSION_CHECK_PERIOD = 2 * 60 * 1000; // 2 minutes.
@@ -39,6 +40,7 @@ async function bootstrap(): Promise<void> {
   app.setGlobalPrefix('/api');
 
   app.useGlobalFilters(new ZodFilter());
+  app.useGlobalFilters(new TwitchHttpExceptionFilter());
 
   await app.listen(port);
 }

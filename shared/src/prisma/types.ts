@@ -6,9 +6,9 @@ declare global {
       fallingDudes?: boolean;
     };
 
-    type ActionData = Record<string, unknown>;
+    type ActionData = Record<string, string | number | undefined>;
 
-    type CommandData = {
+    type ActionableData = {
       arguments: string[];
       action: ActionData;
     };

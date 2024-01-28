@@ -1,21 +1,36 @@
 import { z } from 'zod';
 
+const id = z.number().int().min(1);
+
+const actionId = z.number().int().min(0);
+
+const text = z.string().min(1).max(255);
+
+const cooldown = z.number().int().min(0);
+
+const isActive = z.boolean().optional();
+
+const data = z.any();
+
 export const updateCommandDtoSchema = z.object({
-  id: z.number().int().min(1),
-  isActive: z.boolean().optional(),
-  text: z.string().min(1).max(255).optional(),
-  cooldown: z.number().int().min(0).optional(),
+  id,
+  isActive,
+  text: text.optional(),
+  cooldown: cooldown.optional(),
+  data: data.optional(),
 });
 
 export const createCommandDtoSchema = z.object({
-  actionId: z.number().int().min(0),
-  isActive: z.boolean().optional(),
-  text: z.string().min(1).max(255),
-  cooldown: z.number().int().min(0).optional(),
+  actionId,
+  isActive,
+  text,
+  cooldown,
+  data,
 });
 
-export const updateCommandFormSchema = updateCommandDtoSchema.omit({
-  id: true,
+export const updateCommandFormSchema = z.object({
+  text,
+  cooldown,
 });
 
 export type UpdateCommandForm = z.infer<typeof updateCommandFormSchema>;

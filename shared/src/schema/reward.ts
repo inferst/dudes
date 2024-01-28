@@ -1,27 +1,40 @@
 import { z } from 'zod';
 
-export const updateRewardDtoSchema = z.object({
-  id: z.number().int().min(1),
-  title: z.string().min(1).max(255).optional(),
-  description: z.string().max(255).optional(),
-  cost: z.number().int().min(0).optional(),
-  cooldown: z.number().int().min(0).optional(),
-  isActive: z.boolean().optional(),
-  isPaused: z.boolean().optional(),
+const id = z.number().int().min(1);
+
+const actionId = z.number().int().min(1);
+
+const title = z.string().min(1).max(255);
+
+const cost = z.number().int().min(1);
+
+const isActive =  z.boolean().optional();
+
+const data = z.any();
+
+export const updateTwitchRewardDtoSchema = z.object({
+  id,
+  isActive,
+  title: title.optional(),
+  cost: cost.optional(),
+  data: data.optional(),
 });
 
-export const createRewardDtoSchema = z.object({
-  actionId: z.number().int().min(1),
-  title: z.string().min(1).max(255),
-  description: z.string().max(255).optional(),
-  cost: z.number().int().min(0),
-  cooldown: z.number().int().min(0).optional(),
-  isActive: z.boolean().optional(),
-  isPaused: z.boolean().optional(),
+export const createTwitchRewardDtoSchema = z.object({
+  actionId,
+  title,
+  cost,
+  isActive,
+  data,
 });
 
-export const updateRewardFormSchema = updateRewardDtoSchema.omit({
-  id: true,
+export const updateTwitchRewardFormSchema = z.object({
+  title,
+  cost,
 });
 
-export type UpdateRewardForm = z.infer<typeof updateRewardFormSchema>;
+export const createTwitchRewardFormSchema = createTwitchRewardDtoSchema;
+
+export type UpdateTwitchRewardForm = z.infer<
+  typeof updateTwitchRewardFormSchema
+>;

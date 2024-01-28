@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ActionEntity,
   getActionableEntityFormSchema,
-  updateCommandFormSchema,
+  updateTwitchRewardFormSchema,
 } from '@shared';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
@@ -26,35 +26,38 @@ import {
   ActionDataInput,
 } from '../../common/form/ActionDataForm';
 
-export type CommandFormInput = {
-  text: string;
-  cooldown: number;
+export type EditRewardFormInput = {
+  title: string;
+  cost: number;
 } & ActionDataInput;
 
-type CommandFormProps = {
+export type EditRewardFormProps = {
   action: ActionEntity;
-  onSave: (data: CommandFormInput) => void;
-} & CommandFormInput;
+  onSave: (data: EditRewardFormInput) => void;
+} & EditRewardFormInput;
 
-export function CommandForm(props: CommandFormProps) {
-  const { text, cooldown, data, action, onSave } = props;
+export function EditRewardForm(props: EditRewardFormProps) {
+  const { title, cost, action, data, onSave } = props;
 
   const [open, setOpen] = useState(false);
 
-  const schema = getActionableEntityFormSchema(action, updateCommandFormSchema);
+  const schema = getActionableEntityFormSchema(
+    action,
+    updateTwitchRewardFormSchema
+  );
 
-  const form = useForm<CommandFormInput>({
+  const form = useForm<EditRewardFormInput>({
     resolver: zodResolver(schema),
     values: {
-      text,
-      cooldown,
+      title,
+      cost,
       data,
     },
   });
 
   const uuid = nanoid();
 
-  const onSubmit = (data: CommandFormInput) => {
+  const onSubmit = (data: EditRewardFormInput) => {
     onSave(data);
     setOpen(false);
   };
@@ -76,24 +79,24 @@ export function CommandForm(props: CommandFormProps) {
         <Form {...form}>
           <form id={uuid} name={uuid} onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Edit command</DialogTitle>
+              <DialogTitle>Edit reward</DialogTitle>
               <DialogDescription>
-                Make changes to command here. Click save when you're done.
+                Make changes to reward here. Click save when you're done.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="command-text" className="text-right">
-                  Text
+                <Label htmlFor="reward-text" className="text-right">
+                  Title
                 </Label>
                 <Input
-                  id="command-text"
+                  id="reward-text"
                   className="col-span-3"
-                  {...form.register('text')}
+                  {...form.register('title')}
                 />
                 <ErrorMessage
                   errors={form.formState.errors}
-                  name="text"
+                  name="title"
                   render={({ message }) => (
                     <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
                       {message}
@@ -102,22 +105,20 @@ export function CommandForm(props: CommandFormProps) {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="command-cooldown" className="text-right">
-                  Cooldown
+                <Label htmlFor="reward-cost" className="text-right">
+                  Cost
                 </Label>
                 <Input
-                  id="command-cooldown"
-                  type="number"
-                  min={0}
+                  id="reward-cost"
                   className="col-span-3"
-                  {...form.register('cooldown', {
+                  {...form.register('cost', {
                     setValueAs: (value) =>
-                      value === '' ? 0 : parseInt(value, 10),
+                      value === '' ? undefined : parseInt(value, 10),
                   })}
                 />
                 <ErrorMessage
                   errors={form.formState.errors}
-                  name="cooldown"
+                  name="cost"
                   render={({ message }) => (
                     <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
                       {message}

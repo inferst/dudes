@@ -4,6 +4,8 @@ import { isAxiosError } from 'axios';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const errorCodes = [401, 403];
+
 export const useApiQuery = <
   TQueryFnData = unknown,
   TError = DefaultError,
@@ -17,11 +19,11 @@ export const useApiQuery = <
   const query = useQuery(options, queryClient);
 
   useEffect(() => {
-    if (query.error) {
-      const errorCodes = [401, 403];
+    if (isAxiosError(query.error)) {
+      if (query.error.response) {
+        const type = query.error.response.data.type as string;
 
-      if (isAxiosError(query.error) && query.error.response?.status) {
-        if (errorCodes.includes(query.error.response.status)) {
+        if (!type && errorCodes.includes(query.error.response.status)) {
           navigate('/admin/login');
         }
       }

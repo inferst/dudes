@@ -12,5 +12,4 @@ export const actionsKeys = createQueryKeys('actions', {
 export const useActionsQuery = () =>
   useApiQuery({
     ...actionsKeys.list,
-    initialData: [],
   });
