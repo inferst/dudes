@@ -1,6 +1,10 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ActionEntity, getUpdateCommandFormSchema } from '@shared';
+import {
+  ActionEntity,
+  getActionableEntityFormSchema,
+  updateCommandFormSchema,
+} from '@shared';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
@@ -17,7 +21,10 @@ import {
 import { Form } from '../../ui/form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
-import { RewardActionDataForm, RewardActionDataInput } from '../RewardsPage/RewardActionDataForm';
+import {
+  RewardActionDataForm,
+  RewardActionDataInput,
+} from '../RewardsPage/RewardActionDataForm';
 
 export type CommandFormInput = {
   text: string;
@@ -34,7 +41,7 @@ export function CommandForm(props: CommandFormProps) {
 
   const [open, setOpen] = useState(false);
 
-  const schema = getUpdateCommandFormSchema(action);
+  const schema = getActionableEntityFormSchema(action, updateCommandFormSchema);
 
   const form = useForm<CommandFormInput>({
     resolver: zodResolver(schema),

@@ -1,62 +1,36 @@
 import { z } from 'zod';
-import {
-  ActionEntity,
-  isColorUserActionEntity,
-  isGrowUserActionEntity,
-} from '../dto';
+
+const id = z.number().int().min(1);
+
+const actionId = z.number().int().min(0);
 
 const text = z.string().min(1).max(255);
 
 const cooldown = z.number().int().min(0);
 
-const color = {
-  data: z.object({
-    action: z.object({
-      color: z.string().optional(),
-    }),
-  }),
-};
+const isActive = z.boolean().optional();
 
-const grow = {
-  data: z.object({
-    action: z.object({
-      duration: z.number().int().min(0).max(999999).optional(),
-      scale: z.number().int().min(1).max(10).optional(),
-    }),
-  }),
-};
+const data = z.any();
 
 export const updateCommandDtoSchema = z.object({
-  id: z.number().int().min(1),
-  isActive: z.boolean().optional(),
+  id,
+  isActive,
   text: text.optional(),
-  data: z.any(),
   cooldown: cooldown.optional(),
+  data: data.optional(),
 });
 
 export const createCommandDtoSchema = z.object({
-  actionId: z.number().int().min(0),
-  isActive: z.boolean().optional(),
-  text: text,
-  data: z.any(),
-  cooldown: cooldown,
+  actionId,
+  isActive,
+  text,
+  cooldown,
+  data,
 });
 
 export const updateCommandFormSchema = z.object({
-  text: text,
-  cooldown: cooldown,
+  text,
+  cooldown,
 });
-
-export const getUpdateCommandFormSchema = (action: ActionEntity) => {
-  if (isColorUserActionEntity(action)) {
-    return updateCommandFormSchema.extend(color);
-  }
-
-  if (isGrowUserActionEntity(action)) {
-    return updateCommandFormSchema.extend(grow);
-  }
-
-  return updateCommandFormSchema;
-};
 
 export type UpdateCommandForm = z.infer<typeof updateCommandFormSchema>;

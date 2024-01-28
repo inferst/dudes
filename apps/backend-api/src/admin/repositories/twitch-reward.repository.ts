@@ -134,6 +134,7 @@ export class TwitchRewardRepository {
           },
         },
         platformRewardId: twitchCustomReward.id,
+        data: data.data
       },
     });
 

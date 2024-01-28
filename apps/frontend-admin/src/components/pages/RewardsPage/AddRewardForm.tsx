@@ -1,6 +1,10 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ActionEntity, getCreateTwitchRewardFormSchema } from '@shared';
+import {
+  ActionEntity,
+  createTwitchRewardFormSchema,
+  getActionableEntityFormSchema,
+} from '@shared';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
@@ -47,7 +51,10 @@ export function AddRewardForm(props: AddRewardFormProps) {
   const [open, setOpen] = useState(false);
   const [action, setAction] = useState(actions[0]);
 
-  const schema = getCreateTwitchRewardFormSchema(action);
+  const schema = getActionableEntityFormSchema(
+    action,
+    createTwitchRewardFormSchema
+  );
 
   const form = useForm<AddRewardFormInput>({
     resolver: zodResolver(schema),
