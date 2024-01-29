@@ -8,16 +8,41 @@ import {
 import { Module } from '@nestjs/common';
 import { ConfigService } from '../config/config.service';
 import { PrismaService } from '../database/prisma.service';
-import { TwitchAuthProvider } from './api-clients/twitch-api-client/twitch-auth-provider';
-import { TwitchUserFilterService } from './chat-clients/twitch-user-filter.service';
 import { CommandController, UserController } from './controllers';
 import { ActionController } from './controllers/action.controller';
 import { RewardController } from './controllers/reward.controller';
 import { SettingsController } from './controllers/settings.controller';
+import {
+  TwitchClientFactory
+} from './twitch/twitch-client.factory';
+import { TwitchUserFilterService } from './twitch/twitch-user-filter.service';
 import { ActionRepository } from './repositories/action.repository';
 import { CommandRepository } from './repositories/command.repository';
 import { SettingsRepository } from './repositories/settings.repository';
 import { TwitchRewardRepository } from './repositories/twitch-reward.repository';
+import { EventClientFactory } from './event-client/event-client.factory';
+
+const twitchClientFactory = {
+  provide: 'TWITCH_CLIENT_FACTORY',
+  useFactory: (
+    config: ConfigService,
+    prisma: PrismaService,
+    twitchUserFilterService: TwitchUserFilterService,
+    chasMessageService: ChatMessageService
+  ): TwitchClientFactory =>
+    new TwitchClientFactory(
+      config,
+      prisma,
+      twitchUserFilterService,
+      chasMessageService
+    ),
+  inject: [
+    ConfigService,
+    PrismaService,
+    TwitchUserFilterService,
+    ChatMessageService,
+  ],
+};
 
 @Module({
   imports: [],
@@ -29,14 +54,8 @@ import { TwitchRewardRepository } from './repositories/twitch-reward.repository'
     SettingsController,
   ],
   providers: [
-    {
-      provide: 'TWITCH_AUTH_PROVIDER',
-      useFactory: (
-        config: ConfigService,
-        prisma: PrismaService
-      ): TwitchAuthProvider => new TwitchAuthProvider(config, prisma),
-      inject: [ConfigService, PrismaService],
-    },
+    twitchClientFactory,
+    EventClientFactory,
     TwitchRewardRepository,
     TwitchUserFilterService,
     ChatMessageService,

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ActionEntity, UserActionEntity } from '@shared';
 import { ActionRepository } from '../repositories/action.repository';
 import { CommandRepository } from '../repositories/command.repository';
+import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';
 
 @Injectable()
 export class ActionService {
@@ -9,10 +10,11 @@ export class ActionService {
 
   public constructor(
     private readonly commandRepository: CommandRepository,
-    private readonly actionRepository: ActionRepository
+    private readonly actionRepository: ActionRepository,
+    private readonly twitchRewardRepository: TwitchRewardRepository,
   ) {}
 
-  public async getUserAction(
+  public async getUserActionByMessage(
     userId: number,
     messageUserId: string,
     message: string
@@ -53,6 +55,45 @@ export class ActionService {
     return {
       userId: messageUserId,
       cooldown: command.cooldown,
+      ...action,
+      data: { ...action.data, ...data },
+    };
+  }
+
+  public async getUserActionByReward(
+    userId: number,
+    platformUserId: string,
+    rewardId: string,
+    rewardUserId: string,
+    input: string,
+  ): Promise<UserActionEntity | undefined> {
+    if (this.actions.length == 0) {
+      this.actions = await this.actionRepository.getActions();
+    }
+
+    const twitchReward = await this.twitchRewardRepository.getRewardById(userId, platformUserId, rewardId);
+
+    const action = this.actions.find((action) => action.id == twitchReward.actionId);
+
+    if (!action) {
+      return;
+    }
+
+    let data = {...action.data,  ...twitchReward.data.action};
+
+    if (twitchReward.data.arguments && twitchReward.data.arguments.length > 0) {
+      const args = input.split(' ').filter((arg) => arg);
+
+      const entries = twitchReward.data.arguments
+        .map((argument, i) => [argument, args[i]])
+        .filter((item) => item[1]);
+
+      data = {...Object.fromEntries(entries) };
+    }
+
+    return {
+      userId: rewardUserId,
+      cooldown: 0,
       ...action,
       data: { ...action.data, ...data },
     };

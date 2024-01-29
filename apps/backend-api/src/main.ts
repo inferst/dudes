@@ -30,6 +30,7 @@ async function bootstrap(): Promise<void> {
       resave: false,
       cookie: {
         maxAge: COOKIE_MAX_AGE,
+        sameSite: 'lax',
       },
     })
   );

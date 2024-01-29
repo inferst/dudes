@@ -11,6 +11,7 @@ const SCOPE = [
   'moderator:read:chatters',
   'channel:read:subscriptions',
   'channel:manage:redemptions',
+  'chat:read',
 ];
 
 @Injectable()
@@ -32,7 +33,7 @@ export class TwitchStrategy extends PassportStrategy(Oauth2Strategy, 'twitch') {
 
   public validate(
     accessToken: string,
-    refreshToken: string,
+    refreshToken: string
   ): Promise<AuthUserProps> {
     return this.authService.validate(accessToken, refreshToken);
   }

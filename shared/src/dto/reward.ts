@@ -14,3 +14,9 @@ export type TwitchRewardEntity = {
   isDeleted: boolean;
   isActive: boolean;
 } & RewardEntity;
+
+export type RewardRedemptionEntity = {
+  id: string;
+  userId: string;
+  input: string;
+}
