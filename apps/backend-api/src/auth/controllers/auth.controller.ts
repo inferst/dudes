@@ -2,17 +2,18 @@ import { TwitchAuthGuard } from '@app/backend-api/auth/guards/twitch-auth.guard'
 import { AuthService } from '@app/backend-api/auth/services';
 import { ConfigService } from '@app/backend-api/config/config.service';
 import {
-  Response as ExpressResponse,
-  Request as ExpressRequest,
-} from 'express';
-import {
   Controller,
   Get,
-  UseGuards,
-  Response,
-  Request,
   Logger,
+  Request,
+  Response,
+  UseGuards,
 } from '@nestjs/common';
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
+import { AuthUserProps } from '../services/auth.service';
 
 @Controller()
 export class AuthController {
@@ -42,7 +43,7 @@ export class AuthController {
     @Request() req: ExpressRequest,
     @Response({ passthrough: true }) res: ExpressResponse
   ): Promise<void> {
-    const user = req.user as { accessToken?: string } | undefined;
+    const user = req.user as AuthUserProps | undefined;
 
     if (user?.accessToken) {
       await this.authService.logout(user.accessToken);

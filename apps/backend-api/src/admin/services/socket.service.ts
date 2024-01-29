@@ -1,17 +1,13 @@
 import { UserRepository } from '@app/backend-api/admin/repositories';
-import { TwitchApiClientFactory } from '@app/backend-api/admin/api-clients/twitch-api-client';
-import { Injectable, Logger } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { UserToken } from '@prisma/client';
 import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
 import { Socket } from 'socket.io';
-import {
-  ChatClient,
-  ChatClientFactory,
-} from '../chat-clients/chat-client-factory';
 import { SettingsRepository } from '../repositories/settings.repository';
-import { ActionService } from './action.service';
-import { TwitchUserFilterService } from '../chat-clients/twitch-user-filter.service';
-import { ChatMessageService } from './chat-message.service';
+
+import { ApiClient } from '@twurple/api';
+import { EventSubWsListener } from '@twurple/eventsub-ws';
+import { TwitchAuthProvider } from '../api-clients/twitch-api-client/twitch-auth-provider';
 
 type ClientSocket = {
   socket: Socket;
@@ -20,7 +16,7 @@ type ClientSocket = {
 
 type Room = {
   clients: Socket[];
-  chatClient?: ChatClient;
+  // chatClient?: ChatClient;
 };
 
 @Injectable()
@@ -33,13 +29,9 @@ export class SocketService<
   private readonly rooms: Map<string, Room> = new Map();
 
   public constructor(
-    private readonly chatClientFactory: ChatClientFactory,
-    private readonly botService: TwitchUserFilterService,
-    private readonly chatMessageService: ChatMessageService,
     private readonly userRepository: UserRepository,
     private readonly settingsRepository: SettingsRepository,
-    private readonly actionService: ActionService,
-    private readonly twitchApiClientFactory: TwitchApiClientFactory
+    @Inject('TWITCH_AUTH_PROVIDER') private readonly twitchAuthProvider: TwitchAuthProvider,
   ) {}
 
   public handleDisconnect(socket: TSocket): void {
@@ -66,7 +58,7 @@ export class SocketService<
     if (clients.length > 0) {
       this.rooms.set(connectedClient.roomId, { ...room, clients });
     } else {
-      void room?.chatClient?.disconnect();
+      // void room?.chatClient?.disconnect();
       this.rooms.delete(connectedClient.roomId);
       this.logger.log('Room disconnected with name: ' + connectedClient.roomId);
     }
@@ -96,7 +88,7 @@ export class SocketService<
 
     this.connectedClients.set(socket.id, { socket, roomId: userGuid });
 
-    const settings = await this.settingsRepository.get(user.id);
+    const settings = await this.settingsRepository.get(user.userId);
 
     socket.emit('settings', settings.data);
 
@@ -111,46 +103,63 @@ export class SocketService<
 
     this.logger.log('Room initialized with id: ' + userGuid);
 
-    const chatClient = await this.chatClientFactory.createFromUser(user);
-    await chatClient.connect();
+    // const authProvider = new StaticAuthProvider(
+    //   this.configService.twitchClientId,
+    //   user.accessToken
+    // );
 
-    const connectedRoom = this.rooms.get(userGuid);
+    const apiClient = new ApiClient({ authProvider: this.twitchAuthProvider.authProvider });
 
-    if (connectedRoom) {
-      this.rooms.set(userGuid, { ...connectedRoom, chatClient });
-    }
+    this.twitchAuthProvider.addUserForToken(user.userId);
 
-    chatClient.onChat(async (data) => {
-      const action = await this.actionService.getUserAction(
-        user.id,
-        data.userId,
-        data.message
-      );
+    const listener = new EventSubWsListener({ apiClient });
+    listener.start();
 
-      if (action) {
-        socket.emit('action', action);
-        socket.broadcast.to(userGuid).emit('action', action);
-      }
-
-      const message = this.chatMessageService.formatMessage(data.message);
-
-      if (message || data.emotes.length > 0) {
-        socket.emit('message', { ...data, message });
-        socket.broadcast.to(userGuid).emit('message', { ...data, message });
-      }
+    listener.onChannelRedemptionAdd(user.platformUserId, async (data) => {
+      const reward = await data.getReward();
+      console.log(socket.id, user.platformLogin, reward.title);
     });
 
-    chatClient.onChatters(data => {
-      socket.emit('chatters', data);
-      socket.broadcast.to(userGuid).emit('chatters', data);
-    })
+    // const chatClient = await this.chatClientFactory.createFromUser(user);
+    // await chatClient.connect();
+
+    // const connectedRoom = this.rooms.get(userGuid);
+
+    // if (connectedRoom) {
+    //   this.rooms.set(userGuid, { ...connectedRoom, chatClient });
+    // }
+
+    // chatClient.onChat(async (data) => {
+    //   const action = await this.actionService.getUserAction(
+    //     user.id,
+    //     data.userId,
+    //     data.message
+    //   );
+
+    //   if (action) {
+    //     socket.emit('action', action);
+    //     socket.broadcast.to(userGuid).emit('action', action);
+    //   }
+
+    //   const message = this.chatMessageService.formatMessage(data.message);
+
+    //   if (message || data.emotes.length > 0) {
+    //     socket.emit('message', { ...data, message });
+    //     socket.broadcast.to(userGuid).emit('message', { ...data, message });
+    //   }
+    // });
+
+    // chatClient.onChatters((data) => {
+    //   socket.emit('chatters', data);
+    //   socket.broadcast.to(userGuid).emit('chatters', data);
+    // });
 
     this.logger.log('Chat client initialized in room with id: ' + userGuid);
   }
 
-  private async getUserByGuid(userGuid: string): Promise<User | null> {
+  private async getUserByGuid(userGuid: string): Promise<UserToken | null> {
     try {
-      return await this.userRepository.getUserByGuid(userGuid);
+      return await this.userRepository.getTwitchUserByGuid(userGuid);
     } catch (error) {
       this.logger.error('Failed to fetch the user.', {
         e: error,

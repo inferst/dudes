@@ -1,13 +1,13 @@
 import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
 import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateTwitchRewardDto,
   TwitchRewardEntity,
   UpdateTwitchRewardDto,
 } from '@shared';
-import { TwitchApiClientFactory } from '../api-clients/twitch-api-client';
+import { TwitchAuthProvider } from '../api-clients/twitch-api-client/twitch-auth-provider';
 
 // TODO: handle prisma errors
 
@@ -15,7 +15,7 @@ import { TwitchApiClientFactory } from '../api-clients/twitch-api-client';
 export class TwitchRewardRepository {
   public constructor(
     private readonly prismaService: PrismaService,
-    private readonly twitchApiClientFactory: TwitchApiClientFactory
+    @Inject('TWITCH_AUTH_PROVIDER') private readonly twitchAuthProvider: TwitchAuthProvider,
   ) {}
 
   public async getRewards(user: AuthUserProps): Promise<TwitchRewardEntity[]> {
@@ -29,13 +29,12 @@ export class TwitchRewardRepository {
       },
     });
 
-    const twitchApiClient = await this.twitchApiClientFactory.createFromUserId(
-      user.userId
-    );
+    await this.twitchAuthProvider.addUserForToken(user.userId);
 
-    const twitchCustomRewards = await twitchApiClient.getCustomRewards(
-      user.twitchId
-    );
+    const twitchCustomRewards =
+      await this.twitchAuthProvider.apiClient.channelPoints.getCustomRewards(
+        user.platformUserId
+      );
 
     return rewards.map((reward) => {
       const twitchCustomReward = twitchCustomRewards.find(
@@ -49,7 +48,7 @@ export class TwitchRewardRepository {
       return {
         ...reward,
         isDeleted: false,
-        isActive: twitchCustomReward.is_enabled,
+        isActive: twitchCustomReward.isEnabled,
         title: twitchCustomReward.title,
         cost: twitchCustomReward.cost,
       };
@@ -68,32 +67,30 @@ export class TwitchRewardRepository {
         platformId: TWITCH_PLATFORM_ID,
       },
       data: {
-        data: data.data
-      }
+        data: data.data,
+      },
     });
 
     if (!reward) {
       throw new Error("Reward doesn't exist");
     }
 
-    const twitchApiClient = await this.twitchApiClientFactory.createFromUserId(
-      user.userId
-    );
+    await this.twitchAuthProvider.addUserForToken(user.userId);
 
-    const twitchCustomReward = await twitchApiClient.updateCustomReward(
-      user.twitchId,
+    const twitchCustomReward = await this.twitchAuthProvider.apiClient.channelPoints.updateCustomReward(
+      user.platformUserId,
       reward.platformRewardId,
       {
         title: data.title,
         cost: data.cost,
-        is_enabled: data.isActive,
+        isEnabled: data.isActive,
       }
     );
 
     return {
       ...reward,
       isDeleted: false,
-      isActive: twitchCustomReward.is_enabled,
+      isActive: twitchCustomReward.isEnabled,
       title: twitchCustomReward.title,
       cost: twitchCustomReward.cost,
     };
@@ -103,16 +100,14 @@ export class TwitchRewardRepository {
     user: AuthUserProps,
     data: CreateTwitchRewardDto
   ): Promise<TwitchRewardEntity> {
-    const twitchApiClient = await this.twitchApiClientFactory.createFromUserId(
-      user.userId
-    );
+    await this.twitchAuthProvider.addUserForToken(user.userId);
 
-    const twitchCustomReward = await twitchApiClient.createCustomReward(
-      user.twitchId,
+    const twitchCustomReward = await this.twitchAuthProvider.apiClient.channelPoints.createCustomReward(
+      user.platformUserId,
       {
         title: data.title,
         cost: data.cost,
-        is_enabled: data.isActive ?? true,
+        isEnabled: data.isActive ?? true,
       }
     );
 
@@ -134,14 +129,14 @@ export class TwitchRewardRepository {
           },
         },
         platformRewardId: twitchCustomReward.id,
-        data: data.data
+        data: data.data,
       },
     });
 
     return {
       ...reward,
       isDeleted: false,
-      isActive: twitchCustomReward.is_enabled,
+      isActive: twitchCustomReward.isEnabled,
       title: twitchCustomReward.title,
       cost: twitchCustomReward.cost,
     };
@@ -157,12 +152,10 @@ export class TwitchRewardRepository {
       },
     });
 
-    const twitchApiClient = await this.twitchApiClientFactory.createFromUserId(
-      user.userId
-    );
+    await this.twitchAuthProvider.addUserForToken(user.userId);
 
-    await twitchApiClient.deleteCustomReward(
-      user.twitchId,
+    await this.twitchAuthProvider.apiClient.channelPoints.deleteCustomReward(
+      user.platformUserId,
       reward.platformRewardId
     );
   }

@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthUserProps } from '../services/auth.service';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
 
 type Request = {
   user?: AuthUserProps;
@@ -19,14 +20,17 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const userId = request.user.userId;
-      const { tokenRevoked } = await this.prismaService.user.findUniqueOrThrow({
+      const platformUserId = request.user.platformUserId;
+      const { isTokenRevoked } = await this.prismaService.userToken.findUniqueOrThrow({
         where: {
-          id: userId,
+          platformUserId_platformId: {
+            platformUserId: platformUserId,
+            platformId: TWITCH_PLATFORM_ID,
+          }
         },
       });
 
-      return !tokenRevoked;
+      return !isTokenRevoked;
     } catch (e) {
       return false;
     }

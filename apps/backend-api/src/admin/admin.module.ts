@@ -1,10 +1,14 @@
-import { TwitchApiClientFactory } from '@app/backend-api/admin/api-clients/twitch-api-client';
 import { EventsGateway } from '@app/backend-api/admin/gateways';
 import { UserRepository } from '@app/backend-api/admin/repositories';
-import { ActionService, ChatMessageService, SocketService } from '@app/backend-api/admin/services';
+import {
+  ActionService,
+  ChatMessageService,
+  SocketService,
+} from '@app/backend-api/admin/services';
 import { Module } from '@nestjs/common';
-import { ChatClientFactory } from './chat-clients/chat-client-factory';
-import { TwitchChatClientFactory } from './chat-clients/twitch-chat-client.factory';
+import { ConfigService } from '../config/config.service';
+import { PrismaService } from '../database/prisma.service';
+import { TwitchAuthProvider } from './api-clients/twitch-api-client/twitch-auth-provider';
 import { TwitchUserFilterService } from './chat-clients/twitch-user-filter.service';
 import { CommandController, UserController } from './controllers';
 import { ActionController } from './controllers/action.controller';
@@ -25,11 +29,16 @@ import { TwitchRewardRepository } from './repositories/twitch-reward.repository'
     SettingsController,
   ],
   providers: [
+    {
+      provide: 'TWITCH_AUTH_PROVIDER',
+      useFactory: (
+        config: ConfigService,
+        prisma: PrismaService
+      ): TwitchAuthProvider => new TwitchAuthProvider(config, prisma),
+      inject: [ConfigService, PrismaService],
+    },
     TwitchRewardRepository,
     TwitchUserFilterService,
-    TwitchChatClientFactory,
-    TwitchApiClientFactory,
-    ChatClientFactory,
     ChatMessageService,
     EventsGateway,
     SocketService,
