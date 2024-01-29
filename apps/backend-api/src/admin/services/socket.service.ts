@@ -39,6 +39,10 @@ export class SocketService<
     private readonly eventClinetFactory: EventClientFactory
   ) {}
 
+  public getRooms(): Map<string, Room> {
+    return this.rooms;
+  }
+
   public handleDisconnect(socket: TSocket): void {
     this.processDisconnect(socket);
     this.connectedClients.delete(socket.id);

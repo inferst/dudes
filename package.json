@@ -50,6 +50,7 @@
     "@tanstack/react-table": "^8.11.2",
     "@tweenjs/tween.js": "^23.1.1",
     "@twurple/api": "^7.0.8",
+    "@twurple/api-call": "^7.0.8",
     "@twurple/auth": "^7.0.8",
     "@twurple/chat": "^7.0.8",
     "@twurple/eventsub-ws": "^7.0.8",

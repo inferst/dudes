@@ -9,7 +9,6 @@ import {
 
 const SCOPE = [
   'moderator:read:chatters',
-  'channel:read:subscriptions',
   'channel:manage:redemptions',
   'chat:read',
 ];

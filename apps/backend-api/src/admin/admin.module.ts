@@ -21,6 +21,7 @@ import { CommandRepository } from './repositories/command.repository';
 import { SettingsRepository } from './repositories/settings.repository';
 import { TwitchRewardRepository } from './repositories/twitch-reward.repository';
 import { EventClientFactory } from './event-client/event-client.factory';
+import { SessionController } from './controllers/session.controller';
 
 const twitchClientFactory = {
   provide: 'TWITCH_CLIENT_FACTORY',
@@ -52,6 +53,7 @@ const twitchClientFactory = {
     RewardController,
     ActionController,
     SettingsController,
+    SessionController,
   ],
   providers: [
     twitchClientFactory,

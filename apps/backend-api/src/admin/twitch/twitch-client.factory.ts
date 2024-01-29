@@ -21,9 +21,6 @@ export class TwitchClientFactory {
 
   public authProvider: RefreshingAuthProvider;
   public apiClient: ApiClient;
-  public eventSubWsListener: EventSubWsListener;
-
-  private isEventSubStarted: boolean = false;
 
   public constructor(
     private readonly configService: ConfigService,
@@ -56,10 +53,6 @@ export class TwitchClientFactory {
     });
 
     this.apiClient = new ApiClient({ authProvider: this.authProvider });
-
-    this.eventSubWsListener = new EventSubWsListener({
-      apiClient: this.apiClient,
-    });
   }
 
   public async addUserToken(
@@ -79,11 +72,7 @@ export class TwitchClientFactory {
       throw new Error("User token hasn't been found.");
     }
 
-    if (!userToken.obtainmentTimestamp) {
-      throw new Error('Obtainment timestamp is empty.');
-    }
-
-    const obtainmentTimestamp = userToken.obtainmentTimestamp.getTime();
+    const obtainmentTimestamp = userToken.obtainmentTimestamp?.getTime();
 
     this.authProvider.addUser(
       userToken.platformUserId,
@@ -91,7 +80,7 @@ export class TwitchClientFactory {
         accessToken: userToken.accessToken,
         refreshToken: userToken.refreshToken,
         expiresIn: userToken.expiresIn,
-        obtainmentTimestamp: obtainmentTimestamp,
+        obtainmentTimestamp: obtainmentTimestamp ?? 0,
       },
       intents
     );
@@ -110,24 +99,29 @@ export class TwitchClientFactory {
       channels: [userToken.platformLogin],
     });
 
-    // TODO: Need to be stopped somewhere
-    if (!this.isEventSubStarted) {
-      this.eventSubWsListener.start();
-    }
+    const eventSubWsListener = new EventSubWsListener({
+      apiClient: this.apiClient,
+    });
+
+    eventSubWsListener.start();
 
     const onRewardRedemptionAdd = (
       listener: (data: RewardRedemptionEntity) => void
     ): void => {
-      this.eventSubWsListener.onChannelRedemptionAdd(
-        userToken.platformUserId,
-        (data) => {
-          listener({
-            id: data.rewardId,
-            userId: data.userId,
-            input: data.input,
-          });
-        }
-      );
+      eventSubWsListener.onChannelRedemptionAdd(
+          userToken.platformUserId,
+          (data) => {
+            listener({
+              id: data.rewardId,
+              userId: data.userId,
+              input: data.input,
+            });
+          }
+        );
+
+        eventSubWsListener.onSubscriptionDeleteSuccess((data) => {
+          console.log('onSubscriptionDeleteSuccess', data);
+        });
     };
 
     let chatMessageListener: Listener;
@@ -201,10 +195,15 @@ export class TwitchClientFactory {
     return {
       connect: async (): Promise<void> => {
         chatClient.connect();
+
+        this.logger.log('TwitchClientFactory client has been connected');
       },
       disconnect: async (): Promise<void> => {
         clearInterval(timerId);
         chatClient.removeListener(chatMessageListener);
+        eventSubWsListener.stop();
+
+        this.logger.log('TwitchClientFactory client has been disconnected');
       },
       onChatMessage,
       onChatters,

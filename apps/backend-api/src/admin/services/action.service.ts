@@ -11,7 +11,7 @@ export class ActionService {
   public constructor(
     private readonly commandRepository: CommandRepository,
     private readonly actionRepository: ActionRepository,
-    private readonly twitchRewardRepository: TwitchRewardRepository,
+    private readonly twitchRewardRepository: TwitchRewardRepository
   ) {}
 
   public async getUserActionByMessage(
@@ -39,7 +39,7 @@ export class ActionService {
       return;
     }
 
-    let data = {...action.data,  ...command.data.action};
+    let data = { ...action.data, ...command.data.action };
 
     if (command.data.arguments && command.data.arguments.length > 0) {
       const argsMessage = message.split(command.text)[1];
@@ -49,7 +49,7 @@ export class ActionService {
         .map((argument, i) => [argument, args[i]])
         .filter((item) => item[1]);
 
-      data = {...Object.fromEntries(entries) };
+      data = { ...Object.fromEntries(entries) };
     }
 
     return {
@@ -65,21 +65,27 @@ export class ActionService {
     platformUserId: string,
     rewardId: string,
     rewardUserId: string,
-    input: string,
+    input: string
   ): Promise<UserActionEntity | undefined> {
     if (this.actions.length == 0) {
       this.actions = await this.actionRepository.getActions();
     }
 
-    const twitchReward = await this.twitchRewardRepository.getRewardById(userId, platformUserId, rewardId);
+    const twitchReward = await this.twitchRewardRepository.getRewardById(
+      userId,
+      platformUserId,
+      rewardId
+    );
 
-    const action = this.actions.find((action) => action.id == twitchReward.actionId);
+    const action = this.actions.find(
+      (action) => action.id == twitchReward.actionId
+    );
 
     if (!action) {
       return;
     }
 
-    let data = {...action.data,  ...twitchReward.data.action};
+    let data = { ...action.data, ...twitchReward.data.action };
 
     if (twitchReward.data.arguments && twitchReward.data.arguments.length > 0) {
       const args = input.split(' ').filter((arg) => arg);
@@ -88,7 +94,7 @@ export class ActionService {
         .map((argument, i) => [argument, args[i]])
         .filter((item) => item[1]);
 
-      data = {...Object.fromEntries(entries) };
+      data = { ...Object.fromEntries(entries) };
     }
 
     return {

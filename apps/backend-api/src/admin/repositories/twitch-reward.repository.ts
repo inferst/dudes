@@ -8,6 +8,7 @@ import {
   UpdateTwitchRewardDto,
 } from '@shared';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
+import { TwitchHttpException } from '../exceptions/twitch-http.exception';
 
 // TODO: handle prisma errors
 
@@ -30,25 +31,29 @@ export class TwitchRewardRepository {
       },
     });
 
-    const apiClient = await this.twitchClientFactory.createApiClient(userId);
+    try {
+      const apiClient = await this.twitchClientFactory.createApiClient(userId);
 
-    const twitchCustomReward =
-      await apiClient.channelPoints.getCustomRewardById(
-        platformUserId,
-        rewardId
-      );
+      const twitchCustomReward =
+        await apiClient.channelPoints.getCustomRewardById(
+          platformUserId,
+          rewardId
+        );
 
-    if (!twitchCustomReward) {
-      return { ...reward, isDeleted: true, isActive: false };
+      if (!twitchCustomReward) {
+        return { ...reward, isDeleted: true, isActive: false };
+      }
+
+      return {
+        ...reward,
+        isDeleted: false,
+        isActive: twitchCustomReward.isEnabled,
+        title: twitchCustomReward.title,
+        cost: twitchCustomReward.cost,
+      };
+    } catch (error) {
+      throw new TwitchHttpException(error);
     }
-
-    return {
-      ...reward,
-      isDeleted: false,
-      isActive: twitchCustomReward.isEnabled,
-      title: twitchCustomReward.title,
-      cost: twitchCustomReward.cost,
-    };
   }
 
   public async getRewards(user: AuthUserProps): Promise<TwitchRewardEntity[]> {
@@ -62,31 +67,34 @@ export class TwitchRewardRepository {
       },
     });
 
-    const apiClient = await this.twitchClientFactory.createApiClient(
-      user.userId
-    );
-
-    const twitchCustomRewards = await apiClient.channelPoints.getCustomRewards(
-      user.platformUserId
-    );
-
-    return rewards.map((reward) => {
-      const twitchCustomReward = twitchCustomRewards.find(
-        (customReward) => customReward.id == reward.platformRewardId
+    try {
+      const apiClient = await this.twitchClientFactory.createApiClient(
+        user.userId
       );
 
-      if (!twitchCustomReward) {
-        return { ...reward, isDeleted: true, isActive: false };
-      }
+      const twitchCustomRewards =
+        await apiClient.channelPoints.getCustomRewards(user.platformUserId);
 
-      return {
-        ...reward,
-        isDeleted: false,
-        isActive: twitchCustomReward.isEnabled,
-        title: twitchCustomReward.title,
-        cost: twitchCustomReward.cost,
-      };
-    });
+      return rewards.map((reward) => {
+        const twitchCustomReward = twitchCustomRewards.find(
+          (customReward) => customReward.id == reward.platformRewardId
+        );
+
+        if (!twitchCustomReward) {
+          return { ...reward, isDeleted: true, isActive: false };
+        }
+
+        return {
+          ...reward,
+          isDeleted: false,
+          isActive: twitchCustomReward.isEnabled,
+          title: twitchCustomReward.title,
+          cost: twitchCustomReward.cost,
+        };
+      });
+    } catch (error) {
+      throw new TwitchHttpException(error);
+    }
   }
 
   public async update(
