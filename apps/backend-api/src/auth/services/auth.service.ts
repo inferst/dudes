@@ -51,7 +51,7 @@ export class AuthService {
       refreshToken,
     });
 
-    const user = await this.userRepository.getByIdOrCreate(userToken.id);
+    const user = await this.userRepository.getByIdOrCreate(userToken.userId);
 
     await this.commandRepository.createDefaultCommands(user);
 
