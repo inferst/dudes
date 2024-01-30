@@ -1,26 +1,25 @@
 import { UserRepository } from '@app/backend-api/admin/repositories';
-import { TwitchApiClientFactory } from '@app/backend-api/admin/api-clients/twitch-api-client';
 import { Injectable, Logger } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { UserToken } from '@prisma/client';
 import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
 import { Socket } from 'socket.io';
-import {
-  ChatClient,
-  ChatClientFactory,
-} from '../chat-clients/chat-client-factory';
 import { SettingsRepository } from '../repositories/settings.repository';
+
+import {
+  EventClient,
+  EventClientFactory,
+} from '../event-client/event-client.factory';
 import { ActionService } from './action.service';
-import { TwitchUserFilterService } from '../chat-clients/twitch-user-filter.service';
 import { ChatMessageService } from './chat-message.service';
 
-type ClientSocket = {
+type SocketClient = {
   socket: Socket;
   roomId?: string;
 };
 
 type Room = {
   clients: Socket[];
-  chatClient?: ChatClient;
+  eventClient?: EventClient;
 };
 
 @Injectable()
@@ -29,18 +28,20 @@ export class SocketService<
 > {
   private readonly logger = new Logger(SocketService.name);
 
-  private readonly connectedClients: Map<string, ClientSocket> = new Map();
+  private readonly connectedClients: Map<string, SocketClient> = new Map();
   private readonly rooms: Map<string, Room> = new Map();
 
   public constructor(
-    private readonly chatClientFactory: ChatClientFactory,
-    private readonly botService: TwitchUserFilterService,
-    private readonly chatMessageService: ChatMessageService,
     private readonly userRepository: UserRepository,
     private readonly settingsRepository: SettingsRepository,
     private readonly actionService: ActionService,
-    private readonly twitchApiClientFactory: TwitchApiClientFactory
+    private readonly chatMessageService: ChatMessageService,
+    private readonly eventClinetFactory: EventClientFactory
   ) {}
+
+  public getRooms(): Map<string, Room> {
+    return this.rooms;
+  }
 
   public handleDisconnect(socket: TSocket): void {
     this.processDisconnect(socket);
@@ -66,7 +67,7 @@ export class SocketService<
     if (clients.length > 0) {
       this.rooms.set(connectedClient.roomId, { ...room, clients });
     } else {
-      void room?.chatClient?.disconnect();
+      void room.eventClient?.disconnect();
       this.rooms.delete(connectedClient.roomId);
       this.logger.log('Room disconnected with name: ' + connectedClient.roomId);
     }
@@ -96,7 +97,7 @@ export class SocketService<
 
     this.connectedClients.set(socket.id, { socket, roomId: userGuid });
 
-    const settings = await this.settingsRepository.get(user.id);
+    const settings = await this.settingsRepository.get(user.userId);
 
     socket.emit('settings', settings.data);
 
@@ -111,17 +112,17 @@ export class SocketService<
 
     this.logger.log('Room initialized with id: ' + userGuid);
 
-    const chatClient = await this.chatClientFactory.createFromUser(user);
-    await chatClient.connect();
+    const eventClient = await this.eventClinetFactory.createFromUser(user);
+    eventClient.connect();
 
     const connectedRoom = this.rooms.get(userGuid);
 
     if (connectedRoom) {
-      this.rooms.set(userGuid, { ...connectedRoom, chatClient });
+      this.rooms.set(userGuid, { ...connectedRoom, eventClient });
     }
 
-    chatClient.onChat(async (data) => {
-      const action = await this.actionService.getUserAction(
+    eventClient.onChatMessage(async (data) => {
+      const action = await this.actionService.getUserActionByMessage(
         user.id,
         data.userId,
         data.message
@@ -140,17 +141,32 @@ export class SocketService<
       }
     });
 
-    chatClient.onChatters(data => {
+    eventClient.onChatters((data) => {
       socket.emit('chatters', data);
       socket.broadcast.to(userGuid).emit('chatters', data);
-    })
+    });
+
+    eventClient.onRewardRedemptionAdd(async (data) => {
+      const action = await this.actionService.getUserActionByReward(
+        user.id,
+        user.platformUserId,
+        data.id,
+        data.userId,
+        data.input
+      );
+
+      if (action) {
+        socket.emit('action', action);
+        socket.broadcast.to(userGuid).emit('action', action);
+      }
+    });
 
     this.logger.log('Chat client initialized in room with id: ' + userGuid);
   }
 
-  private async getUserByGuid(userGuid: string): Promise<User | null> {
+  private async getUserByGuid(userGuid: string): Promise<UserToken | null> {
     try {
-      return await this.userRepository.getUserByGuid(userGuid);
+      return await this.userRepository.getTwitchUserByGuid(userGuid);
     } catch (error) {
       this.logger.error('Failed to fetch the user.', {
         e: error,

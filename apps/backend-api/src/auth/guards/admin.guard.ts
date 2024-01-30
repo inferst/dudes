@@ -8,14 +8,15 @@ type Request = {
 };
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
   // We are using prisma service directly to avoid repo import cycles.
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
-    if (!request.user) {
+    // TODO: refactor admin guard (remove hardcode)
+    if (!request.user || request.user.userId != 1) {
       return false;
     }
 

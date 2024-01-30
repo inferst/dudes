@@ -11,8 +11,8 @@ export function PreviewPage() {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCopyClick = () => {
-    if (user?.personalUrl) {
-      navigator.clipboard.writeText(user?.personalUrl);
+    if (user?.previewUrl) {
+      navigator.clipboard.writeText(user?.previewUrl);
       setIsChecked(true);
 
       toast({
@@ -29,7 +29,7 @@ export function PreviewPage() {
       <CardContent>
         <div className="flex items-center">
           <div className="rounded-tl-md rounded-bl-md border p-2">
-            <div className="blur-sm">{user?.personalUrl}</div>
+            <div className="blur-sm">{user?.previewUrl}</div>
           </div>
           <Button
             onClick={handleCopyClick}

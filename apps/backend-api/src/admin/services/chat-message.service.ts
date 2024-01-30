@@ -16,7 +16,7 @@ export class ChatMessageService {
 
   public formatMessage(message: string): string {
     if (this.isUserCommand(message)) {
-      return ''
+      return '';
     }
 
     return message.trim();

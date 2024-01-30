@@ -15,18 +15,32 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
-  accessToken  String     @db.VarChar(255)
-  refreshToken String     @db.VarChar(255)
-  guid         String     @unique @default(uuid()) @db.Uuid
-  twitchId     String     @unique @db.VarChar(255)
-  twitchLogin  String     @db.VarChar(255)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  tokenRevoked Boolean    @default(false)
+  id           Int         @id @default(autoincrement())
+  guid         String      @unique @default(uuid()) @db.Uuid
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
   commands     Command[]
   reward       Reward[]
   settings     Settings[]
+  userToken    UserToken[]
+}
+
+model UserToken {
+  id                  Int       @id @default(autoincrement())
+  accessToken         String    @db.VarChar(255)
+  refreshToken        String    @db.VarChar(255)
+  platformUserId      String    @db.VarChar(255)
+  platformLogin       String    @db.VarChar(255)
+  expiresIn           Int       @default(0)
+  obtainmentTimestamp DateTime? @db.Timestamp(3)
+  userId              Int
+  user                User      @relation(fields: [userId], references: [id])
+  platformId          Int
+  platform            Platform  @relation(fields: [platformId], references: [id])
+  isTokenRevoked      Boolean   @default(false)
+
+  @@unique([userId, platformId])
+  @@unique([platformUserId, platformId])
 }
 
 model Settings {
@@ -69,9 +83,10 @@ model Action {
 }
 
 model Platform {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique @db.VarChar(255)
-  rewards Reward[]
+  id        Int         @id @default(autoincrement())
+  name      String      @unique @db.VarChar(255)
+  userToken UserToken[]
+  rewards   Reward[]
 }
 
 model Reward {

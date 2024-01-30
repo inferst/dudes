@@ -14,7 +14,7 @@ export class UserController {
   public getUser(@Auth() user: AuthUserProps): UserEntity {
     return {
       ...user,
-      personalUrl: `${this.configService.clientUrl}/${user.guid}`,
+      previewUrl: `${this.configService.clientUrl}/${user.guid}`,
     };
   }
 }

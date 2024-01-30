@@ -11,10 +11,10 @@ import { AppController } from './controllers/app.controller';
 
 @Module({
   imports: [
+    ConfigModule,
+    DatabaseModule,
     AuthModule,
     AdminModule,
-    DatabaseModule,
-    ConfigModule,
     PassportModule.register({ session: true }),
     RouterModule.register([
       {

@@ -1,17 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
 import { UserRepository } from '@app/backend-api/auth/repositories/user.repository';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
-import { InvalidTokenException } from '@app/backend-api/auth/exceptions';
 import { ConfigService } from '@app/backend-api/config/config.service';
+import { HttpService } from '@nestjs/axios';
+import { Injectable, Logger } from '@nestjs/common';
+import { firstValueFrom } from 'rxjs';
+import { UserTokenRepository } from '../repositories/user-token.repository';
 import { SeedService } from './seed.service';
 
 export type AuthUserProps = {
-  name: string;
-  picture: string;
-  twitchId: string;
   userId: number;
   guid: string;
+  displayName: string;
+  profileImageUrl: string;
+  platformUserId: string;
   accessToken: string;
 };
 
@@ -34,6 +34,7 @@ export class AuthService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly userRepository: UserRepository,
+    private readonly userTokenRepository: UserTokenRepository,
     private readonly commandRepository: SeedService
   ) {}
 
@@ -41,25 +42,25 @@ export class AuthService {
     accessToken: string,
     refreshToken: string
   ): Promise<AuthUserProps> {
-    await this.validateToken(accessToken);
     const result = await this.getTwitchUserInfo(accessToken);
 
-    const user = await this.userRepository.getByTwitchIdOrCreate({
-      twitchId: result.id,
+    const userToken = await this.userTokenRepository.updateOrCreate({
+      userId: result.id,
+      login: result.login,
       accessToken,
       refreshToken,
-      twitchLogin: result.login,
-      tokenRevoked: false,
     });
+
+    const user = await this.userRepository.getByIdOrCreate(userToken.id);
 
     await this.commandRepository.createDefaultCommands(user);
 
     return {
-      guid: user.guid,
       userId: user.id,
-      twitchId: user.twitchId,
-      picture: result.profile_image_url,
-      name: result.display_name,
+      guid: user.guid,
+      platformUserId: result.id,
+      profileImageUrl: result.profile_image_url,
+      displayName: result.display_name,
       accessToken,
     };
   }
@@ -77,28 +78,10 @@ export class AuthService {
           }
         )
       );
-    } catch (e) {
+    } catch (error) {
       this.logger.error('Failed to logout.', {
-        message: e.response.data,
+        message: error.response.data,
       });
-    }
-  }
-
-  public async validateToken(accessToken: string): Promise<void> {
-    try {
-      await firstValueFrom(
-        this.httpService.get('https://id.twitch.tv/oauth2/validate', {
-          headers: {
-            Authorization: `OAuth ${accessToken}`,
-          },
-        })
-      );
-    } catch (e) {
-      this.logger.error('Token validation has been failed.', {
-        e,
-      });
-
-      throw new InvalidTokenException();
     }
   }
 
