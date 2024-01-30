@@ -1,5 +1,5 @@
 import { ConfigService } from '@app/backend-api/config/config.service';
-import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
+import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
 import { ApiClient } from '@twurple/api';
 import { RefreshingAuthProvider } from '@twurple/auth';
@@ -81,6 +81,7 @@ export class TwitchClientFactory {
         refreshToken: userToken.refreshToken,
         expiresIn: userToken.expiresIn,
         obtainmentTimestamp: obtainmentTimestamp ?? 0,
+        scope: TWITCH_SCOPE,
       },
       intents
     );
@@ -109,19 +110,15 @@ export class TwitchClientFactory {
       listener: (data: RewardRedemptionEntity) => void
     ): void => {
       eventSubWsListener.onChannelRedemptionAdd(
-          userToken.platformUserId,
-          (data) => {
-            listener({
-              id: data.rewardId,
-              userId: data.userId,
-              input: data.input,
-            });
-          }
-        );
-
-        eventSubWsListener.onSubscriptionDeleteSuccess((data) => {
-          console.log('onSubscriptionDeleteSuccess', data);
-        });
+        userToken.platformUserId,
+        (data) => {
+          listener({
+            id: data.rewardId,
+            userId: data.userId,
+            input: data.input,
+          });
+        }
+      );
     };
 
     let chatMessageListener: Listener;

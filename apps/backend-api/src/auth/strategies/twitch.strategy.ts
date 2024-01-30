@@ -6,12 +6,7 @@ import {
   AuthService,
   AuthUserProps,
 } from '@app/backend-api/auth/services/auth.service';
-
-const SCOPE = [
-  'moderator:read:chatters',
-  'channel:manage:redemptions',
-  'chat:read',
-];
+import { TWITCH_SCOPE } from '@app/backend-api/constants';
 
 @Injectable()
 export class TwitchStrategy extends PassportStrategy(Oauth2Strategy, 'twitch') {
@@ -23,7 +18,7 @@ export class TwitchStrategy extends PassportStrategy(Oauth2Strategy, 'twitch') {
       clientID: configService.twitchClientId,
       clientSecret: configService.twitchClientSecret,
       callbackURL: configService.twitchCallbackUrl,
-      scope: SCOPE,
+      scope: TWITCH_SCOPE,
       authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
       tokenURL: 'https://id.twitch.tv/oauth2/token',
       store: true,

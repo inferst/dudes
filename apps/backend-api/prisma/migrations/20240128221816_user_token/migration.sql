@@ -8,16 +8,6 @@
   - You are about to drop the column `twitchLogin` on the `User` table. All the data in the column will be lost.
 
 */
--- DropIndex
-DROP INDEX "User_twitchId_key";
-
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "accessToken",
-DROP COLUMN "refreshToken",
-DROP COLUMN "tokenRevoked",
-DROP COLUMN "twitchId",
-DROP COLUMN "twitchLogin";
-
 -- CreateTable
 CREATE TABLE "UserToken" (
     "id" SERIAL NOT NULL,
@@ -45,3 +35,17 @@ ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_userId_fkey" FOREIGN KEY ("use
 
 -- AddForeignKey
 ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_platformId_fkey" FOREIGN KEY ("platformId") REFERENCES "Platform"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- MigrateData
+INSERT INTO "UserToken" ("userId", "platformUserId", "platformLogin", "accessToken", "refreshToken", "platformId")
+SELECT "id", "twitchId", "twitchLogin", "accessToken", "refreshToken", '1' FROM "User";
+
+-- DropIndex
+DROP INDEX "User_twitchId_key";
+
+-- AlterTable
+ALTER TABLE "User" DROP COLUMN "accessToken",
+DROP COLUMN "refreshToken",
+DROP COLUMN "tokenRevoked",
+DROP COLUMN "twitchId",
+DROP COLUMN "twitchLogin";
