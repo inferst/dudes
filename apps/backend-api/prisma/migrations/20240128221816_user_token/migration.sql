@@ -37,6 +37,7 @@ ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_userId_fkey" FOREIGN KEY ("use
 ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_platformId_fkey" FOREIGN KEY ("platformId") REFERENCES "Platform"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- MigrateData
+INSERT INTO "Platform" ("id", "name") VALUES ('1', 'twitch') ON CONFLICT ("name") DO NOTHING
 INSERT INTO "UserToken" ("userId", "platformUserId", "platformLogin", "accessToken", "refreshToken", "platformId")
 SELECT "id", "twitchId", "twitchLogin", "accessToken", "refreshToken", '1' FROM "User";
 
