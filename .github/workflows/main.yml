@@ -39,7 +39,7 @@ jobs:
           docker build -t dudes-build .
   run_docker_compose_up:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     needs: run_dockerfile
     steps:
     - name: Docker compose up
