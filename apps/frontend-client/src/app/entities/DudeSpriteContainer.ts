@@ -5,6 +5,7 @@ import {
   DudeSpriteLayers,
 } from '@app/frontend-client/sprite/spriteProvider';
 import { Container } from 'pixi.js';
+import { DEFAULT_DUDE_SCALE } from './Dude';
 
 export type DudeSpriteContainerProps = {
   color: {
@@ -53,6 +54,10 @@ export class DudeSpriteContainer {
             layer.sprite.tint = color ?? 0xffffff;
           }
         }
+      }
+
+      if (props.scale.x) {
+        layer.sprite.animationSpeed = DEFAULT_DUDE_SCALE / Math.abs(props.scale.x);
       }
     }
 

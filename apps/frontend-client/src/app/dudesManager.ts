@@ -101,25 +101,29 @@ class DudesManager {
     const dude = this.dudes[action.userId];
 
     if (!dude) {
-      const props: DudeProps = { name: action.name };
-      const sprite = config.chatters[action.name];
+      const props: DudeProps = { name: action.info.displayName };
+      const sprite = config.chatters[action.info.displayName];
 
       if (sprite) {
         props.sprite = sprite;
       }
 
+      if (action.info.color) {
+        props.color = action.info.color;
+      }
+
       const dude = new Dude(props);
+
       dude.spawn({
         onComplete: () => {
-          this.doAction(action, dude);
+          const dude = this.dudes[action.userId];
+          if (dude) {
+            this.doAction(action, dude);
+          }
         },
       });
 
       this.add(action.userId, dude);
-
-      if (action.info.color) {
-        dude.setProps({ color: action.info.color });
-      }
     } else {
       this.doAction(action, dude);
 
