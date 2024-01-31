@@ -113,7 +113,7 @@ export class TwitchClientFactory {
         userToken.platformUserId,
         (data) => {
           listener({
-            id: data.rewardId,
+            rewardId: data.rewardId,
             userId: data.userId,
             userDisplayName: data.userDisplayName,
             input: data.input,

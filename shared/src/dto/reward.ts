@@ -16,7 +16,7 @@ export type TwitchRewardEntity = {
 } & RewardEntity;
 
 export type RewardRedemptionEntity = {
-  id: string;
+  rewardId: string;
   userId: string;
   userDisplayName: string;
   input: string;

@@ -150,6 +150,7 @@ export class SocketService<
     eventClient.onRewardRedemptionAdd(async (data) => {
       const action = await this.actionService.getUserActionByReward(
         user.id,
+        user.platformUserId,
         data,
       );
 

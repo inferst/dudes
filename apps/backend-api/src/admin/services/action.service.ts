@@ -65,6 +65,7 @@ export class ActionService {
 
   public async getUserActionByReward(
     userId: number,
+    platformUserId: string,
     redemption: RewardRedemptionEntity,
   ): Promise<UserActionEntity | undefined> {
     if (this.actions.length == 0) {
@@ -77,8 +78,8 @@ export class ActionService {
 
     const twitchReward = await this.twitchRewardRepository.getRewardById(
       userId,
-      redemption.userId,
-      redemption.id
+      platformUserId,
+      redemption.rewardId
     );
 
     if (!twitchReward) {
