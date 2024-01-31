@@ -25,6 +25,11 @@ export type DudeProps = {
   isAnonymous?: boolean;
 };
 
+export type DudeSpawnProps = {
+  isFalling?: boolean;
+  onComplete?: () => void;
+};
+
 type DudeState = Required<DudeProps>;
 
 type UserProps = {
@@ -131,10 +136,10 @@ export class Dude {
     });
   }
 
-  spawn(isFalling: boolean = false): void {
+  spawn(props: DudeSpawnProps = { isFalling: false }): void {
     const collider = this.state.sprite.collider;
     const fallingStartY = -(collider.y + collider.h - this.state.sprite.h / 2);
-    const spawnY = isFalling ? fallingStartY : renderer.height;
+    const spawnY = props.isFalling ? fallingStartY : renderer.height;
     const spriteWidth = this.state.sprite.w * this.state.scale;
 
     const x = Math.random() * (renderer.width - spriteWidth) + spriteWidth / 2;
@@ -145,7 +150,7 @@ export class Dude {
 
     this.state.direction = Math.random() > 0.5 ? 1 : -1;
 
-    if (!isFalling) {
+    if (!props.isFalling) {
       const zIndex = dudesManager.zIndexDudeMin(this.container.zIndex);
 
       this.container.zIndex = zIndex;
@@ -153,6 +158,7 @@ export class Dude {
 
       this.spawnTween = new TWEEN.Tween(this.container)
         .to({ alpha: 1 }, 2000)
+        .onComplete(props.onComplete)
         .start();
     }
   }

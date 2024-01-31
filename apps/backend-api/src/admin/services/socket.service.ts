@@ -124,13 +124,14 @@ export class SocketService<
     eventClient.onChatMessage(async (data) => {
       const action = await this.actionService.getUserActionByMessage(
         user.id,
-        data.userId,
-        data.message
+        data,
       );
 
       if (action) {
-        socket.emit('action', action);
-        socket.broadcast.to(userGuid).emit('action', action);
+        socket.emit('action', { ...action, info: data.info });
+        socket.broadcast
+          .to(userGuid)
+          .emit('action', { ...action, info: data.info });
       }
 
       const message = this.chatMessageService.formatMessage(data.message);
@@ -149,10 +150,7 @@ export class SocketService<
     eventClient.onRewardRedemptionAdd(async (data) => {
       const action = await this.actionService.getUserActionByReward(
         user.id,
-        user.platformUserId,
-        data.id,
-        data.userId,
-        data.input
+        data,
       );
 
       if (action) {

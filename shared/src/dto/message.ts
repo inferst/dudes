@@ -1,9 +1,8 @@
+import { UserInfo } from './user';
+
 export type MessageEntity = {
-  name: string;
   userId: string;
   message: string;
   emotes: string[];
-  data: {
-    color?: string;
-  }
+  info: UserInfo;
 };

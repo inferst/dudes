@@ -1,10 +1,12 @@
 import { Action } from '@prisma/client';
+import { UserInfo } from './user';
 
 export type ActionEntity = Action;
 
 export type UserActionEntity = {
   userId: string;
   cooldown: number;
+  info: UserInfo;
 } & ActionEntity;
 
 export type JumpUserActionEntity = {

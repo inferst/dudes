@@ -115,6 +115,7 @@ export class TwitchClientFactory {
           listener({
             id: data.rewardId,
             userId: data.userId,
+            userDisplayName: data.userDisplayName,
             input: data.input,
           });
         }
@@ -141,11 +142,11 @@ export class TwitchClientFactory {
         const emoteIds = Array.from(emotes.entries()).map((entry) => entry[0]);
 
         listener({
-          name: name,
           userId: userId,
           emotes: emoteIds.map((emote) => this.getTwitchEmoteUrl(emote)),
           message: this.chasMessageService.stripEmotes(text, emoteNames),
-          data: {
+          info: {
+            displayName: name,
             color: msg.userInfo.color,
           },
         });
