@@ -128,10 +128,10 @@ export class SocketService<
       );
 
       if (action) {
-        socket.emit('action', { ...action, info: data.info });
+        socket.emit('action', action);
         socket.broadcast
           .to(userGuid)
-          .emit('action', { ...action, info: data.info });
+          .emit('action', action);
       }
 
       const message = this.chatMessageService.formatMessage(data.message);
