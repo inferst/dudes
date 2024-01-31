@@ -25,6 +25,11 @@ export type DudeProps = {
   isAnonymous?: boolean;
 };
 
+export type DudeSpawnProps = {
+  isFalling?: boolean;
+  onComplete?: () => void;
+};
+
 type DudeState = Required<DudeProps>;
 
 type UserProps = {
@@ -34,7 +39,7 @@ type UserProps = {
 const jumpSound = new Audio('/client/sounds/jump.mp3');
 jumpSound.volume = 0.2;
 
-const DEFAULT_DUDE_SCALE = 4;
+export const DEFAULT_DUDE_SCALE = 4;
 
 export class Dude {
   public container: PIXI.Container = new PIXI.Container();
@@ -105,7 +110,7 @@ export class Dude {
 
   fadeTween?: TWEEN.Tween<PIXI.Container>;
 
-  scaleTween?: TWEEN.Tween<DudeState>;
+  scaleTween?: TWEEN.Tween<Dude>;
 
   constructor(props: DudeProps = {}) {
     this.container.sortableChildren = true;
@@ -131,10 +136,10 @@ export class Dude {
     });
   }
 
-  spawn(isFalling: boolean = false): void {
+  spawn(props: DudeSpawnProps = { isFalling: false }): void {
     const collider = this.state.sprite.collider;
     const fallingStartY = -(collider.y + collider.h - this.state.sprite.h / 2);
-    const spawnY = isFalling ? fallingStartY : renderer.height;
+    const spawnY = props.isFalling ? fallingStartY : renderer.height;
     const spriteWidth = this.state.sprite.w * this.state.scale;
 
     const x = Math.random() * (renderer.width - spriteWidth) + spriteWidth / 2;
@@ -145,21 +150,26 @@ export class Dude {
 
     this.state.direction = Math.random() > 0.5 ? 1 : -1;
 
-    if (!isFalling) {
+    if (!props.isFalling) {
       const zIndex = dudesManager.zIndexDudeMin(this.container.zIndex);
 
       this.container.zIndex = zIndex;
       this.container.alpha = 0;
 
       this.spawnTween = new TWEEN.Tween(this.container)
-        .to({ alpha: 1 }, 2000)
+        .to({ alpha: 1 }, 500)
+        .onComplete(props.onComplete)
         .start();
     }
   }
 
   despawn(onComplete?: () => void): void {
+    if (this.fadeTween && this.fadeTween.isPlaying()) {
+      return;
+    }
+
     this.fadeTween = new TWEEN.Tween(this.container)
-      .to({ alpha: 0 }, 5000)
+      .to({ alpha: 0 }, 1000)
       .onComplete(() => {
         this.isDespawned = true;
         onComplete && onComplete();
@@ -172,17 +182,26 @@ export class Dude {
       return;
     }
 
+    if (this.scaleTween && this.scaleTween.isPlaying()) {
+      return;
+    }
+
+    if (this.scaleTimer && !this.scaleTimer.isCompleted) {
+      return;
+    }
+
     this.cooldownScaleTimer = new Timer(options.cooldown * 1000);
 
-    this.scaleTween = new TWEEN.Tween(this.state)
-      .to({ scale: DEFAULT_DUDE_SCALE * options.value }, 2000)
+    this.scaleTween = new TWEEN.Tween(this)
+      .to({ state: { scale: DEFAULT_DUDE_SCALE * options.value } }, 2000)
+      .onComplete(() => {
+        this.scaleTimer = new Timer(options.duration * 1000, () => {
+          this.scaleTween = new TWEEN.Tween(this)
+            .to({ state: { scale: DEFAULT_DUDE_SCALE } }, 2000)
+            .start();
+        });
+      })
       .start();
-
-    this.scaleTimer = new Timer(options.duration * 1000, () => {
-      this.scaleTween = new TWEEN.Tween(this.state)
-        .to({ scale: DEFAULT_DUDE_SCALE }, 2000)
-        .start();
-    });
   }
 
   jump(): void {

@@ -75,13 +75,7 @@ class DudesManager {
   private hasMessages = (userId: string): boolean =>
     !!this.lastMessageTimes[userId];
 
-  public processAction(action: UserActionEntity): void {
-    const dude = this.dudes[action.userId];
-
-    if (!dude) {
-      return;
-    }
-
+  public doAction(action: UserActionEntity, dude: Dude) {
     if (isJumpUserActionEntity(action)) {
       dude.jump();
     }
@@ -103,9 +97,45 @@ class DudesManager {
     }
   }
 
+  public processAction(action: UserActionEntity): void {
+    const dude = this.dudes[action.userId];
+
+    if (!dude) {
+      const props: DudeProps = { name: action.info.displayName };
+      const sprite = config.chatters[action.info.displayName];
+
+      if (sprite) {
+        props.sprite = sprite;
+      }
+
+      if (action.info.color) {
+        props.color = action.info.color;
+      }
+
+      const dude = new Dude(props);
+
+      dude.spawn({
+        onComplete: () => {
+          const dude = this.dudes[action.userId];
+          if (dude) {
+            this.doAction(action, dude);
+          }
+        },
+      });
+
+      this.add(action.userId, dude);
+    } else {
+      this.doAction(action, dude);
+
+      if (action.info.color) {
+        dude.setProps({ color: action.info.color });
+      }
+    }
+  }
+
   public processMessage(data: MessageEntity): void {
-    const props: DudeProps = { name: data.name };
-    const sprite = config.chatters[data.name];
+    const props: DudeProps = { name: data.info.displayName };
+    const sprite = config.chatters[data.info.displayName];
 
     if (sprite) {
       props.sprite = sprite;
@@ -119,7 +149,7 @@ class DudesManager {
         : false;
 
       dude = new Dude(props);
-      dude.spawn(isFalling);
+      dude.spawn({ isFalling });
 
       this.add(data.userId, dude);
     } else {
@@ -136,8 +166,8 @@ class DudesManager {
       dude.spitEmotes(data.emotes);
     }
 
-    if (data.data.color) {
-      dude.setProps({ color: data.data.color });
+    if (data.info.color) {
+      dude.setProps({ color: data.info.color });
     }
   }
 

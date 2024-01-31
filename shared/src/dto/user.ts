@@ -5,3 +5,8 @@ export type UserEntity = {
   profileImageUrl: string;
   previewUrl: string;
 };
+
+export type UserInfo = {
+  displayName: string;
+  color?: string;
+}
