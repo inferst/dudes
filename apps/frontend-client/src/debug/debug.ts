@@ -37,7 +37,7 @@ export class Debug {
           name: 'MikeRime',
           sprite: config.chatters[keys[index]],
         });
-        dude.spawn(true);
+        dude.spawn({ isFalling: true });
 
         dudesManager.add('bot ' + i, dude);
 
@@ -52,7 +52,7 @@ export class Debug {
         }, i * 3000);
 
         setTimeout(() => {
-          dude.scale({value: 4, duration: 10, cooldown: 0});
+          dude.scale({ value: 4, duration: 10, cooldown: 0 });
         }, 4000);
       }, 25 * i);
     }
