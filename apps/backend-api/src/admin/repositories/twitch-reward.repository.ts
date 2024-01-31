@@ -24,12 +24,16 @@ export class TwitchRewardRepository {
     userId: number,
     platformUserId: string,
     rewardId: string
-  ): Promise<TwitchRewardEntity> {
-    const reward = await this.prismaService.reward.findFirstOrThrow({
+  ): Promise<TwitchRewardEntity | undefined> {
+    const reward = await this.prismaService.reward.findFirst({
       where: {
         platformRewardId: rewardId,
       },
     });
+
+    if (!reward) {
+      return;
+    }
 
     try {
       const apiClient = await this.twitchClientFactory.createApiClient(userId);

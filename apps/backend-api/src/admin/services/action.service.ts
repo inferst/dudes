@@ -77,6 +77,10 @@ export class ActionService {
       rewardId
     );
 
+    if (!twitchReward) {
+      return;
+    }
+
     const action = this.actions.find(
       (action) => action.id == twitchReward.actionId
     );
