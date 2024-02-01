@@ -54,6 +54,21 @@ export const config: Config = {
         y: 9,
       }
     },
+    zadrot_L2: {
+      name: 'nerd',
+      w: 32,
+      h: 32,
+      collider: {
+        x: 8,
+        y: 7,
+        w: 16,
+        h: 18,
+      },
+      pivot: {
+        x: 0,
+        y: 9,
+      }
+    },
     Duckate: {
       name: 'girl',
       w: 32,
