@@ -79,6 +79,7 @@ export class AuthService {
         )
       );
     } catch (error) {
+      // TODO: check prod error
       this.logger.error('Failed to logout.', {
         message: error.response.data,
       });

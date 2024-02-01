@@ -1,7 +1,5 @@
 import { app } from '@app/frontend-client/app/app';
-import { Dude } from '@app/frontend-client/app/entities/Dude';
 import { Text } from 'pixi.js';
-import { config } from '../config/config';
 import { dudesManager } from '../app/dudesManager';
 
 export class Debug {
@@ -29,32 +27,27 @@ export class Debug {
   }
 
   public generateDudes(): void {
-    for (let i = 0; i < 0; i++) {
-      setTimeout(() => {
-        const keys = Object.keys(config.chatters);
-        const index = Math.round(Math.random() * (keys.length - 1));
-        const dude = new Dude({
-          name: 'MikeRime',
-          sprite: config.chatters[keys[index]],
-        });
-        dude.spawn({ isFalling: true });
+    dudesManager.processMessage({
+      userId: '1',
+      emotes: [],
+      message: 'Привет, я сейчас тебя зарейдю!',
+      info: {
+        displayName: 'tastyteadev',
+        color: 'cyan',
+      },
+    });
 
-        dudesManager.add('bot ' + i, dude);
-
-        // setInterval(() => {
-        //   dude.addMessage(
-        //     'Приветики! Пистолетики. А что это ты тут стримишь, а?'
-        //   );
-        // }, 3000);
-
-        setInterval(() => {
-          dude.jump();
-        }, i * 3000);
-
-        setTimeout(() => {
-          dude.scale({ value: 4, duration: 10, cooldown: 0 });
-        }, 4000);
-      }, 25 * i);
-    }
+    setTimeout(() => {
+      dudesManager.processRaid({
+        broadcaster: {
+          id: '1',
+          info: {
+            displayName: 'tastyteadev',
+            color: 'cyan',
+          },
+        },
+        viewers: 500,
+      });
+    }, 1000);
   }
 }

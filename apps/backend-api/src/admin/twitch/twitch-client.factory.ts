@@ -7,7 +7,12 @@ import { EventSubWsListener } from '@twurple/eventsub-ws';
 import { TwitchUserFilterService } from './twitch-user-filter.service';
 import { ChatMessageService } from '../services';
 import { ChatClient } from '@twurple/chat';
-import { ChatterEntity, MessageEntity, RewardRedemptionEntity } from '@shared';
+import {
+  ChatterEntity,
+  MessageEntity,
+  RaidData,
+  RewardRedemptionData,
+} from '@shared';
 import { Logger } from '@nestjs/common';
 import { Listener } from '@d-fischer/typed-event-emitter';
 import { TokenRevokedException } from './token-revoked.exception';
@@ -69,6 +74,7 @@ export class TwitchClientFactory {
     });
 
     if (!userToken) {
+      // TODO: check prod error
       throw new Error("User token hasn't been found.");
     }
 
@@ -107,7 +113,7 @@ export class TwitchClientFactory {
     eventSubWsListener.start();
 
     const onRewardRedemptionAdd = (
-      listener: (data: RewardRedemptionEntity) => void
+      listener: (data: RewardRedemptionData) => void
     ): void => {
       eventSubWsListener.onChannelRedemptionAdd(
         userToken.platformUserId,
@@ -120,6 +126,25 @@ export class TwitchClientFactory {
           });
         }
       );
+    };
+
+    const onRaid = (listener: (data: RaidData) => void): void => {
+      eventSubWsListener.onChannelRaidTo(userToken.platformUserId, async (data) => {
+        const broadcaster = await data.getRaidingBroadcaster();
+        const apiClient = await this.createApiClient(userToken.userId);
+        const color = await apiClient.chat.getColorForUser(broadcaster.id);
+
+        listener({
+          broadcaster: {
+            id: broadcaster.id,
+            info: {
+              displayName: broadcaster.displayName,
+              color: color ?? undefined
+            }
+          },
+          viewers: data.viewers,
+        });
+      });
     };
 
     let chatMessageListener: Listener;
@@ -205,6 +230,7 @@ export class TwitchClientFactory {
       },
       onChatMessage,
       onChatters,
+      onRaid,
       onRewardRedemptionAdd,
     };
   }

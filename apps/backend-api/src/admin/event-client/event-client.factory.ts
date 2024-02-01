@@ -1,6 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UserToken } from '@prisma/client';
-import { ChatterEntity, MessageEntity, RewardRedemptionEntity } from '@shared';
+import {
+  ChatterEntity,
+  MessageEntity,
+  RaidData,
+  RewardRedemptionData,
+} from '@shared';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 
 export type EventClient = {
@@ -8,8 +13,9 @@ export type EventClient = {
   disconnect: () => Promise<void>;
   onChatMessage: (listener: (data: MessageEntity) => void) => void;
   onChatters: (listener: (data: ChatterEntity[]) => void) => void;
+  onRaid: (listener: (data: RaidData) => void) => void;
   onRewardRedemptionAdd: (
-    listener: (data: RewardRedemptionEntity) => void
+    listener: (data: RewardRedemptionData) => void
   ) => void;
 };
 
