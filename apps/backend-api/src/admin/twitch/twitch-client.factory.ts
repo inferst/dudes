@@ -1,18 +1,19 @@
 import { ConfigService } from '@app/backend-api/config/config.service';
 import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { Listener } from '@d-fischer/typed-event-emitter';
+import { HttpException, Logger } from '@nestjs/common';
+import { UserToken } from '@prisma/client';
+import { ChatterEntity, MessageEntity, RewardRedemptionEntity } from '@shared';
 import { ApiClient } from '@twurple/api';
 import { RefreshingAuthProvider } from '@twurple/auth';
-import { EventSubWsListener } from '@twurple/eventsub-ws';
-import { TwitchUserFilterService } from './twitch-user-filter.service';
-import { ChatMessageService } from '../services';
 import { ChatClient } from '@twurple/chat';
-import { ChatterEntity, MessageEntity, RewardRedemptionEntity } from '@shared';
-import { Logger } from '@nestjs/common';
-import { Listener } from '@d-fischer/typed-event-emitter';
-import { TokenRevokedException } from './token-revoked.exception';
-import { UserToken } from '@prisma/client';
+import { EventSubWsListener } from '@twurple/eventsub-ws';
+import { HttpStatusCode } from 'axios';
 import { EventClient } from '../event-client/event-client.factory';
+import { ChatMessageService } from '../services';
+import { TokenRevokedException } from './token-revoked.exception';
+import { TwitchUserFilterService } from './twitch-user-filter.service';
 
 const TWITCH_CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
@@ -52,6 +53,10 @@ export class TwitchClientFactory {
       }
     });
 
+    this.authProvider.onRefreshFailure((userId) => {
+      this.logger.log('Failed to refresh token.', { userId });
+    });
+
     this.apiClient = new ApiClient({ authProvider: this.authProvider });
   }
 
@@ -69,7 +74,11 @@ export class TwitchClientFactory {
     });
 
     if (!userToken) {
-      throw new Error("User token hasn't been found.");
+      // TODO: check prod error
+      throw new HttpException(
+        `User token with user id (${userId}) hasn't been found.`,
+        HttpStatusCode.InternalServerError
+      );
     }
 
     const obtainmentTimestamp = userToken.obtainmentTimestamp?.getTime();
@@ -126,6 +135,10 @@ export class TwitchClientFactory {
 
     const onChatMessage = (listener: (data: MessageEntity) => void): void => {
       chatMessageListener = chatClient.onMessage((channel, user, text, msg) => {
+        if (this.twitchUserFilterService.isBot(msg.userInfo.userName)) {
+          return;
+        }
+
         const name = msg.userInfo.displayName;
         const userId = msg.userInfo.userId;
 

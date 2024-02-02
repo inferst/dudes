@@ -1,31 +1,44 @@
 import { useAuth } from '@app/frontend-admin/components/Auth/useAuth';
-import { Button } from '../ui/button';
+import { cn } from '@app/frontend-admin/lib/utils';
 import { ChevronDown, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 export function Header() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="py-2 border-b border-border/60">
       <div className="container flex items-center">
-        <div className="flex items-center">
-          <div className="text-primary w-10 h-10 rounded-sm overflow-hidden mr-2 ml-3">
-            <img src={user?.profileImageUrl} alt={user?.displayName} />
-          </div>
-
-          <span>Dudes</span>
-        </div>
+        <button
+          onClick={() => navigate('/admin')}
+          className={cn(
+            'flex items-center',
+            'rounded-md px-2 py-1',
+            'bg-primary text-primary-foreground text-2xl font-medium'
+          )}
+        >
+          <span className='block'>D</span>
+          <span className="block text-xl">U</span>
+          <span className='block'>D</span>
+          <span className="block text-xl">E</span>
+          <span className='block'>S</span>
+        </button>
         <div className="flex flex-1 justify-end">
           <div className="flex items-center">
             <Avatar className="w-8 h-8">
-              <AvatarImage src={user?.profileImageUrl} alt={user?.displayName} />
+              <AvatarImage
+                src={user?.profileImageUrl}
+                alt={user?.displayName}
+              />
               <AvatarFallback>{user?.displayName[0]}</AvatarFallback>
             </Avatar>
             <div className="ml-2 my-2">

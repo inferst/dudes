@@ -3,9 +3,9 @@ import { useSettingsQuery } from '@app/frontend-admin/queries/settings';
 import { UpdateSettingsForm } from '@shared';
 import { Loader } from '../../common/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { DudeForm } from './DudeForm';
+import { SettingsForm } from './SettingsForm';
 
-export function DudePage() {
+export function SettingsPage() {
   const settingsQuery = useSettingsQuery();
   const updateMutation = useUpdateSettingsMutation();
 
@@ -25,7 +25,7 @@ export function DudePage() {
         <CardTitle>Settings</CardTitle>
       </CardHeader>
       <CardContent>
-        <DudeForm data={data} onUpdate={handleFormUpdate} />
+        <SettingsForm data={data} onUpdate={handleFormUpdate} />
       </CardContent>
     </Card>
   );

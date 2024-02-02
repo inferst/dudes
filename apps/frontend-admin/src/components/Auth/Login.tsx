@@ -12,7 +12,7 @@ export function Login() {
     <div className="flex items-center justify-center h-screen">
       <Card>
         <CardHeader>
-          <CardTitle>{'Welcome to Dudes Admin'}</CardTitle>
+          <CardTitle className='text-center'>{'Dudes Admin'}</CardTitle>
           <CardDescription>
             {'The way to manage your stream dudes.'}
           </CardDescription>

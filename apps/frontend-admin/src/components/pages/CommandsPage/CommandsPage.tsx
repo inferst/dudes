@@ -80,9 +80,9 @@ export function CommandsPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Active</TableHead>
-              <TableHead>Command</TableHead>
+              <TableHead className="w-[100px]">Command</TableHead>
               <TableHead>Cooldown</TableHead>
-              <TableHead className="w-40">Edit</TableHead>
+              <TableHead className="w-[10px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
