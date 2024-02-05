@@ -32,8 +32,8 @@ export class Debug {
       emotes: [],
       message: 'Привет, я сейчас тебя зарейдю!',
       info: {
-        displayName: 'tastyteadev',
-        color: 'cyan',
+        displayName: 'broadcaster',
+        color: '',
       },
     });
 
@@ -42,7 +42,7 @@ export class Debug {
         broadcaster: {
           id: '1',
           info: {
-            displayName: 'tastyteadev',
+            displayName: 'broadcaster',
             color: 'cyan',
           },
         },

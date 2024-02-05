@@ -4,12 +4,12 @@ import {
   DudeLayerAnimatedSprite,
   DudeSpriteLayers,
 } from '@app/frontend-client/sprite/spriteProvider';
-import { Container } from 'pixi.js';
+import { Color, Container } from 'pixi.js';
 import { DEFAULT_DUDE_SCALE } from './Dude';
 
 export type DudeSpriteContainerProps = {
   color: {
-    [key in DudeSpriteLayers]?: string;
+    [key in DudeSpriteLayers]?: Color;
   };
   scale: Point;
 };
@@ -45,13 +45,11 @@ export class DudeSpriteContainer {
         for (const colorLayer in props.color) {
           if (colorLayer == layer.layer) {
             const color = props.color[colorLayer];
-            if (color == 'transparent') {
-              layer.sprite.visible = false;
-            } else {
-              layer.sprite.visible = true;
-            }
 
-            layer.sprite.tint = color ?? 0xffffff;
+            if (color) {
+              layer.sprite.alpha = color.alpha;
+              layer.sprite.tint = color;
+            }
           }
         }
       }

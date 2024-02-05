@@ -19,7 +19,7 @@ import { FIXED_DELTA_TIME } from '@app/frontend-client/config/constants';
 export type DudeProps = {
   name?: string;
   sprite?: SpriteConfig;
-  color?: string;
+  color?: PIXI.Color;
   direction?: number;
   scale?: number;
   isAnonymous?: boolean;
@@ -39,7 +39,7 @@ export type DudeDepawnProps = {
 type DudeState = Required<DudeProps>;
 
 type UserProps = {
-  color?: string;
+  color?: PIXI.Color;
 };
 
 const jumpSound = new Audio('/client/sounds/jump.mp3');
@@ -69,7 +69,7 @@ export class Dude {
         y: 9,
       },
     },
-    color: '#969696',
+    color: new PIXI.Color('#969696'),
     direction: 1,
     scale: DEFAULT_DUDE_SCALE,
     isAnonymous: false,
@@ -358,7 +358,9 @@ export class Dude {
     if (this.sprite) {
       this.sprite.update({
         color: {
-          [DudeSpriteLayers.Body]: this.userState.color ?? this.state.color,
+          [DudeSpriteLayers.Body]: this.userState.color
+            ? this.userState.color
+            : this.state.color,
         },
         scale: {
           x: this.state.direction * this.state.scale,
