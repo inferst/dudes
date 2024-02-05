@@ -123,7 +123,7 @@ export class SocketService<
 
     eventClient.onChatMessage(async (data) => {
       const action = await this.actionService.getUserActionByMessage(
-        user.id,
+        user.userId,
         data,
       );
 
@@ -154,7 +154,7 @@ export class SocketService<
 
     eventClient.onRewardRedemptionAdd(async (data) => {
       const action = await this.actionService.getUserActionByReward(
-        user.id,
+        user.userId,
         user.platformUserId,
         data,
       );
