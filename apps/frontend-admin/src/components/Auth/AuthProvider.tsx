@@ -2,7 +2,6 @@ import { api } from '@app/frontend-admin/api/api';
 import { useApiQuery } from '@app/frontend-admin/api/useApiQuery';
 import { UserEntity } from '@shared';
 import { ReactNode, createContext } from 'react';
-import { Loader } from '../common/Loader';
 
 type AuthContext = {
   user?: UserEntity;
@@ -31,7 +30,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   if (isLoading) {
-    return <Loader></Loader>;
+    return;
   }
 
   return (

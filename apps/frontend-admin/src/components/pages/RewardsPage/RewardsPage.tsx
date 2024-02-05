@@ -5,10 +5,7 @@ import {
 } from '@app/frontend-admin/mutations/rewards';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { useRewardsQuery } from '@app/frontend-admin/queries/rewards';
-import {
-  ActionEntity,
-  TwitchRewardEntity
-} from '@shared';
+import { ActionEntity, TwitchRewardEntity } from '@shared';
 import { DeleteDialog } from '../../common/DeleteDialog';
 import { Loader } from '../../common/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
@@ -107,28 +104,29 @@ export function RewardsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Rewards</CardTitle>
+        <CardTitle className="flex">
+          Twitch Rewards
+          <div className="flex flex-1 justify-end">
+            {actions.length > 0 && (
+              <AddRewardForm
+                actions={actions}
+                onSave={(data) => handleAdd(data)}
+              ></AddRewardForm>
+            )}
+          </div>
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-6">
-          {actions.length > 0 && (
-            <AddRewardForm
-              actions={actions}
-              onSave={(data) => handleAdd(data)}
-            ></AddRewardForm>
-          )}
-        </div>
-
         <Table>
           <TableCaption>A list of custom rewards</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Active</TableHead>
               <TableHead className="w-[100px]">Action</TableHead>
+              <TableHead className="w-[100px]">Cost</TableHead>
               <TableHead>Title</TableHead>
-              <TableHead className="w-40">Cost</TableHead>
-              <TableHead>Edit</TableHead>
-              <TableHead>Delete</TableHead>
+              <TableHead className="w-[10px]"></TableHead>
+              <TableHead className="w-[10px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -146,10 +144,10 @@ export function RewardsPage() {
                   )}
                 </TableCell>
                 <TableCell>{getAction(reward.actionId)?.title}</TableCell>
-                <TableCell>{reward.title}</TableCell>
                 <TableCell>{reward.cost}</TableCell>
+                <TableCell>{reward.title}</TableCell>
                 <TableCell>{rewardForm(reward, index)}</TableCell>
-                <TableCell>
+                <TableCell className="text-right">
                   <DeleteDialog
                     onDelete={() => handleDelete(reward.id)}
                   ></DeleteDialog>

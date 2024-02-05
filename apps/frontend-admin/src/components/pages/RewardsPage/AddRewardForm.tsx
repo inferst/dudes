@@ -58,9 +58,14 @@ export function AddRewardForm(props: AddRewardFormProps) {
 
   const form = useForm<AddRewardFormInput>({
     resolver: zodResolver(schema),
-    defaultValues: {
+    values: {
       title: '',
+      cost: 100,
       actionId: action.id,
+      data: {
+        arguments: [],
+        action: {},
+      },
     },
   });
 
@@ -69,21 +74,22 @@ export function AddRewardForm(props: AddRewardFormProps) {
   const onSubmit = (data: AddRewardFormInput) => {
     onSave(data);
     setOpen(false);
-    form.reset();
   };
 
   const handleOpenChange = (value: boolean) => {
-    if (!value) {
+    if (value) {
       form.reset();
     }
 
     setOpen(value);
   };
 
+  console.log(action.name);
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary">Add</Button>
+        <Button variant="secondary">Add Custom Reward</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>

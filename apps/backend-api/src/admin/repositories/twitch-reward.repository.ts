@@ -1,7 +1,7 @@
 import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
 import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import {
   CreateTwitchRewardDto,
   TwitchRewardEntity,
@@ -9,6 +9,7 @@ import {
 } from '@shared';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 import { TwitchHttpException } from '../exceptions/twitch-http.exception';
+import { HttpStatusCode } from 'axios';
 
 // TODO: handle prisma errors
 
@@ -118,7 +119,10 @@ export class TwitchRewardRepository {
     });
 
     if (!reward) {
-      throw new Error("Reward doesn't exist");
+      throw new HttpException(
+        "Reward doesn't exist",
+        HttpStatusCode.InternalServerError
+      );
     }
 
     const apiClient = await this.twitchClientFactory.createApiClient(

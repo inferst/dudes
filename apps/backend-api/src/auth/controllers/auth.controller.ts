@@ -14,6 +14,7 @@ import {
   Response as ExpressResponse,
 } from 'express';
 import { AuthUserProps } from '../services/auth.service';
+import { UserTokenRepository } from '../repositories/user-token.repository';
 
 @Controller()
 export class AuthController {
@@ -21,6 +22,7 @@ export class AuthController {
 
   public constructor(
     private readonly authService: AuthService,
+    private readonly userTokenRepository: UserTokenRepository,
     private readonly configService: ConfigService
   ) {}
 
@@ -45,8 +47,14 @@ export class AuthController {
   ): Promise<void> {
     const user = req.user as AuthUserProps | undefined;
 
-    if (user?.accessToken) {
-      await this.authService.logout(user.accessToken);
+    if (user) {
+      const userToken = await this.userTokenRepository.findByUserId(
+        user.userId
+      );
+
+      if (userToken) {
+        await this.authService.logout(userToken.accessToken);
+      }
 
       req.session.destroy((err) => {
         if (!err || Object.keys(err).length === 0) {

@@ -22,7 +22,7 @@ const links: NavLink[] = [
   },
   {
     path: '/admin/rewards',
-    title: 'Rewards',
+    title: 'Twitch Rewards',
   },
   {
     path: '/admin/skins',
@@ -33,10 +33,6 @@ const links: NavLink[] = [
     path: '/admin/donations',
     title: 'Donations',
     isDisabled: true,
-  },
-  {
-    path: '/admin/hidden-users',
-    title: 'Hidden Users',
   },
 ];
 

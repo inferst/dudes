@@ -1,10 +1,11 @@
 import { UserRepository } from '@app/backend-api/auth/repositories/user.repository';
 import { ConfigService } from '@app/backend-api/config/config.service';
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { UserTokenRepository } from '../repositories/user-token.repository';
 import { SeedService } from './seed.service';
+import { HttpStatusCode } from 'axios';
 
 export type AuthUserProps = {
   userId: number;
@@ -12,7 +13,6 @@ export type AuthUserProps = {
   displayName: string;
   profileImageUrl: string;
   platformUserId: string;
-  accessToken: string;
 };
 
 type WithData<T> = {
@@ -61,7 +61,6 @@ export class AuthService {
       platformUserId: result.id,
       profileImageUrl: result.profile_image_url,
       displayName: result.display_name,
-      accessToken,
     };
   }
 
@@ -104,7 +103,10 @@ export class AuthService {
 
     if (data.length === 0) {
       // TODO: convert to more precise exception.
-      throw new Error('Twitch user is not found.');
+      throw new HttpException(
+        'Twitch user is not found.',
+        HttpStatusCode.InternalServerError
+      );
     }
 
     const [user] = data;

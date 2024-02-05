@@ -14,6 +14,14 @@ export type TwitchUserTokenProps = {
 export class UserTokenRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
+  public async findByUserId(userId: number): Promise<UserToken | null> {
+    return await this.prismaService.userToken.findFirst({
+      where: {
+        userId,
+      }
+    })
+  }
+
   public async updateOrCreate(data: TwitchUserTokenProps): Promise<UserToken> {
     const userToken = await this.prismaService.userToken.findUnique({
       where: {
