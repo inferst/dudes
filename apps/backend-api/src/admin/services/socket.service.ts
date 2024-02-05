@@ -147,6 +147,11 @@ export class SocketService<
       socket.broadcast.to(userGuid).emit('chatters', data);
     });
 
+    eventClient.onRaid((data) => {
+      socket.emit('raid', data);
+      socket.broadcast.to(userGuid).emit('raid', data);
+    });
+
     eventClient.onRewardRedemptionAdd(async (data) => {
       const action = await this.actionService.getUserActionByReward(
         user.id,

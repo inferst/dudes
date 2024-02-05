@@ -4,6 +4,7 @@ import { Container } from 'pixi.js';
 import { assetsLoader } from '../assets/assetsLoader';
 import { dudesManager } from './dudesManager';
 import { Dude } from './entities/Dude';
+import { timers } from '../helpers/timer';
 
 export class App {
   private connection = new Connection();
@@ -24,6 +25,7 @@ export class App {
     this.connection.onMessage((data) => dudesManager.processMessage(data));
     this.connection.onAction((data) => dudesManager.processAction(data));
     this.connection.onChatters((data) => dudesManager.processChatters(data));
+    this.connection.onRaid((data) => dudesManager.processRaid(data));
 
     this.stage.sortableChildren = true;
 
@@ -34,6 +36,7 @@ export class App {
   }
 
   public update(): void {
+    timers.tick();
     dudesManager.update();
   }
 

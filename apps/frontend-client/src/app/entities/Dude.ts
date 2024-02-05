@@ -23,10 +23,16 @@ export type DudeProps = {
   direction?: number;
   scale?: number;
   isAnonymous?: boolean;
+  zIndex?: number;
 };
 
 export type DudeSpawnProps = {
   isFalling?: boolean;
+  positionX?: number;
+  onComplete?: () => void;
+};
+
+export type DudeDepawnProps = {
   onComplete?: () => void;
 };
 
@@ -67,6 +73,7 @@ export class Dude {
     direction: 1,
     scale: DEFAULT_DUDE_SCALE,
     isAnonymous: false,
+    zIndex: 0,
   };
 
   private animationState?: DudeSpriteTags;
@@ -80,7 +87,7 @@ export class Dude {
   private name: DudeName = new DudeName();
 
   private message: DudeMessage = new DudeMessage(() => {
-    this.container.zIndex = dudesManager.zIndexDudeMax(this.container.zIndex);
+    this.state.zIndex = dudesManager.zIndexDudeMax(this.container.zIndex);
   });
 
   private emoteSpitter: DudeEmoteSpitter = new DudeEmoteSpitter();
@@ -113,10 +120,6 @@ export class Dude {
   scaleTween?: TWEEN.Tween<Dude>;
 
   constructor(props: DudeProps = {}) {
-    this.container.sortableChildren = true;
-    this.emoteSpitter.container.zIndex = 1;
-    this.message.container.zIndex = 2;
-
     this.container.addChild(this.name.text);
     this.container.addChild(this.emoteSpitter.container);
     this.container.addChild(this.message.container);
@@ -142,7 +145,10 @@ export class Dude {
     const spawnY = props.isFalling ? fallingStartY : renderer.height;
     const spriteWidth = this.state.sprite.w * this.state.scale;
 
-    const x = Math.random() * (renderer.width - spriteWidth) + spriteWidth / 2;
+    const x =
+      props.positionX != undefined
+        ? props.positionX * renderer.width
+        : Math.random() * (renderer.width - spriteWidth) + spriteWidth / 2;
     const y = spawnY * this.state.scale;
 
     this.container.x = x;
@@ -153,7 +159,7 @@ export class Dude {
     if (!props.isFalling) {
       const zIndex = dudesManager.zIndexDudeMin(this.container.zIndex);
 
-      this.container.zIndex = zIndex;
+      this.state.zIndex = zIndex;
       this.container.alpha = 0;
 
       this.spawnTween = new TWEEN.Tween(this.container)
@@ -163,7 +169,7 @@ export class Dude {
     }
   }
 
-  despawn(onComplete?: () => void): void {
+  despawn(props: DudeDepawnProps = {}): void {
     if (this.fadeTween && this.fadeTween.isPlaying()) {
       return;
     }
@@ -172,7 +178,7 @@ export class Dude {
       .to({ alpha: 0 }, 1000)
       .onComplete(() => {
         this.isDespawned = true;
-        onComplete && onComplete();
+        props.onComplete && props.onComplete();
       })
       .start();
   }
@@ -259,6 +265,8 @@ export class Dude {
     this.fadeTween?.update();
     this.spawnTween?.update();
     this.scaleTween?.update();
+
+    this.container.zIndex = this.state.zIndex;
 
     const collider = this.state.sprite.collider;
 

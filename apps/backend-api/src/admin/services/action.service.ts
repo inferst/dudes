@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ActionEntity, MessageEntity, RewardRedemptionEntity, UserActionEntity } from '@shared';
+import { ActionEntity, MessageEntity, RewardRedemptionData, UserActionEntity } from '@shared';
 import { ActionRepository } from '../repositories/action.repository';
 import { CommandRepository } from '../repositories/command.repository';
 import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';
@@ -66,7 +66,7 @@ export class ActionService {
   public async getUserActionByReward(
     userId: number,
     platformUserId: string,
-    redemption: RewardRedemptionEntity,
+    redemption: RewardRedemptionData,
   ): Promise<UserActionEntity | undefined> {
     if (this.actions.length == 0) {
       this.actions = await this.actionRepository.getActions();

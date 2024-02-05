@@ -4,11 +4,13 @@ import { UpdateSettingsDto } from '../dto/settings';
 export const updateSettingsDtoSchema = z.object({
   showAnonymousDudes: z.boolean().default(false).optional(),
   fallingDudes: z.boolean().default(true).optional(),
+  fallingRaiders: z.boolean().default(false).optional(),
 });
 
 export const defaultSettingsValues: UpdateSettingsDto = {
   showAnonymousDudes: false,
   fallingDudes: true,
+  fallingRaiders: false,
 };
 
 export type UpdateSettingsForm = UpdateSettingsDto;

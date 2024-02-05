@@ -4,7 +4,7 @@ import { PrismaService } from '@app/backend-api/database/prisma.service';
 import { Listener } from '@d-fischer/typed-event-emitter';
 import { HttpException, Logger } from '@nestjs/common';
 import { UserToken } from '@prisma/client';
-import { ChatterEntity, MessageEntity, RewardRedemptionEntity } from '@shared';
+import { ChatterEntity, MessageEntity } from '@shared';
 import { ApiClient } from '@twurple/api';
 import { RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
@@ -12,6 +12,10 @@ import { EventSubWsListener } from '@twurple/eventsub-ws';
 import { HttpStatusCode } from 'axios';
 import { EventClient } from '../event-client/event-client.factory';
 import { ChatMessageService } from '../services';
+import {
+  RaidData,
+  RewardRedemptionData,
+} from '@shared';
 import { TokenRevokedException } from './token-revoked.exception';
 import { TwitchUserFilterService } from './twitch-user-filter.service';
 
@@ -116,7 +120,7 @@ export class TwitchClientFactory {
     eventSubWsListener.start();
 
     const onRewardRedemptionAdd = (
-      listener: (data: RewardRedemptionEntity) => void
+      listener: (data: RewardRedemptionData) => void
     ): void => {
       eventSubWsListener.onChannelRedemptionAdd(
         userToken.platformUserId,
@@ -129,6 +133,25 @@ export class TwitchClientFactory {
           });
         }
       );
+    };
+
+    const onRaid = (listener: (data: RaidData) => void): void => {
+      eventSubWsListener.onChannelRaidTo(userToken.platformUserId, async (data) => {
+        const broadcaster = await data.getRaidingBroadcaster();
+        const apiClient = await this.createApiClient(userToken.userId);
+        const color = await apiClient.chat.getColorForUser(broadcaster.id);
+
+        listener({
+          broadcaster: {
+            id: broadcaster.id,
+            info: {
+              displayName: broadcaster.displayName,
+              color: color ?? undefined
+            }
+          },
+          viewers: data.viewers,
+        });
+      });
     };
 
     let chatMessageListener: Listener;
@@ -218,6 +241,7 @@ export class TwitchClientFactory {
       },
       onChatMessage,
       onChatters,
+      onRaid,
       onRewardRedemptionAdd,
     };
   }

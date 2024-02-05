@@ -2,6 +2,7 @@ import {
   ChatterEntity,
   ClientToServerEvents,
   MessageEntity,
+  RaidData,
   ServerToClientsEvents,
   SettingsEntity,
   UserActionEntity
@@ -39,5 +40,9 @@ export class Connection {
 
   public onChatters(callback: (data: ChatterEntity[]) => void): void {
     this.socket.on('chatters', callback);
+  }
+
+  public onRaid(callback: (data: RaidData) => void): void {
+    this.socket.on('raid', callback);
   }
 }
