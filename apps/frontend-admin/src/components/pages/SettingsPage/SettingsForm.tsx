@@ -109,8 +109,35 @@ export function SettingsForm(props: SettingsFormProps) {
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
         Raid
       </h4>
+      <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
-          In Progress...
+        <div>
+          <Label htmlFor="fallingRaiders" className="text-xl">
+            Falling raiders
+          </Label>
+          <p className="text-sm text-muted-foreground">
+            Drop raiders in the top of screen
+          </p>
+        </div>
+        <div className="col-span-3">
+          <FormField
+            control={form.control}
+            name={'fallingRaiders'}
+            render={({ field }) => {
+              return (
+                <Switch
+                  {...field}
+                  id="fallingRaiders"
+                  onCheckedChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  checked={field.value}
+                  value={`${field.value}`}
+                ></Switch>
+              );
+            }}
+          ></FormField>
+        </div>
       </div>
       <Separator className="mt-4 mb-8" />
     </Form>

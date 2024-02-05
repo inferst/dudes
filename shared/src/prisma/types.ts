@@ -4,6 +4,7 @@ declare global {
     type SettingsData = {
       showAnonymousDudes?: boolean;
       fallingDudes?: boolean;
+      fallingRaiders?: boolean;
     };
 
     type ActionData = Record<string, string | number | undefined>;

@@ -48,6 +48,10 @@ class DudesManager {
   }
 
   public processRaid(data: RaidData) {
+    if (!app.settings.fallingRaiders) {
+      return;
+    }
+
     const time = (1 / data.viewers) * 5000;
 
     for (let i = 0; i < data.viewers; i++) {
