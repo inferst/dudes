@@ -46,7 +46,7 @@ export class Debug {
             color: 'cyan',
           },
         },
-        viewers: 500,
+        viewers: 15,
       });
     }, 1000);
   }

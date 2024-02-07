@@ -12,9 +12,7 @@ import { CommandController, UserController } from './controllers';
 import { ActionController } from './controllers/action.controller';
 import { RewardController } from './controllers/reward.controller';
 import { SettingsController } from './controllers/settings.controller';
-import {
-  TwitchClientFactory
-} from './twitch/twitch-client.factory';
+import { TwitchClientFactory } from './twitch/twitch-client.factory';
 import { TwitchUserFilterService } from './twitch/twitch-user-filter.service';
 import { ActionRepository } from './repositories/action.repository';
 import { CommandRepository } from './repositories/command.repository';
@@ -22,6 +20,7 @@ import { SettingsRepository } from './repositories/settings.repository';
 import { TwitchRewardRepository } from './repositories/twitch-reward.repository';
 import { EventClientFactory } from './event-client/event-client.factory';
 import { SessionController } from './controllers/session.controller';
+import { HttpModule } from '@nestjs/axios';
 
 const twitchClientFactory = {
   provide: 'TWITCH_CLIENT_FACTORY',
@@ -46,7 +45,7 @@ const twitchClientFactory = {
 };
 
 @Module({
-  imports: [],
+  imports: [HttpModule],
   controllers: [
     UserController,
     CommandController,
