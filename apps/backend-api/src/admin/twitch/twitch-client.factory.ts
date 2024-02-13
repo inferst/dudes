@@ -1,7 +1,6 @@
 import { ConfigService } from '@app/backend-api/config/config.service';
 import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { Listener } from '@d-fischer/typed-event-emitter';
 import { HttpException, Logger } from '@nestjs/common';
 import { UserToken } from '@prisma/client';
 import { ChatterEntity, MessageEntity } from '@shared';
@@ -154,10 +153,8 @@ export class TwitchClientFactory {
       });
     };
 
-    let chatMessageListener: Listener;
-
     const onChatMessage = (listener: (data: MessageEntity) => void): void => {
-      chatMessageListener = chatClient.onMessage((channel, user, text, msg) => {
+      chatClient.onMessage((channel, user, text, msg) => {
         if (this.twitchUserFilterService.isBot(msg.userInfo.userName)) {
           return;
         }
@@ -234,7 +231,7 @@ export class TwitchClientFactory {
       },
       disconnect: async (): Promise<void> => {
         clearInterval(timerId);
-        chatClient.removeListener(chatMessageListener);
+        chatClient.quit();
         eventSubWsListener.stop();
 
         this.logger.log('TwitchClientFactory client has been disconnected');
