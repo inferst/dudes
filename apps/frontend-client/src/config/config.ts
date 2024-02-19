@@ -8,8 +8,8 @@ export type Config = {
 
 export type SpriteConfig = {
   name: string;
-  w: number,
-  h: number,
+  w: number;
+  h: number;
   collider: {
     x: number;
     y: number;
@@ -17,9 +17,9 @@ export type SpriteConfig = {
     h: number;
   };
   pivot: {
-    x: number,
-    y: number,
-  }
+    x: number;
+    y: number;
+  };
 };
 
 export const config: Config = {
@@ -37,7 +37,7 @@ export const config: Config = {
       pivot: {
         x: 0,
         y: 9,
-      }
+      },
     },
     St_zarus: {
       name: 'agent',
@@ -52,7 +52,7 @@ export const config: Config = {
       pivot: {
         x: 0,
         y: 9,
-      }
+      },
     },
     zadrot_L2: {
       name: 'nerd',
@@ -67,7 +67,7 @@ export const config: Config = {
       pivot: {
         x: 0,
         y: 9,
-      }
+      },
     },
     Duckate: {
       name: 'girl',
@@ -82,7 +82,7 @@ export const config: Config = {
       pivot: {
         x: 0,
         y: 9,
-      }
+      },
     },
     ArcticSpaceCat: {
       name: 'cat',
@@ -97,7 +97,7 @@ export const config: Config = {
       pivot: {
         x: 0,
         y: 9,
-      }
+      },
     },
     kryptamine90: {
       name: 'senior',
@@ -112,7 +112,22 @@ export const config: Config = {
       pivot: {
         x: 0,
         y: 9,
-      }
+      },
+    },
+    mimbol: {
+      name: 'sponge',
+      w: 32,
+      h: 32,
+      collider: {
+        x: 8,
+        y: 7,
+        w: 16,
+        h: 18,
+      },
+      pivot: {
+        x: 0,
+        y: 9,
+      },
     },
   },
 };
