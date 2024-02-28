@@ -19,8 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@app/backend-api/*": ["apps/backend-api/src/*"],
-      "@app/frontend-client/*": ["apps/frontend-client/src/*"],
       "@app/frontend-admin/*": ["apps/frontend-admin/src/*"],
+      "@app/frontend-client/*": ["apps/frontend-client/src/*"],
       "@shared": ["shared/src/index.ts"]
     }
   },

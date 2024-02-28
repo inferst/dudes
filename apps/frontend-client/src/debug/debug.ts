@@ -30,23 +30,26 @@ export class Debug {
     dudesManager.processMessage({
       userId: '1',
       emotes: [],
-      message: 'Привет, я сейчас тебя зарейдю!',
+      message: 'Привет!',
       info: {
-        displayName: 'broadcaster',
-        color: '',
+        displayName: 'haha',
+        color: 'yellow',
       },
     });
 
     setTimeout(() => {
-      dudesManager.processRaid({
-        broadcaster: {
-          id: '1',
-          info: {
-            displayName: 'broadcaster',
-            color: 'cyan',
-          },
+      dudesManager.processAction({
+        userId: '1',
+        cooldown: 0,
+        data: {},
+        description: "",
+        id: 1,
+        name: 'jump',
+        title: "Jump",
+        info: {
+          displayName: 'haha',
+          color: 'yellow',
         },
-        viewers: 15,
       });
     }, 1000);
   }
