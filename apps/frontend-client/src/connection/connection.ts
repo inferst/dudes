@@ -6,7 +6,7 @@ import {
   ServerToClientsEvents,
   SettingsEntity,
   UserActionEntity
-} from '@shared';
+} from '@libs/types';
 import { Socket, io } from 'socket.io-client';
 
 export class Connection {

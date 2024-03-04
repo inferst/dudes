@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import {
   ActionEntity
-} from '@shared';
+} from '@libs/types';
 import { ActionRepository } from '../repositories/action.repository';
 
 @Controller('/action')

@@ -1,7 +1,7 @@
 {
-  "name": "shared",
+  "name": "types",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "shared/src",
+  "sourceRoot": "types",
   "projectType": "library",
   "targets": {
     "lint": {

@@ -6,7 +6,7 @@ import {
   isColorUserActionEntity,
   isGrowUserActionEntity,
   isJumpUserActionEntity,
-} from '@shared';
+} from '@libs/types';
 import tinycolor from 'tinycolor2';
 import { config } from '../config/config';
 import { timers } from '../helpers/timer';

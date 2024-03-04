@@ -1,7 +1,7 @@
 import { PrismaService } from '@app/backend-api/database/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Settings } from '@prisma/client';
-import { defaultSettingsValues } from '@shared';
+import { defaultSettingsValues } from '@libs/types';
 
 @Injectable()
 export class SettingsRepository {

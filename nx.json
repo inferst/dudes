@@ -69,5 +69,22 @@
       "unitTestRunner": "vitest",
       "e2eTestRunner": "none"
     }
-  }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/remix/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "startTargetName": "start",
+        "typecheckTargetName": "typecheck"
+      }
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    }
+  ]
 }

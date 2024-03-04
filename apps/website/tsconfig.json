@@ -1,32 +1,24 @@
 {
   "extends": "../../tsconfig.base.json",
-  "files": [],
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "strict": true,
-    "resolveJsonModule": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "skipLibCheck": true,
-    "types": ["vite/client", "vitest"]
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "target": "ES2019",
+    "strict": true,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    // Remix takes care of building everything in `remix build`.
+    "noEmit": true
   },
-  "include": ["src"],
+  "include": [],
+  "files": [],
   "references": [
     {
       "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
     }
   ]
 }

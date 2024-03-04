@@ -21,7 +21,7 @@
       "@app/backend-api/*": ["apps/backend-api/src/*"],
       "@app/frontend-admin/*": ["apps/frontend-admin/src/*"],
       "@app/frontend-client/*": ["apps/frontend-client/src/*"],
-      "@shared": ["shared/src/index.ts"]
+      "@lib/types": ["libs/types/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

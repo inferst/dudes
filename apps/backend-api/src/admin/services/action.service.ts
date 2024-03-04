@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ActionEntity, MessageEntity, RewardRedemptionData, UserActionEntity } from '@shared';
+import { ActionEntity, MessageEntity, RewardRedemptionData, UserActionEntity } from '@libs/types';
 import { ActionRepository } from '../repositories/action.repository';
 import { CommandRepository } from '../repositories/command.repository';
 import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';

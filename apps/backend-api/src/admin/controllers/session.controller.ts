@@ -1,6 +1,6 @@
 import { AdminGuard } from '@app/backend-api/auth/guards/admin.guard';
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
+import { ClientToServerEvents, ServerToClientsEvents } from '@libs/types';
 import { Socket } from 'socket.io';
 import { SocketService } from '../services';
 

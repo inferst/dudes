@@ -1,4 +1,4 @@
-import { UpdateCommandDto, CommandEntity, CreateCommandDto } from "@shared";
+import { UpdateCommandDto, CommandEntity, CreateCommandDto } from "@libs/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { api } from "../api/api";

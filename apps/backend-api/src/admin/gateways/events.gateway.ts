@@ -6,7 +6,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
+import { ClientToServerEvents, ServerToClientsEvents } from '@libs/types';
 
 @WebSocketGateway({
   cors: true,

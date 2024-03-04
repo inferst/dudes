@@ -9,7 +9,7 @@ import {
   UpdateSettingsDto,
   UpdateTwitchRewardDto,
   CreateTwitchRewardDto,
-} from '@shared';
+} from '@libs/types';
 import axios, { GenericAbortSignal } from 'axios';
 
 export type WithSignal = {

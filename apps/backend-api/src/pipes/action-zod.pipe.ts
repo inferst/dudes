@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { getActionableEntityFormSchema } from '@shared';
+import { getActionableEntityFormSchema } from '@libs/types';
 import { ZodObject, ZodRawShape } from 'zod';
 import { ActionRepository } from '../admin/repositories/action.repository';
 

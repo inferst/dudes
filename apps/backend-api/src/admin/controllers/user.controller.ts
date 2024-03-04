@@ -3,7 +3,7 @@ import { AuthGuard } from '@app/backend-api/auth/guards';
 import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
 import { ConfigService } from '@app/backend-api/config/config.service';
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { UserEntity } from '@shared';
+import { UserEntity } from '@libs/types';
 
 @Controller('/user')
 export class UserController {

@@ -6,7 +6,7 @@ import {
   CreateTwitchRewardDto,
   TwitchRewardEntity,
   UpdateTwitchRewardDto,
-} from '@shared';
+} from '@libs/types';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 import { TwitchHttpException } from '../exceptions/twitch-http.exception';
 import { HttpStatusCode } from 'axios';
