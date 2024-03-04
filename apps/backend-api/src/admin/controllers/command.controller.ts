@@ -3,7 +3,7 @@ import { AuthGuard } from '@app/backend-api/auth/guards';
 import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
 import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
 import { Body, Controller, Get, Param, ParseIntPipe, Put, UseGuards, Post, Delete } from '@nestjs/common';
-import { UpdateCommandDto, CommandEntity, updateCommandDtoSchema, createCommandDtoSchema, CreateCommandDto } from '@libs/types';
+import { UpdateCommandDto, CommandEntity, updateCommandDtoSchema, createCommandDtoSchema, CreateCommandDto } from '@lib/types';
 import { CommandRepository } from '../repositories/command.repository';
 import { Prisma } from '@prisma/client';
 

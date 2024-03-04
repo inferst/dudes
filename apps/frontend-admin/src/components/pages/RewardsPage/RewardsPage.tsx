@@ -5,7 +5,7 @@ import {
 } from '@app/frontend-admin/mutations/rewards';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { useRewardsQuery } from '@app/frontend-admin/queries/rewards';
-import { ActionEntity, TwitchRewardEntity } from '@libs/types';
+import { ActionEntity, TwitchRewardEntity } from '@lib/types';
 import { DeleteDialog } from '../../common/DeleteDialog';
 import { Loader } from '../../common/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';

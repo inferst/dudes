@@ -16,7 +16,7 @@ import {
 } from '@app/frontend-admin/mutations/commands';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
-import { CommandEntity } from '@libs/types';
+import { CommandEntity } from '@lib/types';
 import { Loader } from '../../common/Loader';
 
 export function CommandsPage() {

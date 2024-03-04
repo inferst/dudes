@@ -1,5 +1,5 @@
 import { Connection } from '@app/frontend-client/connection/connection';
-import { SettingsEntity } from '@libs/types';
+import { SettingsEntity } from '@lib/types';
 import { Container } from 'pixi.js';
 import { assetsLoader } from '../assets/assetsLoader';
 import { dudesManager } from './dudesManager';

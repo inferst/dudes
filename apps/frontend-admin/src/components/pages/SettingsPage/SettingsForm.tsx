@@ -3,7 +3,7 @@ import {
   UpdateSettingsDto,
   UpdateSettingsForm,
   updateSettingsDtoSchema,
-} from '@libs/types';
+} from '@lib/types';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Form, FormField } from '../../ui/form';

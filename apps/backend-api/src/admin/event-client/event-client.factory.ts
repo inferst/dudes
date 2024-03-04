@@ -5,7 +5,7 @@ import {
   MessageEntity,
   RaidData,
   RewardRedemptionData,
-} from '@libs/types';
+} from '@lib/types';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 
 export type EventClient = {

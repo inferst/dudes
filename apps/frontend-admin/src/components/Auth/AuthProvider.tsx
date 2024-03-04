@@ -1,6 +1,6 @@
 import { api } from '@app/frontend-admin/api/api';
 import { useApiQuery } from '@app/frontend-admin/api/useApiQuery';
-import { UserEntity } from '@libs/types';
+import { UserEntity } from '@lib/types';
 import { ReactNode, createContext } from 'react';
 
 type AuthContext = {

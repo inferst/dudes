@@ -1,4 +1,4 @@
-import { CreateTwitchRewardDto, RewardEntity, UpdateTwitchRewardDto } from '@libs/types';
+import { CreateTwitchRewardDto, RewardEntity, UpdateTwitchRewardDto } from '@lib/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '../api/api';

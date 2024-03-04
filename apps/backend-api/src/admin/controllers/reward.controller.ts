@@ -19,7 +19,7 @@ import {
   UpdateTwitchRewardDto,
   createTwitchRewardDtoSchema,
   updateTwitchRewardDtoSchema,
-} from '@libs/types';
+} from '@lib/types';
 import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';
 
 @Controller('/reward')

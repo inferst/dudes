@@ -1,6 +1,6 @@
 import { useUpdateSettingsMutation } from '@app/frontend-admin/mutations/settings';
 import { useSettingsQuery } from '@app/frontend-admin/queries/settings';
-import { UpdateSettingsForm } from '@libs/types';
+import { UpdateSettingsForm } from '@lib/types';
 import { Loader } from '../../common/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { SettingsForm } from './SettingsForm';

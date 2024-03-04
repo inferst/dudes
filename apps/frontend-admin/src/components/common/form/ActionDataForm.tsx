@@ -3,7 +3,7 @@ import {
   ActionEntity,
   isColorUserActionEntity,
   isGrowUserActionEntity,
-} from '@libs/types';
+} from '@lib/types';
 import { UseFormReturn } from 'react-hook-form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
