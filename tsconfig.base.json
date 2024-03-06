@@ -21,6 +21,7 @@
       "@app/backend-api/*": ["apps/backend-api/src/*"],
       "@app/frontend-admin/*": ["apps/frontend-admin/src/*"],
       "@app/frontend-client/*": ["apps/frontend-client/src/*"],
+      "@lib/dudes": ["libs/dudes/src/index.ts"],
       "@lib/types": ["libs/types/index.ts"]
     }
   },

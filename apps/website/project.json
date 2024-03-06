@@ -5,6 +5,12 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "serve": {
+      "executor": "@nx/remix:serve",
+      "options": {
+        "manual": true
+      }
+    },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {

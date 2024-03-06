@@ -1,0 +1,8 @@
+{
+  "name": "dudes",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dudes/src",
+  "projectType": "library",
+  "targets": {},
+  "tags": []
+}

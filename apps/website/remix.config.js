@@ -10,6 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default {
   tailwind: true,
   ignoredRouteFiles: ['**/.*'],
+  browserNodeBuiltinsPolyfill: { modules: { url: true } },
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "build/index.js",
