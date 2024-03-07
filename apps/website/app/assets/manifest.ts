@@ -30,11 +30,7 @@ export const manifest = {
         {
           alias: 'nerd',
           src: '/sprites/nerd/nerd.json',
-        },
-        {
-          alias: 'sponge',
-          src: '/sprites/sponge/sponge.json',
-        },
+        }
       ],
     },
     {
