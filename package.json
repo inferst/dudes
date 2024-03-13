@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "nx run-many --target=serve",
     "website:dev": "nx run website:serve",
-    "build": "npm run db:generate && nx run-many --target=build -c=production",
-    "lint": "npm run lint:types && npm run lint:eslint",
+    "build": "pnpm run db:generate && nx run-many --target=build -c=production",
+    "lint": "pnpm run lint:types && pnpm run lint:eslint",
     "lint:eslint": "nx run-many --target=lint",
     "lint:types": "nx run-many --target=lint-types",
     "db:generate": "prisma generate --schema=apps/backend-api/prisma/schema.prisma",
