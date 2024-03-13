@@ -9,7 +9,6 @@ import { SoundManifest, soundService } from './services/soundService';
 export type AppOptions = {
   manifest: AssetsManifest;
   sound: SoundManifest;
-  settings: SettingsEntity;
 };
 
 export class App {
@@ -25,8 +24,6 @@ export class App {
   public async init(options: AppOptions, element: HTMLElement): Promise<void> {
     await assetsLoader.load(options.manifest);
     soundService.init(options.sound);
-
-    this.settings = options.settings;
 
     this.renderer = new Renderer({
       width: element.clientWidth,
@@ -46,6 +43,10 @@ export class App {
       onAdd: (dude: Dude) => this.stage.addChild(dude.container),
       onDelete: (dude: Dude) => this.stage.removeChild(dude.container),
     });
+  }
+
+  public updateSettings(data: SettingsEntity): void {
+    this.settings = data;
   }
 
   public update(): void {

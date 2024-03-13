@@ -2,6 +2,7 @@ import {
   ChatterEntity,
   MessageEntity,
   RaidData,
+  SettingsEntity,
   UserActionEntity,
 } from '@lib/types';
 import { AppOptions, app } from './app';
@@ -20,6 +21,10 @@ export class Dudes {
     dudesManager.processChatters(data);
 
   processRaid = (data: RaidData) => dudesManager.processRaid(data);
+
+  updateSettings(data: SettingsEntity) {
+    app.updateSettings(data);
+  }
 
   async run(options: AppOptions) {
     if (this.isRendered) {
