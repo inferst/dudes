@@ -13,7 +13,7 @@ jobs:
     - name: Copy folder content recursively to remote
       uses: appleboy/scp-action@v0.1.7
       with:
-        source: "apps,libs,docker-compose.production.yaml,Dockerfile,nx.json,package-lock.json,package.json,tsconfig.base.json"
+        source: "apps,libs,docker-compose.production.yaml,Dockerfile,nx.json,package-lock.json,package.json,pnpm-lock.yaml,tsconfig.base.json"
         target: /srv/dudes
         host: ${{ secrets.hostname }}
         username: ${{ secrets.USERNAME }}
