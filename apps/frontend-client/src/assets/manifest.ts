@@ -28,10 +28,6 @@ export const manifest = {
           src: '/client/sprites/cat/cat.json',
         },
         {
-          alias: 'santa',
-          src: '/client/sprites/santa/santa.json',
-        },
-        {
           alias: 'nerd',
           src: '/client/sprites/nerd/nerd.json',
         },

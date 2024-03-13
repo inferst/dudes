@@ -1,52 +1,34 @@
-import { app } from '@app/frontend-client/app/app';
-import { Text } from 'pixi.js';
-import { dudesManager } from '../app/dudesManager';
+import { Dudes } from '@lib/dudes';
 
 export class Debug {
-  private readonly logs: string[] = [];
-
-  public view: Text;
-
-  constructor() {
-    this.view = new Text();
-    this.view.position.set(10, 10);
-
-    app.stage.addChild(this.view);
-
+  constructor(readonly dudes: Dudes) {
     this.generateDudes();
   }
 
-  public log(text: string | number): void {
-    if (this.logs.length > 10) {
-      this.logs.shift();
-    }
-
-    this.logs.push(text.toString());
-
-    this.view.text = this.logs.join('\n');
-  }
-
   public generateDudes(): void {
-    dudesManager.processMessage({
+    this.dudes.processMessage({
       userId: '1',
       emotes: [],
-      message: 'Привет, я сейчас тебя зарейдю!',
+      message: 'Привет!',
       info: {
-        displayName: 'broadcaster',
-        color: '',
+        displayName: 'haha',
+        color: 'yellow',
       },
     });
 
     setTimeout(() => {
-      dudesManager.processRaid({
-        broadcaster: {
-          id: '1',
-          info: {
-            displayName: 'broadcaster',
-            color: 'cyan',
-          },
+      this.dudes.processAction({
+        userId: '1',
+        cooldown: 0,
+        data: {},
+        description: '',
+        id: 1,
+        name: 'jump',
+        title: 'Jump',
+        info: {
+          displayName: 'haha',
+          color: 'yellow',
         },
-        viewers: 15,
       });
     }, 1000);
   }

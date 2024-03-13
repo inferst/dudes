@@ -1,7 +1,7 @@
 import { UserRepository } from '@app/backend-api/admin/repositories';
 import { Injectable, Logger } from '@nestjs/common';
 import { UserToken } from '@prisma/client';
-import { ClientToServerEvents, ServerToClientsEvents } from '@shared';
+import { ClientToServerEvents, ServerToClientsEvents } from '@lib/types';
 import { Socket } from 'socket.io';
 import { SettingsRepository } from '../repositories/settings.repository';
 

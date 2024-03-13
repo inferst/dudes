@@ -1,4 +1,4 @@
-import { SettingsEntity, UpdateSettingsDto } from '@shared';
+import { SettingsEntity, UpdateSettingsDto } from '@lib/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '../api/api';

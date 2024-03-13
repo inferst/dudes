@@ -3,7 +3,7 @@ import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
 import { HttpException, Logger } from '@nestjs/common';
 import { UserToken } from '@prisma/client';
-import { ChatterEntity, MessageEntity } from '@shared';
+import { ChatterEntity, MessageEntity } from '@lib/types';
 import { ApiClient } from '@twurple/api';
 import { RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
@@ -14,7 +14,7 @@ import { ChatMessageService } from '../services';
 import {
   RaidData,
   RewardRedemptionData,
-} from '@shared';
+} from '@lib/types';
 import { TokenRevokedException } from './token-revoked.exception';
 import { TwitchUserFilterService } from './twitch-user-filter.service';
 

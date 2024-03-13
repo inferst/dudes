@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Rubik
+- Font Author: Copyright 2015 The Rubik Project Authors (https://github.com/googlefonts/rubik)
+- Font Source: https://fonts.gstatic.com/s/rubik/v28/iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-4I-1UE80V4bVkA.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))
