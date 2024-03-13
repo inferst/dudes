@@ -18,7 +18,7 @@ export const updateTwitchRewardDtoSchema = z.object({
   title: title.optional(),
   cost: cost.optional(),
   data: data.optional(),
-});
+}).strict();
 
 export const createTwitchRewardDtoSchema = z.object({
   actionId,
@@ -26,7 +26,7 @@ export const createTwitchRewardDtoSchema = z.object({
   cost,
   isActive,
   data,
-});
+}).strict();
 
 export const updateTwitchRewardFormSchema = z.object({
   title,

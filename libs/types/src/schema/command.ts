@@ -18,7 +18,7 @@ export const updateCommandDtoSchema = z.object({
   text: text.optional(),
   cooldown: cooldown.optional(),
   data: data.optional(),
-});
+}).strict();
 
 export const createCommandDtoSchema = z.object({
   actionId,
@@ -26,7 +26,7 @@ export const createCommandDtoSchema = z.object({
   text,
   cooldown,
   data,
-});
+}).strict();
 
 export const updateCommandFormSchema = z.object({
   text,
