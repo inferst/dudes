@@ -1,5 +1,10 @@
-import { DefaultError, QueryKey } from '@tanstack/query-core';
-import { QueryClient, UseQueryOptions, useQuery } from '@tanstack/react-query';
+import {
+  QueryClient,
+  UseQueryOptions,
+  useQuery,
+  DefaultError,
+  QueryKey,
+} from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
