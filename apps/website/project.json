@@ -11,12 +11,6 @@
         "manual": true
       }
     },
-    "build": {
-      "executor": "@nx/remix:build",
-      "options": {
-        "outputPath": "dist/apps/website"
-      }
-    },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {

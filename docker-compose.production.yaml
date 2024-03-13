@@ -18,7 +18,9 @@ services:
 
   website:
     image: dudes-build
-    command: sh -c "cd dist/apps/website && npx remix-serve build/index.js"
+    command: sh -c "cd apps/website && npx remix-serve build/index.js"
+    environment:
+      - PORT=${REMIX_PORT}
     container_name: dudes-website
     working_dir: /usr/src/dudes
     user: $DOCKER_USER
