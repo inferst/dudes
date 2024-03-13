@@ -4,18 +4,18 @@ import {
   DudeLayerAnimatedSprite,
   DudeSpriteLayers,
 } from '../services/spriteProvider';
-import { Color, Container } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { DEFAULT_DUDE_SCALE } from './Dude';
 
 export type DudeSpriteContainerProps = {
   color: {
-    [key in DudeSpriteLayers]?: Color;
+    [key in DudeSpriteLayers]?: PIXI.Color;
   };
   scale: Point;
 };
 
 export class DudeSpriteContainer {
-  public container: Container = new Container();
+  public container: PIXI.Container = new PIXI.Container();
 
   private sprites: DudeLayerAnimatedSprite[];
 

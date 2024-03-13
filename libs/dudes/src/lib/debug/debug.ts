@@ -1,14 +1,14 @@
 import { app } from '../app';
-import { Text } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { dudesManager } from '../services/dudesManager';
 
 export class Debug {
   private readonly logs: string[] = [];
 
-  public view: Text;
+  public view: PIXI.Text;
 
   constructor() {
-    this.view = new Text();
+    this.view = new PIXI.Text();
     this.view.position.set(10, 10);
 
     app.stage.addChild(this.view);

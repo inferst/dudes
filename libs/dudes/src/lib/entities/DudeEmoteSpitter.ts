@@ -1,4 +1,4 @@
-import { Container, Sprite } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { Point } from '../helpers/types';
 import { Timer } from '../helpers/timer';
 import { FIXED_DELTA_TIME } from '../config/constants';
@@ -8,9 +8,9 @@ export type DudeEmoteSpitterProps = {
 };
 
 export class DudeEmoteSpitter {
-  public container: Container = new Container();
+  public container: PIXI.Container = new PIXI.Container();
 
-  private emotes: Sprite[] = [];
+  private emotes: PIXI.Sprite[] = [];
 
   private moveSpeed = 50;
   private alphaSpeed = 1;
@@ -19,7 +19,7 @@ export class DudeEmoteSpitter {
   private timer?: Timer;
 
   public add(url: string): void {
-    const sprite = Sprite.from(url);
+    const sprite = PIXI.Sprite.from(url);
     sprite.anchor.set(0.5, 0.5);
     sprite.scale.set(0, 0);
     this.emotes.push(sprite);

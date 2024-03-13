@@ -1,5 +1,5 @@
 import { Point, Rect } from '../helpers/types';
-import { Text } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 
 export type DudeNameProps = {
   name: string;
@@ -8,7 +8,7 @@ export type DudeNameProps = {
 };
 
 export class DudeName {
-  public text: Text = new Text(undefined, {
+  public text: PIXI.Text = new PIXI.Text(undefined, {
     fontFamily: 'Rubik',
     fontSize: 18,
     fill: 0xffffff,

@@ -1,17 +1,17 @@
 import { Timer } from '../helpers/timer';
 import { Point } from '../helpers/types';
 import { Tween } from '@tweenjs/tween.js';
-import { Container, Graphics, Text, TextMetrics } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 
 export type DudeMesageProps = {
   position: Point;
 };
 
 export class DudeMessage {
-  public container: Container = new Container();
-  public animated: Container = new Container();
+  public container: PIXI.Container = new PIXI.Container();
+  public animated: PIXI.Container = new PIXI.Container();
 
-  private text: Text = new Text(undefined, {
+  private text: PIXI.Text = new PIXI.Text(undefined, {
     fontFamily: 'Rubik',
     fontSize: 20,
     fill: 0x222222,
@@ -31,8 +31,8 @@ export class DudeMessage {
 
   private messageQueue: string[] = [];
 
-  private showTween?: Tween<Container>;
-  private hideTween?: Tween<Container>;
+  private showTween?: Tween<PIXI.Container>;
+  private hideTween?: Tween<PIXI.Container>;
 
   private timer?: Timer;
 
@@ -43,8 +43,8 @@ export class DudeMessage {
     this.text.position.set(0, -this.padding);
   }
 
-  private trim(text: Text): string {
-    const metrics = TextMetrics.measureText(text.text, text.style);
+  private trim(text: PIXI.Text): string {
+    const metrics = PIXI.TextMetrics.measureText(text.text, text.style);
 
     return metrics.lines.length > 4
       ? metrics.lines.slice(0, 4).join(' ').slice(0, -3) + '...'
@@ -83,7 +83,7 @@ export class DudeMessage {
     this.messageQueue.push(message);
   }
 
-  private drawBox(text: Text) {
+  private drawBox(text: PIXI.Text) {
     const roundedRect = {
       x: text.x - this.padding - text.width * text.anchor.x,
       y: text.y - this.padding - text.height * text.anchor.y,
@@ -91,7 +91,7 @@ export class DudeMessage {
       h: text.height + this.padding * 2,
     };
 
-    const box = new Graphics();
+    const box = new PIXI.Graphics();
     box.beginFill(this.boxColor);
 
     box.drawRoundedRect(

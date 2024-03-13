@@ -1,5 +1,5 @@
 import { SettingsEntity } from '@lib/types';
-import { AssetsManifest, Container, Renderer } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { assetsLoader } from './services/assetsLoader';
 import { dudesManager } from './services/dudesManager';
 import { Dude } from './entities/Dude';
@@ -7,25 +7,25 @@ import { timers } from './helpers/timer';
 import { SoundManifest, soundService } from './services/soundService';
 
 export type AppOptions = {
-  manifest: AssetsManifest;
+  manifest: PIXI.AssetsManifest;
   sound: SoundManifest;
 };
 
 export class App {
-  public stage: Container = new Container();
+  public stage: PIXI.Container = new PIXI.Container();
   public dudes: Record<string, Dude> = {};
 
   public chatterIds: string[] = [];
 
   public settings: SettingsEntity = {};
 
-  public renderer!: Renderer;
+  public renderer!: PIXI.Renderer;
 
   public async init(options: AppOptions, element: HTMLElement): Promise<void> {
     await assetsLoader.load(options.manifest);
     soundService.init(options.sound);
 
-    this.renderer = new Renderer({
+    this.renderer = new PIXI.Renderer({
       width: element.clientWidth,
       height: element.clientHeight,
       backgroundAlpha: 0,

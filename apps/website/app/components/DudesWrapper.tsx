@@ -19,7 +19,8 @@ export const DudesWrapper = () => {
     };
 
     const dudes = new Dudes(element);
-    await dudes.run({ manifest, sound, settings });
+    await dudes.run({ manifest, sound });
+    dudes.updateSettings(settings);
 
     setTimeout(() => {
       dudes.processMessage({

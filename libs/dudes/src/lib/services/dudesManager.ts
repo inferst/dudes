@@ -12,7 +12,7 @@ import { config } from '../config/config';
 import { timers } from '../helpers/timer';
 import { app } from '../app';
 import { Dude, DudeProps } from '../entities/Dude';
-import { Color } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 
 type DudesManagerSubscription = {
   onAdd: (dude: Dude) => void;
@@ -152,7 +152,7 @@ class DudesManager {
       const color = tinycolor(action.data.color);
 
       if (color && color.isValid()) {
-        dude.setUserProps({ color: new Color(action.data.color) });
+        dude.setUserProps({ color: new PIXI.Color(action.data.color) });
       }
     }
 
@@ -178,7 +178,7 @@ class DudesManager {
     }
 
     if (color) {
-      props.color = new Color(color);
+      props.color = new PIXI.Color(color);
     }
 
     return props;
