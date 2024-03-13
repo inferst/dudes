@@ -61,7 +61,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         command_timeout: 30m
-        envs: ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,VITE_CJS_IGNORE_WARNING,VITE_CLIENT_SOCKET_HOST
+        envs: ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,VITE_CJS_IGNORE_WARNING,VITE_CLIENT_SOCKET_HOST,REMIX_PORT
         script: |
           cd /srv/dudes
           docker compose -f docker-compose.production.yaml down
