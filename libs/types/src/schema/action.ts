@@ -3,7 +3,17 @@ import {
   ActionEntity,
   isColorUserActionEntity,
   isGrowUserActionEntity,
+  isJumpUserActionEntity,
 } from '../dto';
+
+export const jumpActionData = {
+  data: z.object({
+    action: z.object({
+      velocityX: z.number().min(-100).max(100).optional(),
+      velocityY: z.number().min(-100).max(100).optional(),
+    }),
+  }),
+};
 
 export const colorActionData = {
   data: z.union([
@@ -37,6 +47,10 @@ export const getActionableEntityFormSchema = (
 
   if (isGrowUserActionEntity(action)) {
     return schema.extend(growActionData);
+  }
+
+  if (isJumpUserActionEntity(action)) {
+    return schema.extend(jumpActionData);
   }
 
   return schema;

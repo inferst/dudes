@@ -145,7 +145,11 @@ class DudesManager {
 
   public doAction(action: UserActionEntity, dude: Dude) {
     if (isJumpUserActionEntity(action)) {
-      dude.jump();
+      dude.jump({
+        velocityX: action.data.velocityX,
+        velocityY: action.data.velocityY,
+        cooldown: action.cooldown,
+      });
     }
 
     if (isColorUserActionEntity(action)) {

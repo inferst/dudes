@@ -44,6 +44,13 @@ export async function defaultJumpCommandSeed(
             id: user.id,
           },
         },
+        data: {
+          action: {
+            velocityX: 3.5,
+            velocityY: -8,
+          },
+          arguments: []
+        }
       },
     });
   }

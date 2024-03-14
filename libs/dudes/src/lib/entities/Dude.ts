@@ -111,6 +111,8 @@ export class Dude {
 
   cooldownScaleTimer?: Timer;
 
+  cooldownJumpTimer?: Timer;
+
   spawnTween?: TWEEN.Tween<PIXI.Container>;
 
   fadeTween?: TWEEN.Tween<PIXI.Container>;
@@ -194,12 +196,12 @@ export class Dude {
       return;
     }
 
-    this.cooldownScaleTimer = new Timer(options.cooldown * 1000);
+    this.cooldownScaleTimer = new Timer((options.cooldown ?? 0) * 1000);
 
     this.scaleTween = new TWEEN.Tween(this)
-      .to({ state: { scale: DEFAULT_DUDE_SCALE * options.value } }, 2000)
+      .to({ state: { scale: DEFAULT_DUDE_SCALE * (options.value ?? 2) } }, 2000)
       .onComplete(() => {
-        this.scaleTimer = new Timer(options.duration * 1000, () => {
+        this.scaleTimer = new Timer((options.duration ?? 10) * 1000, () => {
           this.scaleTween = new TWEEN.Tween(this)
             .to({ state: { scale: DEFAULT_DUDE_SCALE } }, 2000)
             .start();
@@ -208,16 +210,26 @@ export class Dude {
       .start();
   }
 
-  jump(): void {
+  jump(options: {
+    velocityX: number;
+    velocityY: number;
+    cooldown: number;
+  }): void {
     if (this.isDespawned) {
       return;
     }
 
+    if (this.cooldownJumpTimer && !this.cooldownJumpTimer.isCompleted) {
+      return;
+    }
+
+    this.cooldownJumpTimer = new Timer((options.cooldown ?? 0) * 1000);
+
     if (!this.isJumping) {
       this.isJumping = true;
 
-      this.velocity.x = this.state.direction * 3.5;
-      this.velocity.y = -8;
+      this.velocity.x = this.state.direction * (options.velocityX ?? 3.5);
+      this.velocity.y = options.velocityY ?? -8;
 
       this.setAnimationState(DudeSpriteTags.Jump);
 
@@ -257,6 +269,7 @@ export class Dude {
     this.scaleTimer?.tick();
 
     this.cooldownScaleTimer?.tick();
+    this.cooldownJumpTimer?.tick();
 
     this.fadeTween?.update();
     this.spawnTween?.update();
@@ -384,10 +397,7 @@ export class Dude {
     }
   }
 
-  async setAnimationState(
-    state: DudeSpriteTags,
-    force = false
-  ): Promise<void> {
+  async setAnimationState(state: DudeSpriteTags, force = false): Promise<void> {
     if (this.animationState == state && !force) {
       return;
     }

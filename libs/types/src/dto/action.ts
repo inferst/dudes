@@ -11,6 +11,10 @@ export type UserActionEntity = {
 
 export type JumpUserActionEntity = {
   name: 'jump',
+  data: {
+    velocityX: number,
+    velocityY: number,
+  }
 } & UserActionEntity;
 
 export type ColorUserActionEntity = {

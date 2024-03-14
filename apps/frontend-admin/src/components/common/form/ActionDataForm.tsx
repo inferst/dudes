@@ -3,11 +3,13 @@ import {
   ActionEntity,
   isColorUserActionEntity,
   isGrowUserActionEntity,
+  isJumpUserActionEntity,
 } from '@lib/types';
 import { UseFormReturn } from 'react-hook-form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { ColorActionDataForm } from './ColorActionDataForm';
+import { JumpActionDataForm } from './JumpActionDataForm';
 
 export type ActionDataInput = { data: PrismaJson.ActionableData };
 
@@ -72,6 +74,10 @@ export function ActionDataForm(props: ActionDataFormProps) {
 
   if (isColorUserActionEntity(action)) {
     return <ColorActionDataForm form={form} />;
+  }
+
+  if (isJumpUserActionEntity(action)) {
+    return <JumpActionDataForm form={form} />;
   }
 
   return;
