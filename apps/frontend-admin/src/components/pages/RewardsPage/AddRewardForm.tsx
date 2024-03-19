@@ -84,8 +84,6 @@ export function AddRewardForm(props: AddRewardFormProps) {
     setOpen(value);
   };
 
-  console.log(action.name);
-
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>

@@ -1,42 +1,42 @@
 import { Action, PrismaClient, User } from '@prisma/client';
 
-export async function defaultJumpCommandSeed(
+export async function defaultDashCommandSeed(
   prisma: PrismaClient,
   user: User,
   action?: Action
 ): Promise<void> {
-  const jumpAction =
+  const dashAction =
     action ??
     (await prisma.action.findFirst({
-      where: { name: 'jump' },
+      where: { name: 'dash' },
     }));
-
-  if (!jumpAction) {
-    return;
-  }
 
   // Create non existing command based on actions for each user
 
-  const foundJumpCommand = await prisma.command.findFirst({
+  if (!dashAction) {
+    return;
+  }
+
+  const foundDashCommand = await prisma.command.findFirst({
     where: {
       user: {
         id: user.id,
       },
       action: {
-        id: jumpAction.id,
+        id: dashAction.id,
       },
     },
   });
 
-  if (!foundJumpCommand) {
+  if (!foundDashCommand) {
     await prisma.command.create({
       data: {
-        text: `!jump`,
+        text: `!dash`,
         cooldown: 0,
         isActive: true,
         action: {
           connect: {
-            id: jumpAction.id,
+            id: dashAction.id,
           },
         },
         user: {
@@ -46,8 +46,7 @@ export async function defaultJumpCommandSeed(
         },
         data: {
           action: {
-            velocityX: 3.5,
-            velocityY: -8,
+            force: 14,
           },
           arguments: []
         }

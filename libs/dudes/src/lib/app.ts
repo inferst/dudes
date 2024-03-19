@@ -41,7 +41,10 @@ export class App {
 
     dudesManager.subscribe({
       onAdd: (dude: Dude) => this.stage.addChild(dude.container),
-      onDelete: (dude: Dude) => this.stage.removeChild(dude.container),
+      onDelete: (dude: Dude) => {
+        this.stage.removeChild(dude.container);
+        this.stage.removeChild(dude.trail.container);
+      }
     });
   }
 

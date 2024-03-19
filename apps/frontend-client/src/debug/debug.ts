@@ -20,16 +20,36 @@ export class Debug {
       this.dudes.processAction({
         userId: '1',
         cooldown: 0,
-        data: {},
+        data: {
+          scale: 4
+        },
         description: '',
         id: 1,
-        name: 'jump',
-        title: 'Jump',
+        name: 'grow',
+        title: 'Dash',
         info: {
           displayName: 'haha',
           color: 'yellow',
         },
       });
     }, 1000);
+
+    setTimeout(() => {
+      this.dudes.processAction({
+        userId: '1',
+        cooldown: 0,
+        data: {
+          force: 15
+        },
+        description: '',
+        id: 1,
+        name: 'dash',
+        title: 'Dash',
+        info: {
+          displayName: 'haha',
+          color: 'yellow',
+        },
+      });
+    }, 6000);
   }
 }
