@@ -11,7 +11,6 @@ export class SeedService {
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async createDefaultCommands(user: User): Promise<void> {
-    console.log(1231)
     await defaultJumpCommandSeed(this.prismaService, user);
     await defaultColorCommandSeed(this.prismaService, user);
     await defaultGrowCommandSeed(this.prismaService, user);
