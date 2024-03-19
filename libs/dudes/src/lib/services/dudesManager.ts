@@ -4,6 +4,7 @@ import {
   RaidData,
   UserActionEntity,
   isColorUserActionEntity,
+  isDashUserActionEntity,
   isGrowUserActionEntity,
   isJumpUserActionEntity,
 } from '@lib/types';
@@ -150,6 +151,10 @@ class DudesManager {
         velocityY: action.data.velocityY,
         cooldown: action.cooldown,
       });
+    }
+
+    if (isDashUserActionEntity(action)) {
+      dude.dash({force: action.data.force, cooldown: action.cooldown});
     }
 
     if (isColorUserActionEntity(action)) {

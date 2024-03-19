@@ -2,6 +2,7 @@ import { ZodObject, ZodRawShape, z } from 'zod';
 import {
   ActionEntity,
   isColorUserActionEntity,
+  isDashUserActionEntity,
   isGrowUserActionEntity,
   isJumpUserActionEntity,
 } from '../dto';
@@ -37,6 +38,14 @@ export const growActionData = {
   }),
 };
 
+export const dashActionData = {
+  data: z.object({
+    action: z.object({
+      force: z.number().min(0).max(100).optional(),
+    }),
+  }),
+};
+
 export const getActionableEntityFormSchema = (
   action: ActionEntity,
   schema: ZodObject<ZodRawShape>
@@ -51,6 +60,10 @@ export const getActionableEntityFormSchema = (
 
   if (isJumpUserActionEntity(action)) {
     return schema.extend(jumpActionData);
+  }
+
+  if (isDashUserActionEntity(action)) {
+    return schema.extend(dashActionData);
   }
 
   return schema;

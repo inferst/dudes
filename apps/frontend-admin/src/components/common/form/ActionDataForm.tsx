@@ -2,6 +2,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import {
   ActionEntity,
   isColorUserActionEntity,
+  isDashUserActionEntity,
   isGrowUserActionEntity,
   isJumpUserActionEntity,
 } from '@lib/types';
@@ -10,6 +11,7 @@ import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { ColorActionDataForm } from './ColorActionDataForm';
 import { JumpActionDataForm } from './JumpActionDataForm';
+import { DashActionDataForm } from './DashActionDataForm';
 
 export type ActionDataInput = { data: PrismaJson.ActionableData };
 
@@ -78,6 +80,10 @@ export function ActionDataForm(props: ActionDataFormProps) {
 
   if (isJumpUserActionEntity(action)) {
     return <JumpActionDataForm form={form} />;
+  }
+
+  if (isDashUserActionEntity(action)) {
+    return <DashActionDataForm form={form} />;
   }
 
   return;

@@ -1,10 +1,10 @@
+import * as PIXI from 'pixi.js';
 import { FIXED_DELTA_TIME } from '../config/constants';
 import { Point } from '../helpers/types';
 import {
   DudeLayerAnimatedSprite,
   DudeSpriteLayers,
 } from '../services/spriteProvider';
-import * as PIXI from 'pixi.js';
 import { DEFAULT_DUDE_SCALE } from './Dude';
 
 export type DudeSpriteContainerProps = {
@@ -12,12 +12,13 @@ export type DudeSpriteContainerProps = {
     [key in DudeSpriteLayers]?: PIXI.Color;
   };
   scale: Point;
+  play: boolean;
 };
 
 export class DudeSpriteContainer {
   public container: PIXI.Container = new PIXI.Container();
 
-  private sprites: DudeLayerAnimatedSprite[];
+  public sprites: DudeLayerAnimatedSprite[];
 
   constructor(sprites: DudeLayerAnimatedSprite[]) {
     this.sprites = sprites;
@@ -39,7 +40,9 @@ export class DudeSpriteContainer {
 
   public update(props: DudeSpriteContainerProps): void {
     for (const layer of this.sprites) {
-      layer.sprite.update(FIXED_DELTA_TIME * 0.06);
+      if (props.play) {
+        layer.sprite.update(FIXED_DELTA_TIME * 0.06);
+      }
 
       if (props.color) {
         for (const colorLayer in props.color) {
@@ -55,7 +58,8 @@ export class DudeSpriteContainer {
       }
 
       if (props.scale.x) {
-        layer.sprite.animationSpeed = DEFAULT_DUDE_SCALE / Math.abs(props.scale.x);
+        layer.sprite.animationSpeed =
+          DEFAULT_DUDE_SCALE / Math.abs(props.scale.x);
       }
     }
 

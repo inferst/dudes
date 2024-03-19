@@ -1,21 +1,22 @@
 import * as TWEEN from '@tweenjs/tween.js';
 import * as PIXI from 'pixi.js';
+import { app } from '../app';
 import { SpriteConfig } from '../config/config';
 import { FIXED_DELTA_TIME } from '../config/constants';
 import { Timer } from '../helpers/timer';
+import { dudesManager } from '../services/dudesManager';
+import { soundService } from '../services/soundService';
 import {
   DudeSpriteLayers,
   DudeSpriteTags,
   DudeTagAnimatedSprites,
   spriteProvider,
 } from '../services/spriteProvider';
-import { dudesManager } from '../services/dudesManager';
-import { soundService } from '../services/soundService';
 import { DudeEmoteSpitter } from './DudeEmoteSpitter';
 import { DudeMessage } from './DudeMessage';
 import { DudeName } from './DudeName';
 import { DudeSpriteContainer } from './DudeSpriteContainer';
-import { app } from '../app';
+import { DudeTrailEffect } from './DudeTrailEffect';
 
 export type DudeProps = {
   name?: string;
@@ -82,6 +83,8 @@ export class Dude {
   private tagSprites: DudeTagAnimatedSprites =
     spriteProvider.createTagAnimatedSprites(this.state.sprite.name);
 
+  public trail: DudeTrailEffect = new DudeTrailEffect();
+
   private name: DudeName = new DudeName();
 
   private message: DudeMessage = new DudeMessage(() => {
@@ -99,7 +102,11 @@ export class Dude {
 
   private gravity = 0.2;
 
+  private dashAcc = 3;
+
   private isJumping = false;
+
+  private isDashing = false;
 
   private isDespawned = false;
 
@@ -112,6 +119,8 @@ export class Dude {
   cooldownScaleTimer?: Timer;
 
   cooldownJumpTimer?: Timer;
+
+  cooldownDashTimer?: Timer;
 
   spawnTween?: TWEEN.Tween<PIXI.Container>;
 
@@ -237,6 +246,23 @@ export class Dude {
     }
   }
 
+  dash(options: { force: number; cooldown: number }): void {
+    if (this.isDespawned) {
+      return;
+    }
+
+    if (this.cooldownDashTimer && !this.cooldownDashTimer.isCompleted) {
+      return;
+    }
+
+    this.cooldownDashTimer = new Timer((options.cooldown ?? 0) * 1000);
+
+    if (!this.isDashing) {
+      this.isDashing = true;
+      this.velocity.x = this.state.direction * (options.force ?? 14);
+    }
+  }
+
   setSprite(sprite: SpriteConfig) {
     if (sprite.name && sprite.name != this.state.sprite.name) {
       this.tagSprites = spriteProvider.createTagAnimatedSprites(sprite.name);
@@ -270,6 +296,7 @@ export class Dude {
 
     this.cooldownScaleTimer?.tick();
     this.cooldownJumpTimer?.tick();
+    this.cooldownDashTimer?.tick();
 
     this.fadeTween?.update();
     this.spawnTween?.update();
@@ -301,48 +328,66 @@ export class Dude {
       },
     });
 
-    if (this.stateTimer?.isCompleted) {
-      this.stateTimer = new Timer(Math.random() * 5000, () => {
-        if (this.animationState == DudeSpriteTags.Idle) {
-          this.setAnimationState(DudeSpriteTags.Run);
-        } else if (this.animationState == DudeSpriteTags.Run) {
-          this.setAnimationState(DudeSpriteTags.Idle);
-        }
-      });
-    }
-
-    if (this.animationState == DudeSpriteTags.Run) {
-      const speed = this.runSpeed * this.state.direction;
-      this.velocity.x = speed * FIXED_DELTA_TIME;
-    }
-
-    this.velocity.y = this.velocity.y + this.gravity;
-
     const position = {
-      x: this.container.position.x + this.velocity.x,
-      y: this.container.position.y + this.velocity.y,
+      x: this.container.position.x,
+      y: this.container.position.y,
     };
 
-    if (this.isOnGround(position.y)) {
-      this.velocity.y = 0;
-      this.velocity.x = 0;
+    if (this.isDashing) {
+      const currentVelocitySign = Math.sign(this.velocity.x);
 
-      position.y = app.renderer.height;
+      this.velocity.x =
+        this.velocity.x -
+        (currentVelocitySign * this.dashAcc) / Math.abs(this.velocity.x);
 
-      if (this.animationState == DudeSpriteTags.Fall) {
-        this.setAnimationState(DudeSpriteTags.Land);
-        this.landTimer = new Timer(200, () => {
-          this.setAnimationState(DudeSpriteTags.Idle);
-          this.isJumping = false;
+      if (currentVelocitySign != Math.sign(this.velocity.x)) {
+        this.isDashing = false;
+        this.velocity.x = 0;
+      } else {
+        position.x += this.velocity.x;
+      }
+    } else {
+      if (this.stateTimer?.isCompleted) {
+        this.stateTimer = new Timer(Math.random() * 5000, () => {
+          if (this.animationState == DudeSpriteTags.Idle) {
+            this.setAnimationState(DudeSpriteTags.Run);
+          } else if (this.animationState == DudeSpriteTags.Run) {
+            this.setAnimationState(DudeSpriteTags.Idle);
+          }
         });
+      }
+
+      if (this.animationState == DudeSpriteTags.Run) {
+        const speed = this.runSpeed * this.state.direction;
+        this.velocity.x = speed * FIXED_DELTA_TIME;
+      }
+
+      this.velocity.y = this.velocity.y + this.gravity;
+
+      position.x += this.velocity.x;
+      position.y += this.velocity.y;
+
+      if (this.isOnGround(position.y)) {
+        this.velocity.y = 0;
+        this.velocity.x = 0;
+
+        position.y = app.renderer.height;
+
+        if (this.animationState == DudeSpriteTags.Fall) {
+          this.setAnimationState(DudeSpriteTags.Land);
+          this.landTimer = new Timer(200, () => {
+            this.setAnimationState(DudeSpriteTags.Idle);
+            this.isJumping = false;
+          });
+        }
+      }
+
+      if (this.velocity.y > 0) {
+        this.setAnimationState(DudeSpriteTags.Fall);
       }
     }
 
-    if (this.velocity.y > 0) {
-      this.setAnimationState(DudeSpriteTags.Fall);
-    }
-
-    if (this.animationState != DudeSpriteTags.Idle) {
+    if (this.animationState != DudeSpriteTags.Idle || this.isDashing) {
       const halfSpriteWidth = (collider.w / 2) * this.state.scale;
 
       const left = this.container.x - halfSpriteWidth < 0;
@@ -375,8 +420,13 @@ export class Dude {
           x: this.state.direction * this.state.scale,
           y: this.state.scale,
         },
+        play: !this.isDashing,
       });
     }
+
+    this.trail.update({
+      play: this.isDashing,
+    });
   }
 
   isOnGround(y: number): boolean {
@@ -412,6 +462,8 @@ export class Dude {
     const layerAnimatedSprites = this.tagSprites[this.animationState];
 
     this.sprite = new DudeSpriteContainer(layerAnimatedSprites);
+
+    this.trail.setSprite(this.sprite);
 
     this.sprite.container.pivot.set(
       this.state.sprite.pivot.x,

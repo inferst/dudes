@@ -32,6 +32,13 @@ export type GrowUserActionEntity = {
   };
 } & UserActionEntity;
 
+export type DashUserActionEntity = {
+  name: 'dash',
+  data: {
+    force: number,
+  };
+} & UserActionEntity;
+
 export const isJumpUserActionEntity = (
   entity: ActionEntity
 ): entity is JumpUserActionEntity => entity.name == 'jump';
@@ -43,3 +50,7 @@ export const isColorUserActionEntity = (
 export const isGrowUserActionEntity = (
   entity: ActionEntity
 ): entity is GrowUserActionEntity => entity.name == 'grow';
+
+export const isDashUserActionEntity = (
+  entity: ActionEntity
+): entity is DashUserActionEntity => entity.name == 'dash';
