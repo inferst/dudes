@@ -49,8 +49,6 @@ export class TwitchRewardRepository {
         return { ...reward, isDeleted: true, isActive: false };
       }
 
-      console.log(twitchCustomReward);
-
       return {
         ...reward,
         isDeleted: false,
