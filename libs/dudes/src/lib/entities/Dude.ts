@@ -116,12 +116,6 @@ export class Dude {
 
   scaleTimer?: Timer;
 
-  cooldownScaleTimer?: Timer;
-
-  cooldownJumpTimer?: Timer;
-
-  cooldownDashTimer?: Timer;
-
   spawnTween?: TWEEN.Tween<PIXI.Container>;
 
   fadeTween?: TWEEN.Tween<PIXI.Container>;
@@ -193,10 +187,6 @@ export class Dude {
   }
 
   scale(options: { value: number; duration: number; cooldown: number }): void {
-    if (this.cooldownScaleTimer && !this.cooldownScaleTimer.isCompleted) {
-      return;
-    }
-
     if (this.scaleTween && this.scaleTween.isPlaying()) {
       return;
     }
@@ -204,8 +194,6 @@ export class Dude {
     if (this.scaleTimer && !this.scaleTimer.isCompleted) {
       return;
     }
-
-    this.cooldownScaleTimer = new Timer((options.cooldown ?? 0) * 1000);
 
     this.scaleTween = new TWEEN.Tween(this)
       .to({ state: { scale: DEFAULT_DUDE_SCALE * (options.value ?? 2) } }, 2000)
@@ -228,12 +216,6 @@ export class Dude {
       return;
     }
 
-    if (this.cooldownJumpTimer && !this.cooldownJumpTimer.isCompleted) {
-      return;
-    }
-
-    this.cooldownJumpTimer = new Timer((options.cooldown ?? 0) * 1000);
-
     if (!this.isJumping) {
       this.isJumping = true;
 
@@ -250,12 +232,6 @@ export class Dude {
     if (this.isDespawned) {
       return;
     }
-
-    if (this.cooldownDashTimer && !this.cooldownDashTimer.isCompleted) {
-      return;
-    }
-
-    this.cooldownDashTimer = new Timer((options.cooldown ?? 0) * 1000);
 
     if (!this.isDashing) {
       this.isDashing = true;
@@ -293,10 +269,6 @@ export class Dude {
     this.landTimer?.tick();
     this.stateTimer?.tick();
     this.scaleTimer?.tick();
-
-    this.cooldownScaleTimer?.tick();
-    this.cooldownJumpTimer?.tick();
-    this.cooldownDashTimer?.tick();
 
     this.fadeTween?.update();
     this.spawnTween?.update();

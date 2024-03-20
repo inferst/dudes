@@ -1,13 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ActionEntity, MessageEntity, RewardRedemptionData, UserActionEntity } from '@lib/types';
+import {
+  ActionEntity,
+  MessageEntity,
+  RewardRedemptionData,
+  UserActionEntity,
+} from '@lib/types';
 import { ActionRepository } from '../repositories/action.repository';
 import { CommandRepository } from '../repositories/command.repository';
 import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 
+type CooldownStorage = {
+  [id: string]: NodeJS.Timeout;
+};
+
 @Injectable()
 export class ActionService {
   private actions: ActionEntity[] = [];
+
+  private commandCooldownStorage: CooldownStorage = {};
 
   public constructor(
     private readonly commandRepository: CommandRepository,
@@ -19,7 +30,7 @@ export class ActionService {
 
   public async getUserActionByMessage(
     userId: number,
-    message: MessageEntity,
+    message: MessageEntity
   ): Promise<UserActionEntity | undefined> {
     if (this.actions.length == 0) {
       this.actions = await this.actionRepository.getActions();
@@ -29,7 +40,9 @@ export class ActionService {
       userId
     );
 
-    const command = commands.find((command) => message.message.includes(command.text));
+    const command = commands.find((command) =>
+      message.message.includes(command.text)
+    );
 
     if (!command) {
       return;
@@ -39,6 +52,18 @@ export class ActionService {
 
     if (!action) {
       return;
+    }
+
+    const cooldownId = `${userId}_${message.userId}_${command.id}`;
+
+    console.log(this.commandCooldownStorage);
+
+    if (this.commandCooldownStorage[cooldownId]) {
+      return;
+    } else {
+      this.commandCooldownStorage[cooldownId] = setTimeout(() => {
+        delete this.commandCooldownStorage[cooldownId];
+      }, command.cooldown * 1000);
     }
 
     let data = { ...action.data, ...command.data.action };
@@ -66,7 +91,7 @@ export class ActionService {
   public async getUserActionByReward(
     userId: number,
     platformUserId: string,
-    redemption: RewardRedemptionData,
+    redemption: RewardRedemptionData
   ): Promise<UserActionEntity | undefined> {
     if (this.actions.length == 0) {
       this.actions = await this.actionRepository.getActions();
@@ -74,7 +99,9 @@ export class ActionService {
 
     const apiClient = await this.twitchClientFactory.createApiClient(userId);
 
-    const redemptionUserColor = await apiClient.chat.getColorForUser(redemption.userId);
+    const redemptionUserColor = await apiClient.chat.getColorForUser(
+      redemption.userId
+    );
 
     const twitchReward = await this.twitchRewardRepository.getRewardById(
       userId,
@@ -114,7 +141,7 @@ export class ActionService {
       info: {
         displayName: redemption.userDisplayName,
         color: redemptionUserColor ?? undefined,
-      }
+      },
     };
   }
 }
