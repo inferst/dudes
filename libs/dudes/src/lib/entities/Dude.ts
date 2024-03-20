@@ -261,44 +261,8 @@ export class Dude {
     this.userState = { ...this.userState, ...props };
   }
 
-  update(): void {
-    if (this.isDespawned) {
-      return;
-    }
-
-    this.landTimer?.tick();
-    this.stateTimer?.tick();
-    this.scaleTimer?.tick();
-
-    this.fadeTween?.update();
-    this.spawnTween?.update();
-    this.scaleTween?.update();
-
-    this.container.zIndex = this.state.zIndex;
-
+  private move() {
     const collider = this.state.sprite.collider;
-
-    this.name.update({
-      name: this.state.name,
-      isVisible: !this.state.isAnonymous,
-      position: {
-        y:
-          -(this.state.sprite.h / 2 - collider.y + this.state.sprite.pivot.y) *
-          this.state.scale,
-      },
-    });
-
-    this.message.update({
-      position: {
-        y: this.name.text.position.y - this.name.text.height - 6,
-      },
-    });
-
-    this.emoteSpitter.update({
-      position: {
-        y: this.message.container.position.y - this.message.container.height,
-      },
-    });
 
     const position = {
       x: this.container.position.x,
@@ -380,6 +344,48 @@ export class Dude {
     }
 
     this.container.position.set(position.x, position.y);
+  }
+
+  update(): void {
+    if (this.isDespawned) {
+      return;
+    }
+
+    this.landTimer?.tick();
+    this.stateTimer?.tick();
+    this.scaleTimer?.tick();
+
+    this.fadeTween?.update();
+    this.spawnTween?.update();
+    this.scaleTween?.update();
+
+    this.container.zIndex = this.state.zIndex;
+
+    const collider = this.state.sprite.collider;
+
+    this.name.update({
+      name: this.state.name,
+      isVisible: !this.state.isAnonymous,
+      position: {
+        y:
+          -(this.state.sprite.h / 2 - collider.y + this.state.sprite.pivot.y) *
+          this.state.scale,
+      },
+    });
+
+    this.message.update({
+      position: {
+        y: this.name.text.position.y - this.name.text.height - 6,
+      },
+    });
+
+    this.emoteSpitter.update({
+      position: {
+        y: this.message.container.position.y - this.message.container.height,
+      },
+    });
+
+    this.move();
 
     if (this.sprite) {
       this.sprite.update({
