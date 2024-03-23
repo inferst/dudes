@@ -32,6 +32,16 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <script src="/yandex.js" />
+        <noscript>
+          <div>
+            <img
+              src="https://mc.yandex.ru/watch/96832653"
+              style={{ position: 'absolute', left: '-9999px' }}
+              alt=""
+            />
+          </div>
+        </noscript>
       </body>
     </html>
   );
