@@ -1,4 +1,4 @@
-import type { MetaFunction, LinksFunction } from '@remix-run/node';
+import type { LinksFunction, MetaFunction } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -7,7 +7,22 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react';
+import {
+  ExternalScripts,
+  ExternalScriptsHandle,
+} from 'remix-utils/external-scripts';
 import twStyles from './tailwind.css';
+
+export let handle: ExternalScriptsHandle = {
+  scripts: [
+    {
+      src: '/yandex.js',
+      crossOrigin: 'anonymous',
+      preload: true,
+    },
+  ],
+};
+
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: twStyles },
 ];
@@ -26,26 +41,22 @@ export default function App() {
       <head>
         <Meta />
         <Links />
+        <ExternalScripts />
       </head>
       <body className="dark">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        {process.env.NODE_ENV === 'production' && (
-          <>
-            <script src="/yandex.js" />
-            <noscript>
-              <div>
-                <img
-                  src="https://mc.yandex.ru/watch/96832653"
-                  style={{ position: 'absolute', left: '-9999px' }}
-                  alt=""
-                />
-              </div>
-            </noscript>
-          </>
-        )}
+        <noscript>
+          <div>
+            <img
+              src="https://mc.yandex.ru/watch/96832653"
+              style={{ position: 'absolute', left: '-9999px' }}
+              alt=""
+            />
+          </div>
+        </noscript>
       </body>
     </html>
   );

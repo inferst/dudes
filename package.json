@@ -85,6 +85,7 @@
     "react-hook-form": "^7.51.0",
     "react-router-dom": "^6.22.3",
     "reflect-metadata": "^0.1.14",
+    "remix-utils": "^7.5.0",
     "rxjs": "^7.8.1",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
