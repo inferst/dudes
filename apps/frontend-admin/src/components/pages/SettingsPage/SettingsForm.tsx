@@ -10,6 +10,7 @@ import { Form, FormField } from '../../ui/form';
 import { Label } from '../../ui/label';
 import { Switch } from '../../ui/switch';
 import { Separator } from '../../ui/separator';
+import { useTranslation } from 'react-i18next';
 
 type FormInput = UpdateSettingsDto;
 
@@ -23,6 +24,8 @@ export function SettingsForm(props: SettingsFormProps) {
     resolver: zodResolver(updateSettingsDtoSchema),
     values: props.data,
   });
+
+  const { t } = useTranslation();
 
   const handleSubmit = form.handleSubmit(
     (data) => {
@@ -44,16 +47,16 @@ export function SettingsForm(props: SettingsFormProps) {
   return (
     <Form {...form}>
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-        Global
+        {t('pages.Settings.globalTitle')}
       </h4>
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
           <Label htmlFor="fallingDudes" className="text-xl">
-            Falling dudes
+            {t('pages.Settings.fallingDudesText')}
           </Label>
           <p className="text-sm text-muted-foreground">
-            Drop dude in the top of screen
+            {t('pages.Settings.fallingDudesDescription')}
           </p>
         </div>
         <div className="col-span-3">
@@ -79,10 +82,10 @@ export function SettingsForm(props: SettingsFormProps) {
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
           <Label htmlFor="showAnonymousDudes" className="text-xl">
-            Spawn anonymous viewers
+            {t('pages.Settings.spawnAnonymousViewersText')}
           </Label>
           <p className="text-sm text-muted-foreground">
-            Viewers who don't chat will be spawned without names
+            {t('pages.Settings.spawnAnonymousViewersDescription')}
           </p>
         </div>
         <div className="col-span-3">
@@ -107,16 +110,16 @@ export function SettingsForm(props: SettingsFormProps) {
       </div>
       <Separator className="mt-4 mb-8" />
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-        Raid
+        {t('pages.Settings.raidTitle')}
       </h4>
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
           <Label htmlFor="fallingRaiders" className="text-xl">
-            Falling raiders
+            {t('pages.Settings.fallingRaidersText')}
           </Label>
           <p className="text-sm text-muted-foreground">
-            Drop raiders in the top of screen
+            {t('pages.Settings.fallingRaidersDescription')}
           </p>
         </div>
         <div className="col-span-3">

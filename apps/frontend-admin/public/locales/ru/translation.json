@@ -1,0 +1,48 @@
+{
+  "Header": {
+    "logOutButtonText": "Выйти"
+  },
+  "Sidebar": {
+    "preview": "Предпросмотр",
+    "settings": "Настройки",
+    "commands": "Команды",
+    "rewards": "Twitch Награды",
+    "skins": "Скины",
+    "donations": "Донаты"
+  },
+  "common": {
+    "delete": "Удалить"
+  },
+  "pages": {
+    "Preview": {
+      "title": "Предпросмотр",
+      "warningLinkText": "Не показывайте эту ссылку никому"
+    },
+    "Settings": {
+      "title": "Настройки",
+      "globalTitle": "Глобальные",
+      "raidTitle": "Рейд",
+      "fallingDudesText": "Падающие челы",
+      "fallingDudesDescription": "Челы падают сверху экрана",
+      "spawnAnonymousViewersText": "Спавнить анонимных челов",
+      "spawnAnonymousViewersDescription": "Зрители, которые ничего не писали, будут спавниться без имен",
+      "fallingRaidersText": "Падающие рейдеры",
+      "fallingRaidersDescription": "Рейдеры падают сверху экрана"
+    },
+    "Commands": {
+      "title": "Команды",
+      "columnActive": "Активные",
+      "columnCommand": "Команда",
+      "columnCooldown": "Перезарядка",
+      "edit": "Редактировать"
+    },
+    "TwitchRewards": {
+      "title": "Twitch Награды",
+      "columnActive": "Активные",
+      "columnAction": "Действие",
+      "columnCost": "Цена",
+      "columnTitle": "Название",
+      "edit": "Редактировать"
+    }
+  }
+}

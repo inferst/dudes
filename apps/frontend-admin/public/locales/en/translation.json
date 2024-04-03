@@ -1,0 +1,48 @@
+{
+  "Header": {
+    "logOutButtonText": "Log out"
+  },
+  "Sidebar": {
+    "preview": "Preview",
+    "settings": "Settings",
+    "commands": "Commands",
+    "rewards": "Twitch Rewards",
+    "skins": "Skins",
+    "donations": "Donations"
+  },
+  "common": {
+    "delete": "Delete"
+  },
+  "pages": {
+    "Preview": {
+      "title": "Preview",
+      "warningLinkText": "Don't show the link anyone"
+    },
+    "Settings": {
+      "title": "Settings",
+      "globalTitle": "Global",
+      "raidTitle": "Raid",
+      "fallingDudesText": "Falling dudes",
+      "fallingDudesDescription": "Drop dude in the top of screen",
+      "spawnAnonymousViewersText": "Spawn anonymous viewers",
+      "spawnAnonymousViewersDescription": "Viewers who don't chat will be spawned without names",
+      "fallingRaidersText": "Falling raiders",
+      "fallingRaidersDescription": "Drop raiders in the top of screen"
+    },
+    "Commands": {
+      "title": "Commands",
+      "columnActive": "Active",
+      "columnCommand": "Command",
+      "columnCooldown": "Cooldown",
+      "edit": "Edit"
+    },
+    "TwitchRewards": {
+      "title": "Twitch Rewards",
+      "columnActive": "Active",
+      "columnAction": "Action",
+      "columnCost": "Cost",
+      "columnTitle": "Title",
+      "edit": "Edit"
+    }
+  }
+}

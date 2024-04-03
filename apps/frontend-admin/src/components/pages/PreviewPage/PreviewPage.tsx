@@ -4,10 +4,12 @@ import { AlertTriangle, Copy, CopyCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '../../ui/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { useTranslation } from 'react-i18next';
 
 export function PreviewPage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCopyClick = () => {
@@ -24,7 +26,7 @@ export function PreviewPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Preview</CardTitle>
+        <CardTitle>{t('pages.Preview.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center">
@@ -39,8 +41,8 @@ export function PreviewPage() {
           </Button>
         </div>
         <div className="mt-4 flex">
-          <AlertTriangle className="mr-2"></AlertTriangle> Don't show the link
-          anyone
+          <AlertTriangle className="mr-2"></AlertTriangle>{' '}
+          {t('pages.Preview.warningLinkText')}
         </div>
       </CardContent>
     </Card>

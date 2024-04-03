@@ -18,8 +18,11 @@ import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
 import { CommandEntity } from '@lib/types';
 import { Loader } from '../../common/Loader';
+import { useTranslation } from 'react-i18next';
 
 export function CommandsPage() {
+  const { t } = useTranslation();
+
   const actionsQuery = useActionsQuery();
   const commandsQuery = useCommndsQuery();
 
@@ -72,16 +75,16 @@ export function CommandsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Commands</CardTitle>
+        <CardTitle>{t('pages.Commands.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableCaption>A list of dude commands</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Active</TableHead>
-              <TableHead className="w-[100px]">Command</TableHead>
-              <TableHead>Cooldown</TableHead>
+              <TableHead className="w-[100px]">{t('pages.Commands.columnActive')}</TableHead>
+              <TableHead className="w-[100px]">{t('pages.Commands.columnCommand')}</TableHead>
+              <TableHead>{t('pages.Commands.columnCooldown')}</TableHead>
               <TableHead className="w-[10px]"></TableHead>
             </TableRow>
           </TableHeader>

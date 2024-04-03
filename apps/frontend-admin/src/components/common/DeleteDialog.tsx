@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,11 +18,12 @@ export type DeleteDialogProps = {
 
 export function DeleteDialog(props: DeleteDialogProps) {
   const { onDelete } = props;
+  const { t } = useTranslation();
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">Delete</Button>
+        <Button variant="outline">{t('common.delete')}</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

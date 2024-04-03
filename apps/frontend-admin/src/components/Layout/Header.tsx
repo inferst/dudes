@@ -10,9 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { useTranslation } from 'react-i18next';
 
 export function Header() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -26,11 +28,11 @@ export function Header() {
             'bg-primary text-primary-foreground text-2xl font-medium'
           )}
         >
-          <span className='block'>D</span>
+          <span className="block">D</span>
           <span className="block text-xl">U</span>
-          <span className='block'>D</span>
+          <span className="block">D</span>
           <span className="block text-xl">E</span>
-          <span className='block'>S</span>
+          <span className="block">S</span>
         </button>
         <div className="flex flex-1 justify-end">
           <div className="flex items-center">
@@ -52,7 +54,7 @@ export function Header() {
                 <DropdownMenuContent>
                   <DropdownMenuItem>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <a href="/api/auth/logout">Log out</a>
+                    <a href="/api/auth/logout">{ t('Header.logOutButtonText')}</a>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

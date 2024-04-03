@@ -25,6 +25,7 @@ import {
   ActionDataForm,
   ActionDataInput,
 } from '../../common/form/ActionDataForm';
+import { useTranslation } from 'react-i18next';
 
 export type CommandFormInput = {
   text: string;
@@ -38,6 +39,8 @@ type CommandFormProps = {
 
 export function CommandForm(props: CommandFormProps) {
   const { text, cooldown, data, action, onSave } = props;
+
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
 
@@ -70,7 +73,7 @@ export function CommandForm(props: CommandFormProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary">Edit</Button>
+        <Button variant="secondary">{t('pages.Commands.edit')}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
