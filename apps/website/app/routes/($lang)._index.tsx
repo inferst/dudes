@@ -1,4 +1,4 @@
-import { Main } from '../main';
+import { Main } from '../components/Main';
 
 export default function Index() {
   return (

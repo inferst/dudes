@@ -1,6 +1,9 @@
-import { DudesWrapper } from './components/DudesWrapper';
+import { useTranslation } from 'react-i18next';
+import { DudesWrapper } from './DudesWrapper';
 
 export const Main = () => {
+  let { t } = useTranslation();
+
   return (
     <div className="container">
       <div className="m-6 flex justify-center">
@@ -16,14 +19,14 @@ export const Main = () => {
         </a>
       </div>
       <div className="text-2xl text-center m-4">
-        Make your stream better with Dudes!
+        {t('mainTitle')}
       </div>
       <div className="border border-border/60 bg-slate-900">
         <DudesWrapper />
       </div>
       <div className="m-6 text-2xl flex items-center justify-center">
         <a className="block bg-[#772ce8] p-4 rounded-sm" href="/api/auth/login">
-          Login with Twitch
+          {t('twitchLoginButtonText')}
         </a>
       </div>
     </div>
