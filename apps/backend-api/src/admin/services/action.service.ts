@@ -56,8 +56,6 @@ export class ActionService {
 
     const cooldownId = `${userId}_${message.userId}_${command.id}`;
 
-    console.log(this.commandCooldownStorage);
-
     if (this.commandCooldownStorage[cooldownId]) {
       return;
     } else {
