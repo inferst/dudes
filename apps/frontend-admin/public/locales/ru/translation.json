@@ -61,5 +61,6 @@
   "SettingsForm.raidTitle": "Рейд",
   "SettingsForm.fallingRaidersText": "Падающие рейдеры",
   "SettingsForm.fallingRaidersDescription": "Рейдеры падают сверху экрана",
-  "SettingsPage.title": "Настройки"
+  "SettingsPage.title": "Настройки",
+  "DeleteDialog.cancelButtonText": "Отмена"
 }

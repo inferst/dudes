@@ -61,5 +61,6 @@
   "SettingsForm.raidTitle": "Raid",
   "SettingsForm.fallingRaidersText": "Falling raiders",
   "SettingsForm.fallingRaidersDescription": "Drop raiders in the top of screen",
-  "SettingsPage.title": "Settings"
+  "SettingsPage.title": "Settings",
+  "DeleteDialog.cancelButtonText": "Cancel"
 }
