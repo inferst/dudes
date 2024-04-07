@@ -11,15 +11,16 @@ import {
 } from '../../ui/table';
 import { CommandForm, CommandFormInput } from './CommandForm';
 
-import {
-  useUpdateCommandMutation
-} from '@app/frontend-admin/mutations/commands';
+import { useUpdateCommandMutation } from '@app/frontend-admin/mutations/commands';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
 import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
 import { CommandEntity } from '@lib/types';
 import { Loader } from '../../common/Loader';
+import { useTranslation } from 'react-i18next';
 
 export function CommandsPage() {
+  const { t } = useTranslation();
+
   const actionsQuery = useActionsQuery();
   const commandsQuery = useCommndsQuery();
 
@@ -72,16 +73,28 @@ export function CommandsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Commands</CardTitle>
+        <CardTitle>
+          {t('CommandsPage.title', { defaultValue: 'Commands' })}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>A list of dude commands</TableCaption>
+          <TableCaption>
+            {t('CommandsPage.caption', {
+              defaultValue: 'A list of dude commands',
+            })}
+          </TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Active</TableHead>
-              <TableHead className="w-[100px]">Command</TableHead>
-              <TableHead>Cooldown</TableHead>
+              <TableHead className="w-[100px]">
+                {t('CommandsPage.columnActive', { defaultValue: 'Active' })}
+              </TableHead>
+              <TableHead className="w-[100px]">
+                {t('CommandsPage.columnCommand', { defaultValue: 'Command' })}
+              </TableHead>
+              <TableHead>
+                {t('CommandsPage.columnCooldown', { defaultValue: 'Cooldown' })}
+              </TableHead>
               <TableHead className="w-[10px]"></TableHead>
             </TableRow>
           </TableHeader>

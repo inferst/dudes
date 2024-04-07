@@ -21,8 +21,10 @@ import {
 } from '../../ui/table';
 import { AddRewardForm, AddRewardFormInput } from './AddRewardForm';
 import { EditRewardForm, EditRewardFormInput } from './EditRewardForm';
+import { useTranslation } from 'react-i18next';
 
 export function RewardsPage() {
+  const { t } = useTranslation();
   const actionsQuery = useActionsQuery();
   const rewardsQuery = useRewardsQuery();
 
@@ -105,7 +107,7 @@ export function RewardsPage() {
     <Card>
       <CardHeader>
         <CardTitle className="flex">
-          Twitch Rewards
+          {t('RewardsPage.title', { defaultValue: 'Twitch Rewards' })}
           <div className="flex flex-1 justify-end">
             {actions.length > 0 && (
               <AddRewardForm
@@ -118,13 +120,25 @@ export function RewardsPage() {
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>A list of custom rewards</TableCaption>
+          <TableCaption>
+            {t('RewardsPage.caption', {
+              defaultValue: 'A list of custom rewards',
+            })}
+          </TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Active</TableHead>
-              <TableHead className="w-[100px]">Action</TableHead>
-              <TableHead className="w-[100px]">Cost</TableHead>
-              <TableHead>Title</TableHead>
+              <TableHead className="w-[100px]">
+                {t('RewardsPage.columnActive', { defaultValue: 'Active' })}
+              </TableHead>
+              <TableHead className="w-[100px]">
+                {t('RewardsPage.columnAction', { defaultValue: 'Action' })}
+              </TableHead>
+              <TableHead className="w-[100px]">
+                {t('RewardsPage.columnCost', { defaultValue: 'Cost' })}
+              </TableHead>
+              <TableHead>
+                {t('RewardsPage.columnTitle', { defaultValue: 'Title' })}
+              </TableHead>
               <TableHead className="w-[10px]"></TableHead>
               <TableHead className="w-[10px]"></TableHead>
             </TableRow>

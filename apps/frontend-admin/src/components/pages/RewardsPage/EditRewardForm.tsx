@@ -25,6 +25,7 @@ import {
   ActionDataForm,
   ActionDataInput,
 } from '../../common/form/ActionDataForm';
+import { useTranslation } from 'react-i18next';
 
 export type EditRewardFormInput = {
   title: string;
@@ -38,6 +39,8 @@ export type EditRewardFormProps = {
 
 export function EditRewardForm(props: EditRewardFormProps) {
   const { title, cost, action, data, onSave } = props;
+
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
 
@@ -73,21 +76,34 @@ export function EditRewardForm(props: EditRewardFormProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary">Edit</Button>
+        <Button variant="secondary">
+          {t('EditRewardForm.editCustomRewardButtonText', {
+            defaultValue: 'Edit',
+          })}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form id={uuid} name={uuid} onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Edit reward</DialogTitle>
+              <DialogTitle>
+                {t('EditRewardForm.dialogTitle', {
+                  defaultValue: 'Edit reward',
+                })}
+              </DialogTitle>
               <DialogDescription>
-                Make changes to reward here. Click save when you're done.
+                {t('EditRewardForm.dialogDescription', {
+                  defaultValue:
+                    "Make changes to reward here. Click save when you're done.",
+                })}
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="reward-text" className="text-right">
-                  Title
+                  {t('EditRewardForm.titleText', {
+                    defaultValue: 'Title',
+                  })}
                 </Label>
                 <Input
                   id="reward-text"
@@ -106,7 +122,9 @@ export function EditRewardForm(props: EditRewardFormProps) {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="reward-cost" className="text-right">
-                  Cost
+                  {t('EditRewardForm.costText', {
+                    defaultValue: 'Cost',
+                  })}
                 </Label>
                 <Input
                   id="reward-cost"
@@ -132,7 +150,11 @@ export function EditRewardForm(props: EditRewardFormProps) {
               />
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">
+                {t('EditRewardForm.saveButtonText', {
+                  defaultValue: 'Save changes',
+                })}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

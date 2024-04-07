@@ -2,6 +2,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { UseFormReturn } from 'react-hook-form';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
+import { useTranslation } from 'react-i18next';
 
 export type ActionDataInput = { data: PrismaJson.ActionableData };
 
@@ -11,11 +12,12 @@ export type DashActionDataFormProps = {
 
 export function DashActionDataForm(props: DashActionDataFormProps) {
   const { form } = props;
+  const { t } = useTranslation();
 
   return (
     <div className="grid grid-cols-4 items-center gap-4">
       <Label htmlFor="jump-force" className="text-right">
-        Force
+        {t('DashActionDataForm.forceText', { defaultValue: 'Force' })}
       </Label>
       <Input
         id="jump-force"

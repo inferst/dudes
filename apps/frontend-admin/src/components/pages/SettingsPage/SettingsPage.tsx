@@ -4,10 +4,13 @@ import { UpdateSettingsForm } from '@lib/types';
 import { Loader } from '../../common/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { SettingsForm } from './SettingsForm';
+import { useTranslation } from 'react-i18next';
 
 export function SettingsPage() {
   const settingsQuery = useSettingsQuery();
   const updateMutation = useUpdateSettingsMutation();
+
+  const { t } = useTranslation();
 
   const data = settingsQuery.data;
 
@@ -22,7 +25,9 @@ export function SettingsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Settings</CardTitle>
+        <CardTitle>
+          {t('SettingsPage.title', { defaultValue: 'Settings' })}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <SettingsForm data={data} onUpdate={handleFormUpdate} />

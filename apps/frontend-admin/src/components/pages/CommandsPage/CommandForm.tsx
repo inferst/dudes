@@ -25,6 +25,7 @@ import {
   ActionDataForm,
   ActionDataInput,
 } from '../../common/form/ActionDataForm';
+import { useTranslation } from 'react-i18next';
 
 export type CommandFormInput = {
   text: string;
@@ -38,6 +39,8 @@ type CommandFormProps = {
 
 export function CommandForm(props: CommandFormProps) {
   const { text, cooldown, data, action, onSave } = props;
+
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
 
@@ -70,21 +73,28 @@ export function CommandForm(props: CommandFormProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary">Edit</Button>
+        <Button variant="secondary">
+          {t('CommandForm.editButtonText', { defaultValue: 'Edit' })}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form id={uuid} name={uuid} onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Edit command</DialogTitle>
+              <DialogTitle>
+                {t('CommandForm.editTitle', { defaultValue: 'Edit command' })}
+              </DialogTitle>
               <DialogDescription>
-                Make changes to command here. Click save when you're done.
+                {t('CommandForm.editDescription', {
+                  defaultValue:
+                    "Make changes to command here. Click save when you're done.",
+                })}
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="command-text" className="text-right">
-                  Text
+                  {t('CommandForm.commandText', { defaultValue: 'Text' })}
                 </Label>
                 <Input
                   id="command-text"
@@ -103,7 +113,7 @@ export function CommandForm(props: CommandFormProps) {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="command-cooldown" className="text-right">
-                  Cooldown
+                  {t('CommandForm.cooldownText', { defaultValue: 'Cooldown' })}
                 </Label>
                 <Input
                   id="command-cooldown"
@@ -131,7 +141,9 @@ export function CommandForm(props: CommandFormProps) {
               />
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">
+                {t('CommandForm.saveText', { defaultValue: 'Save changes' })}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
