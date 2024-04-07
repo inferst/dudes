@@ -107,7 +107,7 @@ export function RewardsPage() {
     <Card>
       <CardHeader>
         <CardTitle className="flex">
-          {t('pages.TwitchRewards.title')}
+          {t('RewardsPage.title', { defaultValue: 'Twitch Rewards' })}
           <div className="flex flex-1 justify-end">
             {actions.length > 0 && (
               <AddRewardForm
@@ -120,13 +120,25 @@ export function RewardsPage() {
       </CardHeader>
       <CardContent>
         <Table>
-          <TableCaption>A list of custom rewards</TableCaption>
+          <TableCaption>
+            {t('RewardsPage.caption', {
+              defaultValue: 'A list of custom rewards',
+            })}
+          </TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">{t('pages.TwitchRewards.columnActive')}</TableHead>
-              <TableHead className="w-[100px]">{t('pages.TwitchRewards.columnAction')}</TableHead>
-              <TableHead className="w-[100px]">{t('pages.TwitchRewards.columnCost')}</TableHead>
-              <TableHead>{t('pages.TwitchRewards.columnTitle')}</TableHead>
+              <TableHead className="w-[100px]">
+                {t('RewardsPage.columnActive', { defaultValue: 'Active' })}
+              </TableHead>
+              <TableHead className="w-[100px]">
+                {t('RewardsPage.columnAction', { defaultValue: 'Action' })}
+              </TableHead>
+              <TableHead className="w-[100px]">
+                {t('RewardsPage.columnCost', { defaultValue: 'Cost' })}
+              </TableHead>
+              <TableHead>
+                {t('RewardsPage.columnTitle', { defaultValue: 'Title' })}
+              </TableHead>
               <TableHead className="w-[10px]"></TableHead>
               <TableHead className="w-[10px]"></TableHead>
             </TableRow>

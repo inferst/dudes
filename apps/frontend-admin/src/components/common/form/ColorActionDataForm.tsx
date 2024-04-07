@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../ui/select';
+import { useTranslation } from 'react-i18next';
 
 export type ActionDataInput = { data: PrismaJson.ActionableData };
 
@@ -23,13 +24,15 @@ type PropType = 'argument' | 'value';
 export function ColorActionDataForm(props: ColorActionDataFormProps) {
   const { form } = props;
 
+  const { t } = useTranslation();
+
   const getPropType = (value: string[]): PropType =>
     value?.includes('color') ? 'argument' : 'value';
 
   return (
     <div className="grid grid-cols-4 items-center gap-4">
       <Label htmlFor="reward-color" className="text-right">
-        Color
+        {t('ColorActionDataForm.colorText', { defaultValue: 'Color' })}
       </Label>
 
       <FormField
@@ -52,8 +55,16 @@ export function ColorActionDataForm(props: ColorActionDataFormProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value={'argument'}>User argument</SelectItem>
-                  <SelectItem value={'value'}>Value</SelectItem>
+                  <SelectItem value={'argument'}>
+                    {t('ColorActionDataForm.userArgumentText', {
+                      defaultValue: 'User argument',
+                    })}
+                  </SelectItem>
+                  <SelectItem value={'value'}>
+                    {t('ColorActionDataForm.valueText', {
+                      defaultValue: 'Value',
+                    })}
+                  </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>

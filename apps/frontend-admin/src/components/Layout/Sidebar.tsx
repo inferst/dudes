@@ -17,28 +17,40 @@ export function Sidebar() {
   const links: NavLink[] = [
     {
       path: '/admin',
-      title: t('Sidebar.preview'),
+      title: t('Sidebar.previewText', {
+        defaultValue: 'Preview'
+      }),
     },
     {
       path: '/admin/settings',
-      title: t('Sidebar.settings'),
+      title: t('Sidebar.settingsText', {
+        defaultValue: 'Settings'
+      }),
     },
     {
       path: '/admin/commands',
-      title: t('Sidebar.commands'),
+      title: t('Sidebar.commandsText', {
+        defaultValue: 'Commands'
+      }),
     },
     {
       path: '/admin/rewards',
-      title: t('Sidebar.rewards'),
+      title: t('Sidebar.rewardsText', {
+        defaultValue: 'Twitch Rewards'
+      }),
     },
     {
       path: '/admin/skins',
-      title: t('Sidebar.skins'),
+      title: t('Sidebar.skinsText', {
+        defaultValue: 'Skins'
+      }),
       isDisabled: true,
     },
     {
       path: '/admin/donations',
-      title: t('Sidebar.donations'),
+      title: t('Sidebar.donationsText', {
+        defaultValue: 'Donations'
+      }),
       isDisabled: true,
     },
   ];

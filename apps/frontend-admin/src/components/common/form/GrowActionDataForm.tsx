@@ -6,32 +6,31 @@ import { useTranslation } from 'react-i18next';
 
 export type ActionDataInput = { data: PrismaJson.ActionableData };
 
-export type JumpActionDataFormProps = {
+export type GrowActionDataFormProps = {
   form: UseFormReturn<ActionDataInput>;
 };
 
-export function JumpActionDataForm(props: JumpActionDataFormProps) {
+export function GrowActionDataForm(props: GrowActionDataFormProps) {
   const { form } = props;
   const { t } = useTranslation();
 
   return (
     <>
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="jump-velocity-x" className="text-right">
-          {t('JumpActionDataForm.velocityXText', {
-            defaultValue: 'Velocity X',
-          })}
+        <Label htmlFor="reward-duration" className="text-right">
+          {t('GrowActionDataForm.durationText', { defaultValue: 'Duration' })}
         </Label>
         <Input
-          id="jump-velocity-x"
+          id="reward-duration"
           className="col-span-3"
-          {...form.register('data.action.velocityX', {
-            setValueAs: (value) => (value === '' ? undefined : Number(value)),
+          {...form.register('data.action.duration', {
+            setValueAs: (value) =>
+              value === '' ? undefined : parseInt(value, 10),
           })}
         />
         <ErrorMessage
           errors={form.formState.errors}
-          name="data.action.velocityX"
+          name="data.action.duration"
           render={({ message }) => (
             <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
               {message}
@@ -40,21 +39,20 @@ export function JumpActionDataForm(props: JumpActionDataFormProps) {
         />
       </div>
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="jump-velocity-y" className="text-right">
-          {t('JumpActionDataForm.velocityYText', {
-            defaultValue: 'Velocity Y',
-          })}
+        <Label htmlFor="reward-scale" className="text-right">
+          {t('GrowActionDataForm.scaleText', { defaultValue: 'Scale' })}
         </Label>
         <Input
-          id="jump-velocity-y"
+          id="reward-scale"
           className="col-span-3"
-          {...form.register('data.action.velocityY', {
-            setValueAs: (value) => (value === '' ? undefined : Number(value)),
+          {...form.register('data.action.scale', {
+            setValueAs: (value) =>
+              value === '' ? undefined : parseInt(value, 10),
           })}
         />
         <ErrorMessage
           errors={form.formState.errors}
-          name="data.action.velocityY"
+          name="data.action.scale"
           render={({ message }) => (
             <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
               {message}

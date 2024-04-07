@@ -47,16 +47,20 @@ export function SettingsForm(props: SettingsFormProps) {
   return (
     <Form {...form}>
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-        {t('pages.Settings.globalTitle')}
+        {t('SettingsForm.globalTitle', { defaultValue: 'Global' })}
       </h4>
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
           <Label htmlFor="fallingDudes" className="text-xl">
-            {t('pages.Settings.fallingDudesText')}
+            {t('SettingsForm.fallingDudesText', {
+              defaultValue: 'Falling dudes',
+            })}
           </Label>
           <p className="text-sm text-muted-foreground">
-            {t('pages.Settings.fallingDudesDescription')}
+            {t('SettingsForm.fallingDudesDescription', {
+              defaultValue: 'Drop dude in the top of screen',
+            })}
           </p>
         </div>
         <div className="col-span-3">
@@ -82,10 +86,15 @@ export function SettingsForm(props: SettingsFormProps) {
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
           <Label htmlFor="showAnonymousDudes" className="text-xl">
-            {t('pages.Settings.spawnAnonymousViewersText')}
+            {t('SettingsForm.spawnAnonymousViewersText', {
+              defaultValue: 'Spawn anonymous viewers',
+            })}
           </Label>
           <p className="text-sm text-muted-foreground">
-            {t('pages.Settings.spawnAnonymousViewersDescription')}
+            {t('SettingsForm.spawnAnonymousViewersDescription', {
+              defaultValue:
+                "Viewers who don't chat will be spawned without names",
+            })}
           </p>
         </div>
         <div className="col-span-3">
@@ -110,16 +119,22 @@ export function SettingsForm(props: SettingsFormProps) {
       </div>
       <Separator className="mt-4 mb-8" />
       <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-        {t('pages.Settings.raidTitle')}
+        {t('SettingsForm.raidTitle', {
+          defaultValue: 'Raid',
+        })}
       </h4>
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
           <Label htmlFor="fallingRaiders" className="text-xl">
-            {t('pages.Settings.fallingRaidersText')}
+            {t('SettingsForm.fallingRaidersText', {
+              defaultValue: 'Falling raiders',
+            })}
           </Label>
           <p className="text-sm text-muted-foreground">
-            {t('pages.Settings.fallingRaidersDescription')}
+            {t('SettingsForm.fallingRaidersDescription', {
+              defaultValue: 'Drop raiders in the top of screen',
+            })}
           </p>
         </div>
         <div className="col-span-3">

@@ -18,7 +18,9 @@ export function PreviewPage() {
       setIsChecked(true);
 
       toast({
-        title: 'Copied to clipboard',
+        title: t('PreviewPage.copiedToClipboard', {
+          defaultValue: 'Copied to clipboard',
+        }),
       });
     }
   };
@@ -26,7 +28,9 @@ export function PreviewPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('pages.Preview.title')}</CardTitle>
+        <CardTitle>
+          {t('PreviewPage.title', { defaultValue: 'Preview' })}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center">
@@ -42,7 +46,9 @@ export function PreviewPage() {
         </div>
         <div className="mt-4 flex">
           <AlertTriangle className="mr-2"></AlertTriangle>{' '}
-          {t('pages.Preview.warningLinkText')}
+          {t('PreviewPage.warningLinkText', {
+            defaultValue: "Don't show the link anyone",
+          })}
         </div>
       </CardContent>
     </Card>

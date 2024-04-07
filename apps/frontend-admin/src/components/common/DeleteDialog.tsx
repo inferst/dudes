@@ -23,18 +23,37 @@ export function DeleteDialog(props: DeleteDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">{t('common.delete')}</Button>
+        <Button variant="outline">
+          {t('DeleteDialog.deleteButtonText', {
+            defaultValue: 'Delete',
+          })}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>
+            {t('DeleteDialog.title', {
+              defaultValue: 'Are you absolutely sure?',
+            })}
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete item.
+            {t('DeleteDialog.description', {
+              defaultValue:
+                'This action cannot be undone. This will permanently delete item.',
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+          <AlertDialogCancel>
+            {t('DeleteDialog.cancelButtonText', {
+              defaultValue: 'Cancel',
+            })}
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={onDelete}>
+            {t('DeleteDialog.deleteButtonText', {
+              defaultValue: 'Delete',
+            })}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

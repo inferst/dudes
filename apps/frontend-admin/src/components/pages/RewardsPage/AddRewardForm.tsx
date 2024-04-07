@@ -33,6 +33,7 @@ import {
   ActionDataForm,
   ActionDataInput,
 } from '../../common/form/ActionDataForm';
+import { useTranslation } from 'react-i18next';
 
 export type AddRewardFormInput = {
   actionId: number;
@@ -47,6 +48,8 @@ export type AddRewardFormProps = {
 
 export function AddRewardForm(props: AddRewardFormProps) {
   const { actions, onSave } = props;
+
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
   const [action, setAction] = useState(actions[0]);
@@ -87,15 +90,26 @@ export function AddRewardForm(props: AddRewardFormProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary">Add Custom Reward</Button>
+        <Button variant="secondary">
+          {t('AddRewardForm.addCustomRewardButtonText', {
+            defaultValue: 'Add Custom Reward',
+          })}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form id={uuid} name={uuid} onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Add reward</DialogTitle>
+              <DialogTitle>
+                {t('AddRewardForm.dialogTitle', {
+                  defaultValue: 'Add Custom Reward',
+                })}
+              </DialogTitle>
               <DialogDescription>
-                Make changes to reward here. Click save when you're done.
+                {t('AddRewardForm.dialogDescription', {
+                  defaultValue:
+                    "Make changes to reward here. Click save when you're done.",
+                })}
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -106,7 +120,9 @@ export function AddRewardForm(props: AddRewardFormProps) {
                   render={({ field }) => (
                     <>
                       <Label htmlFor="reward-action-id" className="text-right">
-                        Action
+                        {t('AddRewardForm.actionText', {
+                          defaultValue: 'Action',
+                        })}
                       </Label>
                       <div className="col-span-3">
                         <Select
@@ -144,7 +160,9 @@ export function AddRewardForm(props: AddRewardFormProps) {
 
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="reward-text" className="text-right">
-                  Title
+                  {t('AddRewardForm.titleText', {
+                    defaultValue: 'Title',
+                  })}
                 </Label>
                 <Input
                   id="reward-text"
@@ -163,7 +181,9 @@ export function AddRewardForm(props: AddRewardFormProps) {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="reward-cost" className="text-right">
-                  Cost
+                  {t('AddRewardForm.costText', {
+                    defaultValue: 'Cost',
+                  })}
                 </Label>
                 <Input
                   id="reward-cost"
@@ -190,7 +210,11 @@ export function AddRewardForm(props: AddRewardFormProps) {
               />
             </div>
             <DialogFooter>
-              <Button type="submit">Add reward</Button>
+              <Button type="submit">
+                {t('AddRewardForm.addRewardButtonText', {
+                  defaultValue: 'Add reward',
+                })}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

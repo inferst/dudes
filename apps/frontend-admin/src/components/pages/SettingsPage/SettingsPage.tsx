@@ -25,7 +25,9 @@ export function SettingsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('pages.Settings.title')}</CardTitle>
+        <CardTitle>
+          {t('SettingsPage.title', { defaultValue: 'Settings' })}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <SettingsForm data={data} onUpdate={handleFormUpdate} />

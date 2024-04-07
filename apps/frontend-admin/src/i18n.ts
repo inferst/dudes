@@ -26,6 +26,8 @@ i18n
 
     backend: { loadPath: "/admin/locales/{{lng}}/{{ns}}.json" },
 
+    saveMissing: true,
+
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     }

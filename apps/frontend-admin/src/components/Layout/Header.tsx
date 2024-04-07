@@ -54,7 +54,11 @@ export function Header() {
                 <DropdownMenuContent>
                   <DropdownMenuItem>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <a href="/api/auth/logout">{ t('Header.logOutButtonText')}</a>
+                    <a href="/api/auth/logout">
+                      {t('Header.logOutButtonText', {
+                        defaultValue: 'Log out',
+                      })}
+                    </a>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
