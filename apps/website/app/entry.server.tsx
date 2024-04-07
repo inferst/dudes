@@ -12,7 +12,7 @@ import { createInstance } from 'i18next';
 import i18next from './i18next.server';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import Backend from 'i18next-fs-backend';
-import i18n from './i18n'; // your i18n configuration file
+import i18n from './i18n';
 import { resolve } from 'node:path';
 
 const ABORT_DELAY = 5000;
@@ -30,16 +30,15 @@ export default async function handleRequest(
   let lng = remixContext.staticHandlerContext.loaderData['root']['lang'] ?? 'en';
 
   let instance = createInstance();
-  // let lng = await i18next.getLocale(request);
   let ns = i18next.getRouteNamespaces(remixContext);
 
   await instance
-    .use(initReactI18next) // Tell our instance to use react-i18next
-    .use(Backend) // Setup our backend
+    .use(initReactI18next)
+    .use(Backend)
     .init({
-      ...i18n, // spread the configuration
-      lng, // The locale we detected above
-      ns, // The namespaces the routes about to render wants to use
+      ...i18n,
+      lng,
+      ns,
       backend: { loadPath: resolve('./public/locales/{{lng}}/{{ns}}.json') },
     });
 
