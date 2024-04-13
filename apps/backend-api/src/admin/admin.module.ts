@@ -21,6 +21,8 @@ import { TwitchRewardRepository } from './repositories/twitch-reward.repository'
 import { EventClientFactory } from './event-client/event-client.factory';
 import { SessionController } from './controllers/session.controller';
 import { HttpModule } from '@nestjs/axios';
+import { ChatterController } from './controllers/chatter.controller';
+import { ChatterRepository } from './repositories/chatter.repository';
 
 const twitchClientFactory = {
   provide: 'TWITCH_CLIENT_FACTORY',
@@ -53,6 +55,7 @@ const twitchClientFactory = {
     ActionController,
     SettingsController,
     SessionController,
+    ChatterController,
   ],
   providers: [
     twitchClientFactory,
@@ -67,6 +70,7 @@ const twitchClientFactory = {
     CommandRepository,
     ActionRepository,
     SettingsRepository,
+    ChatterRepository,
   ],
 })
 export class AdminModule {}

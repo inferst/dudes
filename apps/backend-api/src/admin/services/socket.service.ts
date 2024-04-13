@@ -11,6 +11,7 @@ import {
 } from '../event-client/event-client.factory';
 import { ActionService } from './action.service';
 import { ChatMessageService } from './chat-message.service';
+import { ChatterRepository } from '../repositories/chatter.repository';
 
 type SocketClient = {
   socket: Socket;
@@ -34,6 +35,7 @@ export class SocketService<
   public constructor(
     private readonly userRepository: UserRepository,
     private readonly settingsRepository: SettingsRepository,
+    private readonly chatterRepository: ChatterRepository,
     private readonly actionService: ActionService,
     private readonly chatMessageService: ChatMessageService,
     private readonly eventClinetFactory: EventClientFactory
@@ -124,21 +126,40 @@ export class SocketService<
     eventClient.onChatMessage(async (data) => {
       const action = await this.actionService.getUserActionByMessage(
         user.userId,
-        data,
+        data
+      );
+
+      const chatter = await this.chatterRepository.getChatterByName(
+        data.info.displayName
       );
 
       if (action) {
-        socket.emit('action', action);
-        socket.broadcast
-          .to(userGuid)
-          .emit('action', action);
+        const actionData = {
+          ...action,
+          info: {
+            ...action.info,
+            sprite: chatter?.sprite,
+          }
+        };
+
+        socket.emit('action', actionData);
+        socket.broadcast.to(userGuid).emit('action', actionData);
       }
 
       const message = this.chatMessageService.formatMessage(data.message);
 
       if (message || data.emotes.length > 0) {
-        socket.emit('message', { ...data, message });
-        socket.broadcast.to(userGuid).emit('message', { ...data, message });
+        const messageData = {
+          ...data,
+          message,
+          info: {
+            ...data.info,
+            sprite: chatter?.sprite
+          }
+        };
+
+        socket.emit('message', messageData);
+        socket.broadcast.to(userGuid).emit('message', messageData);
       }
     });
 
@@ -156,7 +177,7 @@ export class SocketService<
       const action = await this.actionService.getUserActionByReward(
         user.userId,
         user.platformUserId,
-        data,
+        data
       );
 
       if (action) {

@@ -15,14 +15,15 @@ datasource db {
 }
 
 model User {
-  id           Int         @id @default(autoincrement())
-  guid         String      @unique @default(uuid()) @db.Uuid
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  commands     Command[]
-  reward       Reward[]
-  settings     Settings[]
-  userToken    UserToken[]
+  id        Int         @id @default(autoincrement())
+  guid      String      @unique @default(uuid()) @db.Uuid
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  commands  Command[]
+  reward    Reward[]
+  settings  Settings[]
+  userToken UserToken[]
+  chatters  Chatter[]
 }
 
 model UserToken {
@@ -100,4 +101,12 @@ model Reward {
   platformRewardId String
   /// [ActionableData]
   data             Json     @default("{}") @db.JsonB()
+}
+
+model Chatter {
+  id          Int    @id @default(autoincrement())
+  userId      Int
+  user        User   @relation(fields: [userId], references: [id])
+  chatterName String
+  sprite      String
 }

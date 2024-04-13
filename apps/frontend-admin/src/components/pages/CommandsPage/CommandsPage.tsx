@@ -13,7 +13,7 @@ import { CommandForm, CommandFormInput } from './CommandForm';
 
 import { useUpdateCommandMutation } from '@app/frontend-admin/mutations/commands';
 import { useActionsQuery } from '@app/frontend-admin/queries/actions';
-import { useCommndsQuery } from '@app/frontend-admin/queries/commands';
+import { useCommandsQuery } from '@app/frontend-admin/queries/commands';
 import { CommandEntity } from '@lib/types';
 import { Loader } from '../../common/Loader';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,7 @@ export function CommandsPage() {
   const { t } = useTranslation();
 
   const actionsQuery = useActionsQuery();
-  const commandsQuery = useCommndsQuery();
+  const commandsQuery = useCommandsQuery();
 
   const commands = commandsQuery.data ?? [];
   const actions = actionsQuery.data ?? [];

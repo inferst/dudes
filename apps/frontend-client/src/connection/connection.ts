@@ -1,10 +1,10 @@
 import {
-  ChatterEntity,
   ClientToServerEvents,
   MessageEntity,
   RaidData,
   ServerToClientsEvents,
   SettingsEntity,
+  TwitchChatterEntity,
   UserActionEntity
 } from '@lib/types';
 import { Socket, io } from 'socket.io-client';
@@ -38,7 +38,7 @@ export class Connection {
     this.socket.on('settings', callback);
   }
 
-  public onChatters(callback: (data: ChatterEntity[]) => void): void {
+  public onChatters(callback: (data: TwitchChatterEntity[]) => void): void {
     this.socket.on('chatters', callback);
   }
 

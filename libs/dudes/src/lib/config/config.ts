@@ -1,9 +1,9 @@
-export type Chatters = {
+export type Sprites = {
   [key: string]: SpriteConfig;
 };
 
 export type Config = {
-  chatters: Chatters;
+  sprites: Sprites;
 };
 
 export type SpriteConfig = {
@@ -23,8 +23,8 @@ export type SpriteConfig = {
 };
 
 export const config: Config = {
-  chatters: {
-    nets1l: {
+  sprites: {
+    sith: {
       name: 'sith',
       w: 32,
       h: 32,
@@ -39,7 +39,7 @@ export const config: Config = {
         y: 9,
       },
     },
-    St_zarus: {
+    agent: {
       name: 'agent',
       w: 32,
       h: 32,
@@ -54,7 +54,7 @@ export const config: Config = {
         y: 9,
       },
     },
-    zadrot_L2: {
+    nerd: {
       name: 'nerd',
       w: 32,
       h: 32,
@@ -69,7 +69,7 @@ export const config: Config = {
         y: 9,
       },
     },
-    Duckate: {
+    girl: {
       name: 'girl',
       w: 32,
       h: 32,
@@ -84,7 +84,7 @@ export const config: Config = {
         y: 9,
       },
     },
-    ArcticSpaceCat: {
+    cat: {
       name: 'cat',
       w: 32,
       h: 32,
@@ -99,7 +99,7 @@ export const config: Config = {
         y: 9,
       },
     },
-    kryptamine90: {
+    senior: {
       name: 'senior',
       w: 32,
       h: 32,
@@ -114,7 +114,7 @@ export const config: Config = {
         y: 9,
       },
     },
-    mimbol: {
+    sponge: {
       name: 'sponge',
       w: 32,
       h: 32,

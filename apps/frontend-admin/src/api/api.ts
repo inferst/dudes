@@ -9,6 +9,8 @@ import {
   UpdateSettingsDto,
   UpdateTwitchRewardDto,
   CreateTwitchRewardDto,
+  ChatterEntity,
+  CreateChatterDto,
 } from '@lib/types';
 import axios, { GenericAbortSignal } from 'axios';
 
@@ -93,6 +95,23 @@ export const api = {
     settings: UpdateSettingsDto
   ): Promise<SettingsEntity> => {
     const { data } = await appAxios.put('/admin/settings/', settings);
+
+    return data;
+  },
+  getChatters: async ({ signal }: WithSignal): Promise<ChatterEntity[]> => {
+    const { data } = await appAxios.get('/admin/chatter/list', {
+      signal,
+    });
+
+    return data;
+  },
+  deleteChatter: async (id: number): Promise<ChatterEntity> => {
+    const { data } = await appAxios.delete('/admin/chatter/' + id);
+
+    return data;
+  },
+  createChatter: async (command: CreateChatterDto): Promise<ChatterEntity> => {
+    const { data } = await appAxios.post('/admin/chatter/', command);
 
     return data;
   },

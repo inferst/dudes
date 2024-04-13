@@ -2,14 +2,14 @@ import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { api } from "../api/api";
 import { useApiQuery } from "../api/useApiQuery";
 
-export const commandsKeys = createQueryKeys('commands', {
+export const chattersKeys = createQueryKeys('chatters', {
   list: {
     queryKey: null,
-    queryFn: api.getCommands,
+    queryFn: api.getChatters,
   },
 });
 
-export const useCommandsQuery = () =>
+export const useChattersQuery = () =>
   useApiQuery({
-    ...commandsKeys.list,
+    ...chattersKeys.list,
   });

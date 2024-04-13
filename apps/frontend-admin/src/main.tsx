@@ -5,10 +5,12 @@ import App from './App';
 
 import './i18n';
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
+const root = document.getElementById('root');
 
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+if (root) {
+  ReactDOM.createRoot(root).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}

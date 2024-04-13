@@ -1,9 +1,9 @@
 import {
-  ChatterEntity,
   MessageEntity,
   RaidData,
   SettingsEntity,
-  UserActionEntity,
+  TwitchChatterEntity,
+  UserActionEntity
 } from '@lib/types';
 import { AppOptions, app } from './app';
 import { dudesManager } from './services/dudesManager';
@@ -17,7 +17,7 @@ export class Dudes {
 
   processAction = (data: UserActionEntity) => dudesManager.processAction(data);
 
-  processChatters = (data: ChatterEntity[]) =>
+  processChatters = (data: TwitchChatterEntity[]) =>
     dudesManager.processChatters(data);
 
   processRaid = (data: RaidData) => dudesManager.processRaid(data);

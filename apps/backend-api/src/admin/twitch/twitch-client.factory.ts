@@ -1,9 +1,12 @@
 import { ConfigService } from '@app/backend-api/config/config.service';
 import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
+import {
+  MessageEntity, RaidData,
+  RewardRedemptionData, TwitchChatterEntity
+} from '@lib/types';
 import { HttpException, Logger } from '@nestjs/common';
 import { UserToken } from '@prisma/client';
-import { ChatterEntity, MessageEntity } from '@lib/types';
 import { ApiClient } from '@twurple/api';
 import { RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
@@ -11,10 +14,6 @@ import { EventSubWsListener } from '@twurple/eventsub-ws';
 import { HttpStatusCode } from 'axios';
 import { EventClient } from '../event-client/event-client.factory';
 import { ChatMessageService } from '../services';
-import {
-  RaidData,
-  RewardRedemptionData,
-} from '@lib/types';
 import { TokenRevokedException } from './token-revoked.exception';
 import { TwitchUserFilterService } from './twitch-user-filter.service';
 
@@ -188,7 +187,7 @@ export class TwitchClientFactory {
 
     let timerId: NodeJS.Timer;
 
-    const onChatters = (listener: (data: ChatterEntity[]) => void): void => {
+    const onChatters = (listener: (data: TwitchChatterEntity[]) => void): void => {
       timerId = setInterval(async () => {
         try {
           const apiClient = await this.createApiClient(userToken.userId);

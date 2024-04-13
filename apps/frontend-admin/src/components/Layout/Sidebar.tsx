@@ -18,38 +18,37 @@ export function Sidebar() {
     {
       path: '/admin',
       title: t('Sidebar.previewText', {
-        defaultValue: 'Preview'
+        defaultValue: 'Preview',
       }),
     },
     {
       path: '/admin/settings',
       title: t('Sidebar.settingsText', {
-        defaultValue: 'Settings'
+        defaultValue: 'Settings',
       }),
     },
     {
       path: '/admin/commands',
       title: t('Sidebar.commandsText', {
-        defaultValue: 'Commands'
+        defaultValue: 'Commands',
       }),
     },
     {
       path: '/admin/rewards',
       title: t('Sidebar.rewardsText', {
-        defaultValue: 'Twitch Rewards'
+        defaultValue: 'Twitch Rewards',
       }),
     },
     {
       path: '/admin/skins',
       title: t('Sidebar.skinsText', {
-        defaultValue: 'Skins'
+        defaultValue: 'Skins',
       }),
-      isDisabled: true,
     },
     {
       path: '/admin/donations',
       title: t('Sidebar.donationsText', {
-        defaultValue: 'Donations'
+        defaultValue: 'Donations',
       }),
       isDisabled: true,
     },
@@ -57,7 +56,7 @@ export function Sidebar() {
 
   const handleLinkClick = (link: NavLink) => {
     navigate(link.path);
-  }
+  };
 
   return (
     <aside className="pt-10 w-60">

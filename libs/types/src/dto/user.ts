@@ -9,4 +9,5 @@ export type UserEntity = {
 export type UserInfo = {
   displayName: string;
   color?: string;
+  sprite?: string;
 }
