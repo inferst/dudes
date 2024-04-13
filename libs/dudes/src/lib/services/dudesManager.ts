@@ -6,7 +6,7 @@ import {
   isColorUserActionEntity,
   isDashUserActionEntity,
   isGrowUserActionEntity,
-  isJumpUserActionEntity
+  isJumpUserActionEntity,
 } from '@lib/types';
 import * as PIXI from 'pixi.js';
 import tinycolor from 'tinycolor2';
@@ -56,8 +56,15 @@ class DudesManager {
 
     const time = (1 / data.viewers) * 5000;
 
+    const spriteConfig = config.sprites['agent'];
+
     for (let i = 0; i < data.viewers; i++) {
-      const dude = new Dude({ isAnonymous: true, zIndex: -1 });
+      const dude = new Dude({
+        isAnonymous: true,
+        zIndex: -1,
+        sprite: spriteConfig,
+        color: new PIXI.Color(data.broadcaster.info.color),
+      });
 
       timers.add(time * i, () => {
         this.addRaider(dude);
@@ -154,7 +161,7 @@ class DudesManager {
     }
 
     if (isDashUserActionEntity(action)) {
-      dude.dash({force: action.data.force, cooldown: action.cooldown});
+      dude.dash({ force: action.data.force, cooldown: action.cooldown });
     }
 
     if (isColorUserActionEntity(action)) {
@@ -174,7 +181,11 @@ class DudesManager {
     }
   }
 
-  private prepareDudeProps(name: string, color?: string, sprite?: string): DudeProps {
+  private prepareDudeProps(
+    name: string,
+    color?: string,
+    sprite?: string
+  ): DudeProps {
     const props: DudeProps = {
       name,
       isAnonymous: false,
@@ -199,7 +210,7 @@ class DudesManager {
     const props: DudeProps = this.prepareDudeProps(
       action.info.displayName,
       action.info.color,
-      action.info.sprite,
+      action.info.sprite
     );
 
     if (!dude) {
@@ -225,7 +236,7 @@ class DudesManager {
     const props: DudeProps = this.prepareDudeProps(
       data.info.displayName,
       data.info.color,
-      data.info.sprite,
+      data.info.sprite
     );
 
     let dude = this.viewers[data.userId];
