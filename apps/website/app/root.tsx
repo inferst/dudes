@@ -1,4 +1,8 @@
-import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+import type {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -13,7 +17,7 @@ import {
   ExternalScripts,
   ExternalScriptsHandle,
 } from 'remix-utils/external-scripts';
-import { useChangeLanguage } from "remix-i18next/react";
+import { useChangeLanguage } from 'remix-i18next/react';
 import twStyles from './tailwind.css';
 import i18next from './i18next.server';
 import { useTranslation } from 'react-i18next';
@@ -21,11 +25,11 @@ import { getLang } from './utils';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const lang = getLang(params);
-  let locale = await i18next.getLocale(request);
+  const locale = await i18next.getLocale(request);
   return json({ locale, lang });
 }
 
-export let handle: ExternalScriptsHandle = {
+export const handle: ExternalScriptsHandle = {
   scripts: [
     {
       src: '/yandex.js',
@@ -33,7 +37,7 @@ export let handle: ExternalScriptsHandle = {
       preload: true,
     },
   ],
-  i18n: 'common',
+  // i18n: 'common',
 };
 
 export const links: LinksFunction = () => [
@@ -49,15 +53,15 @@ export const meta: MetaFunction = () => [
 ];
 
 export default function App() {
-  let { locale, lang } = useLoaderData<typeof loader>();
+  const { lang } = useLoaderData<typeof loader>();
 
-	let { i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
-	// This hook will change the i18n instance language to the current locale
-	// detected by the loader, this way, when we do something to change the
-	// language, this locale will change and i18next will load the correct
-	// translation files
-	useChangeLanguage(lang);
+  // This hook will change the i18n instance language to the current locale
+  // detected by the loader, this way, when we do something to change the
+  // language, this locale will change and i18next will load the correct
+  // translation files
+  useChangeLanguage(lang);
 
   return (
     <html lang={lang} dir={i18n.dir()}>

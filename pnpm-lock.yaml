@@ -149,6 +149,9 @@ dependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  evotars:
+    specifier: ^0.0.2
+    version: 0.0.2(@pixi/utils@7.3.2)
   express:
     specifier: ^4.18.3
     version: 4.18.3
@@ -216,11 +219,11 @@ dependencies:
     specifier: ^0.1.14
     version: 0.1.14
   remix-i18next:
-    specifier: ^6.0.1
-    version: 6.0.1(@remix-run/node@2.8.1)(@remix-run/react@2.8.1)(i18next@23.10.1)(react-i18next@14.1.0)(react@18.2.0)
+    specifier: ^6.1.0
+    version: 6.1.0(@remix-run/node@2.8.1)(@remix-run/react@2.8.1)(i18next@23.10.1)(react-i18next@14.1.0)(react@18.2.0)
   remix-utils:
-    specifier: ^7.5.0
-    version: 7.5.0(@remix-run/node@2.8.1)(@remix-run/react@2.8.1)(react@18.2.0)(zod@3.22.4)
+    specifier: ^7.6.0
+    version: 7.6.0(@remix-run/node@2.8.1)(@remix-run/react@2.8.1)(react@18.2.0)(zod@3.22.4)
   rxjs:
     specifier: ^7.8.1
     version: 7.8.1
@@ -10234,6 +10237,16 @@ packages:
     engines: {node: '>=0.8.x'}
     dev: true
 
+  /evotars@0.0.2(@pixi/utils@7.3.2):
+    resolution: {integrity: sha512-qfNhg+yzug8KZh4TLMp3RqkVROUzZ8iv7aTTiqJsYRHcny4JlI1mutUN7mPFsL4zC9I+MIC+J/nKSzS0IO9MfQ==}
+    dependencies:
+      '@tweenjs/tween.js': 23.1.1
+      pixi.js: 7.3.2(@pixi/utils@7.3.2)
+      zod: 3.22.5
+    transitivePeerDependencies:
+      - '@pixi/utils'
+    dev: false
+
   /execa@0.7.0:
     resolution: {integrity: sha512-RztN09XglpYI7aBBrJCPW95jEH7YF1UEPOoX9yDhUTPdp7mK+CQvnLTuD10BNXZ3byLTu2uehZ8EcKT/4CGiFw==}
     engines: {node: '>=4'}
@@ -15495,8 +15508,8 @@ packages:
       unified: 10.1.2
     dev: true
 
-  /remix-i18next@6.0.1(@remix-run/node@2.8.1)(@remix-run/react@2.8.1)(i18next@23.10.1)(react-i18next@14.1.0)(react@18.2.0):
-    resolution: {integrity: sha512-zO7sYe/Ui4s/ZGHMZoScFUNsuarykzQsQ9AB3KPswb7lLahwqIu+K09XFNZBUGBOPHOUl9txv0+2vOrIiGCSPA==}
+  /remix-i18next@6.1.0(@remix-run/node@2.8.1)(@remix-run/react@2.8.1)(i18next@23.10.1)(react-i18next@14.1.0)(react@18.2.0):
+    resolution: {integrity: sha512-uoI+NaxdGN1iaoOI2P/62HY+ARf9Nem0gf07+Uc/oJFReZ5Q36tu32TF4TE1MOGYYamzhMmQsin18xasKcFKpQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@remix-run/cloudflare': ^2.0.0
@@ -15523,8 +15536,8 @@ packages:
       react-i18next: 14.1.0(i18next@23.10.1)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /remix-utils@7.5.0(@remix-run/node@2.8.1)(@remix-run/react@2.8.1)(react@18.2.0)(zod@3.22.4):
-    resolution: {integrity: sha512-vzjDhbdwK+3XxqL2LM7ZPzq0zyjb+77eAWbKhDqhnh0nlA11n3CmTtYzrZYpVf6h24+6m5mD6KnRfcdD3Zrl7w==}
+  /remix-utils@7.6.0(@remix-run/node@2.8.1)(@remix-run/react@2.8.1)(react@18.2.0)(zod@3.22.4):
+    resolution: {integrity: sha512-BPhCUEy+nwrhDDDg2v3+LFSszV6tluMbeSkbffj2o4tqZxt5Kn69Y9sNpGxYLAj8gjqeYDuxjv55of+gYnnykA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@remix-run/cloudflare': ^2.0.0
@@ -15562,7 +15575,7 @@ packages:
       '@remix-run/node': 2.8.1(typescript@5.3.3)
       '@remix-run/react': 2.8.1(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
       react: 18.2.0
-      type-fest: 4.13.1
+      type-fest: 4.15.0
       zod: 3.22.4
     dev: false
 
@@ -17170,8 +17183,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: false
 
-  /type-fest@4.13.1:
-    resolution: {integrity: sha512-ASMgM+Vf2cLwDMt1KXSkMUDSYCxtckDJs8zsaVF/mYteIsiARKCVtyXtcK38mIKbLTctZP8v6GMqdNaeI3fo7g==}
+  /type-fest@4.15.0:
+    resolution: {integrity: sha512-tB9lu0pQpX5KJq54g+oHOLumOx+pMep4RaM6liXh2PKmVRFF+/vAtUP0ZaJ0kOySfVNjF6doBWPHhBhISKdlIA==}
     engines: {node: '>=16'}
     dev: false
 
@@ -18232,6 +18245,10 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+
+  /zod@3.22.5:
+    resolution: {integrity: sha512-HqnGsCdVZ2xc0qWPLdO25WnseXThh0kEYKIdV5F/hTHO75hNZFp8thxSeHhiPrHZKrFTo1SOgkAj9po5bexZlw==}
+    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

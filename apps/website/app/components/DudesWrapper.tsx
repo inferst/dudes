@@ -1,4 +1,4 @@
-import { Dudes } from '@lib/dudes';
+import { Dudes } from 'evotars';
 import { useCallback, useState } from 'react';
 import { manifest } from '../assets/manifest';
 import { SettingsEntity } from '@lib/types';

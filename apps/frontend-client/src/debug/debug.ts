@@ -1,4 +1,4 @@
-import { Dudes } from '@lib/dudes';
+import { Dudes } from 'evotars';
 
 export class Debug {
   constructor(readonly dudes: Dudes) {
@@ -21,7 +21,7 @@ export class Debug {
         userId: '1',
         cooldown: 0,
         data: {
-          scale: 4
+          scale: 4,
         },
         description: '',
         id: 1,
@@ -39,7 +39,7 @@ export class Debug {
         userId: '1',
         cooldown: 0,
         data: {
-          force: 15
+          force: 15,
         },
         description: '',
         id: 1,

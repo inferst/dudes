@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { DudesWrapper } from './DudesWrapper';
 
 export const Main = () => {
-  let { t } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <div className="container">
@@ -18,9 +18,7 @@ export const Main = () => {
           <span className="block">S</span>
         </a>
       </div>
-      <div className="text-2xl text-center m-4">
-        {t('mainTitle')}
-      </div>
+      <div className="text-2xl text-center m-4">{t('mainTitle')}</div>
       <div className="border border-border/60 bg-slate-900">
         <DudesWrapper />
       </div>

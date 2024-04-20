@@ -17,6 +17,7 @@
     a.parentNode.insertBefore(k, a);
 })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
 
+// eslint-disable-next-line no-undef
 ym(96832653, 'init', {
   clickmap: true,
   trackLinks: true,

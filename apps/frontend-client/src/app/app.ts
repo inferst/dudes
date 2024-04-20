@@ -1,5 +1,5 @@
 import { Connection } from '@app/frontend-client/connection/connection';
-import { Dudes } from '@lib/dudes';
+import { Dudes } from 'evotars';
 import { manifest } from '../assets/manifest';
 import { Debug } from '../debug/debug';
 
