@@ -1,0 +1,81 @@
+name: Dudes Deploy
+run-name: ${{ github.actor }} is deploying Dudes
+on:
+  push:
+    branches:
+      - main
+jobs:
+  copy_files_to_server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - uses: actions/checkout@v4
+    - name: Copy folder content recursively to remote
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        source: "apps,libs,docker-compose.production.yaml,Dockerfile,nx.json,package-lock.json,package.json,pnpm-lock.yaml,tsconfig.base.json"
+        target: /srv/dudes
+        host: ${{ secrets.hostname }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        overwrite: true
+        rm: true
+  run_dockerfile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: copy_files_to_server
+    steps:
+    - name: Run Dockerfile
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.hostname }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        command_timeout: 30m
+        script: |
+          cd /srv/dudes
+          docker system prune --all --force
+          docker build -t dudes-build --network=host .
+  run_docker_compose_up:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: run_dockerfile
+    steps:
+    - name: Docker compose up
+      uses: appleboy/ssh-action@v0.1.10
+      env:
+        ADMIN_URL: ${{ vars.ADMIN_URL }}
+        CLIENT_URL: ${{ vars.CLIENT_URL }}
+        TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+        TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+        TWITCH_CALLBACK_URL: ${{ vars.TWITCH_CALLBACK_URL }}
+        SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+        REMIX_PORT: ${{ secrets.REMIX_PORT }}
+        DATABASE_URL: ${{ vars.DATABASE_URL }}
+        VITE_CLIENT_SOCKET_HOST: ${{ vars.VITE_CLIENT_SOCKET_HOST }}
+        VITE_CJS_IGNORE_WARNING: ${{ vars.VITE_CJS_IGNORE_WARNING }}
+      with:
+        host: ${{ secrets.hostname }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        command_timeout: 30m
+        envs: ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,VITE_CJS_IGNORE_WARNING,VITE_CLIENT_SOCKET_HOST,REMIX_PORT
+        script: |
+          cd /srv/dudes
+          docker compose -f docker-compose.production.yaml down
+          docker compose -f docker-compose.production.yaml up -d
+  health_check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: run_docker_compose_up
+    steps:
+    - name: Check the deployed service URL
+      uses: jtalk/url-health-check-action@v3
+      with:
+        url: https://dudes2.mikedanagam.space/api/meta
+        follow-redirect: false
+        max-attempts: 3
+        retry-delay: 10s
+        retry-all: true
