@@ -65,7 +65,8 @@ jobs:
         script: |
           cd /srv/dudes
           docker compose -f docker-compose.production.yaml down
-          docker compose -f docker-compose.production.yaml up -d
+          docker compose -f docker-compose.production.yaml up
+          docker restart nginx-proxy-manager-app
   health_check:
     runs-on: ubuntu-latest
     timeout-minutes: 5
