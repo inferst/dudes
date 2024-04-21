@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-// import { DudesWrapper } from './DudesWrapper';
+import { DudesWrapper } from './DudesWrapper';
 
 export const Main = () => {
   const { t } = useTranslation();
@@ -19,7 +19,9 @@ export const Main = () => {
         </a>
       </div>
       <div className="text-2xl text-center m-4">{t('mainTitle')}</div>
-      <div className="border border-border/60 bg-slate-900"></div>
+      <div className="border border-border/60 bg-slate-900">
+        <DudesWrapper />
+      </div>
       <div className="m-6 text-2xl flex items-center justify-center">
         <a className="block bg-[#772ce8] p-4 rounded-sm" href="/api/auth/login">
           {t('twitchLoginButtonText')}

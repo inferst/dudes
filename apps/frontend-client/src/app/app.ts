@@ -1,5 +1,5 @@
 import { Connection } from '@app/frontend-client/connection/connection';
-import { Dudes } from 'evotars';
+import { Evotars } from 'evotars';
 import { manifest } from '../assets/manifest';
 import { Debug } from '../debug/debug';
 
@@ -7,7 +7,7 @@ export class App {
   private connection = new Connection();
 
   public async init(): Promise<void> {
-    const dudes = new Dudes(document.body);
+    const dudes = new Evotars(document.body);
     await dudes.run({
       manifest,
       sound: { jump: '/client/sounds/jump.mp3' },

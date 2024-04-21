@@ -1,7 +1,7 @@
-import { Dudes } from 'evotars';
+import { Evotars } from 'evotars';
 
 export class Debug {
-  constructor(readonly dudes: Dudes) {
+  constructor(readonly dudes: Evotars) {
     this.generateDudes();
   }
 

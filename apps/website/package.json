@@ -6,21 +6,21 @@
   "scripts": {},
   "type": "module",
   "dependencies": {
-    "@remix-run/node": "^2.3.0",
-    "@remix-run/react": "^2.3.0",
-    "@remix-run/serve": "^2.3.0",
-    "evotars": "^0.0.2",
-    "isbot": "^3.6.8",
+    "@remix-run/node": "^2.8.1",
+    "@remix-run/react": "^2.8.1",
+    "@remix-run/serve": "^2.8.1",
+    "evotars": "^0.0.3",
+    "isbot": "^4.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.3.0",
-    "@remix-run/eslint-config": "^2.3.0",
+    "@remix-run/dev": "^2.8.1",
+    "@remix-run/eslint-config": "^2.8.1",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "eslint": "^8.38.0",
-    "typescript": "^5.1.6"
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=14"

@@ -5,17 +5,32 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "build": {
+      "executor": "@nx/remix:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/website"
+      }
+    },
     "serve": {
       "executor": "@nx/remix:serve",
       "options": {
-        "manual": true
+        "command": "pnpm exec remix-serve build/index.js",
+        "manual": true,
+        "port": 4200
       }
     },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
+    "start": {
+      "dependsOn": ["build"],
+      "command": "remix-serve build/index.js",
       "options": {
-        "buildTarget": "website:build",
-        "port": 4200
+        "cwd": "apps/website"
+      }
+    },
+    "typecheck": {
+      "command": "tsc --project tsconfig.app.json",
+      "options": {
+        "cwd": "apps/website"
       }
     }
   }
