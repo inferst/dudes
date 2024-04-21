@@ -1,4 +1,4 @@
-import { Dudes } from 'evotars';
+import { Evotars } from 'evotars';
 import { useCallback, useState } from 'react';
 import { manifest } from '../assets/manifest';
 import { SettingsEntity } from '@lib/types';
@@ -18,7 +18,7 @@ export const DudesWrapper = () => {
       fallingDudes: true,
     };
 
-    const dudes = new Dudes(element);
+    const dudes = new Evotars(element);
     await dudes.run({ manifest, sound });
     dudes.updateSettings(settings);
 
