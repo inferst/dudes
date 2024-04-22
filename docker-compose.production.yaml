@@ -37,6 +37,13 @@ services:
       - POSTGRES_USER=dudes
       - POSTGRES_DB=dudes
 
+  nginx:
+    image: nginx:alpine
+    container_name: dudes-nginx
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    restart: always
+
 volumes:
   postgres-data:
 
