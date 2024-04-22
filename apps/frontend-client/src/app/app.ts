@@ -20,7 +20,11 @@ export class App {
     this.connection.init();
 
     this.connection.onSettings((data) => {
-      dudes.updateSettings(data);
+      dudes.updateSettings({
+        fallingEvotars: data.fallingDudes,
+        fallingRaiders: data.fallingRaiders,
+        showAnonymousEvotars: data.showAnonymousDudes,
+      });
     });
 
     this.connection.onMessage((data) => dudes.processMessage(data));
