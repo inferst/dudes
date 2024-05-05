@@ -1,0 +1,17 @@
+{
+  "collider": {
+    "x": 8,
+    "y": 5,
+    "w": 16,
+    "h": 20
+  },
+  "size": {
+    "w": 32,
+    "h": 32
+  },
+  "scale": 4,
+  "flip": true,
+  "colored": [
+    "Body"
+  ]
+}

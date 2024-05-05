@@ -1,17 +1,30 @@
 import { Connection } from '@app/frontend-client/connection/connection';
 import { Evotars } from 'evotars';
-import { manifest } from '../assets/manifest';
 import { Debug } from '../debug/debug';
 
 export class App {
   private connection = new Connection();
 
   public async init(): Promise<void> {
-    const dudes = new Evotars(document.body);
-    await dudes.run({
-      manifest,
-      sound: { jump: '/client/sounds/jump.mp3' },
+    const sounds = { jump: { src: '/client/sounds/jump.mp3' } };
+    const dudes = new Evotars(document.body, {
+      sounds,
+      spriteLoaderFn: async (name: string) => {
+        const path = '/client/evotars/' + name + '/';
+        const sprite = await fetch(path + 'sprite.json');
+        const spriteJson = await sprite.json();
+        const data = await fetch(path + 'data.json');
+        const dataJson = await data.json();
+
+        return {
+          data: dataJson,
+          image: path + 'sprite.png',
+          sprite: spriteJson,
+        };
+      },
     });
+
+    await dudes.run();
 
     if (import.meta.env.DEV) {
       new Debug(dudes);

@@ -13,6 +13,7 @@ export class Debug {
       info: {
         displayName: 'haha',
         color: 'yellow',
+        sprite: 'dude',
       },
     });
 
@@ -30,6 +31,7 @@ export class Debug {
         info: {
           displayName: 'haha',
           color: 'yellow',
+          sprite: 'dude',
         },
       });
     }, 1000);
@@ -48,6 +50,7 @@ export class Debug {
         info: {
           displayName: 'haha',
           color: 'yellow',
+          sprite: 'dude',
         },
       });
     }, 6000);

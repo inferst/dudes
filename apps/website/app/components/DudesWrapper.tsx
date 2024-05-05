@@ -1,6 +1,5 @@
 import { Evotars } from 'evotars';
 import { useCallback, useState } from 'react';
-import { manifest } from '../assets/manifest';
 import { SettingsEntity } from '@lib/types';
 
 export const DudesWrapper = () => {
@@ -13,13 +12,30 @@ export const DudesWrapper = () => {
 
     setIsInit(true);
 
-    const sound = { jump: '/sounds/jump.mp3' };
     const settings: SettingsEntity = {
       fallingDudes: true,
     };
 
-    const dudes = new Evotars(element);
-    await dudes.run({ manifest, sound });
+    const sounds = { jump: { src: '/sounds/jump.mp3' } };
+
+    const dudes = new Evotars(element, {
+      sounds,
+      spriteLoaderFn: async (name: string) => {
+        const path = '/evotars/' + name + '/';
+        const sprite = await fetch(path + 'sprite.json');
+        const spriteJson = await sprite.json();
+        const data = await fetch(path + 'data.json');
+        const dataJson = await data.json();
+
+        return {
+          data: dataJson,
+          image: path + 'sprite.png',
+          sprite: spriteJson,
+        };
+      },
+    });
+
+    await dudes.run();
     dudes.updateSettings(settings);
 
     setTimeout(() => {
@@ -30,6 +46,7 @@ export const DudesWrapper = () => {
         info: {
           color: 'pink',
           displayName: 'Dude',
+          sprite: 'dude',
         },
       });
     }, 500);
