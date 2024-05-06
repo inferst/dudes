@@ -4,12 +4,14 @@ import {
   isDashUserActionEntity,
   isGrowUserActionEntity,
   isJumpUserActionEntity,
+  isSpriteUserActionEntity,
 } from '@lib/types';
 import { UseFormReturn } from 'react-hook-form';
 import { ColorActionDataForm } from './ColorActionDataForm';
 import { DashActionDataForm } from './DashActionDataForm';
 import { GrowActionDataForm } from './GrowActionDataForm';
 import { JumpActionDataForm } from './JumpActionDataForm';
+import { SpriteActionDataForm } from './SpriteActionDataForm';
 
 export type ActionDataInput = { data: PrismaJson.ActionableData };
 
@@ -35,6 +37,10 @@ export function ActionDataForm(props: ActionDataFormProps) {
 
   if (isDashUserActionEntity(action)) {
     return <DashActionDataForm form={form} />;
+  }
+
+  if (isSpriteUserActionEntity(action)) {
+    return <SpriteActionDataForm form={form} />;
   }
 
   return;

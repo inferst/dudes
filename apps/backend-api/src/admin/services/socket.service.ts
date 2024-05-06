@@ -138,8 +138,8 @@ export class SocketService<
           ...action,
           info: {
             ...action.info,
-            sprite: chatter?.sprite,
-          }
+            sprite: chatter?.sprite ?? 'dude',
+          },
         };
 
         socket.emit('action', actionData);
@@ -154,8 +154,8 @@ export class SocketService<
           message,
           info: {
             ...data.info,
-            sprite: chatter?.sprite
-          }
+            sprite: chatter?.sprite ?? 'dude',
+          },
         };
 
         socket.emit('message', messageData);

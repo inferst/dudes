@@ -4,6 +4,7 @@ import { growActionSeed } from './actions/grow';
 import { jumpActionSeed } from './actions/jump';
 import { TWITCH_PLATFORM_ID } from '../../constants';
 import { dashActionSeed } from './actions/dash';
+import { spriteActionSeed } from './actions/sprite';
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,7 @@ async function main(): Promise<void> {
   await colorActionSeed(prisma);
   await growActionSeed(prisma);
   await dashActionSeed(prisma);
+  await spriteActionSeed(prisma);
 
   await prisma.platform.upsert({
     where: { id: TWITCH_PLATFORM_ID },
