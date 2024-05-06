@@ -4,11 +4,15 @@ import {
   MessageEntity,
   RewardRedemptionData,
   UserActionEntity,
+  isColorUserActionEntity,
+  isSpriteUserActionEntity,
 } from '@lib/types';
 import { ActionRepository } from '../repositories/action.repository';
 import { CommandRepository } from '../repositories/command.repository';
 import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
+import { ChatterRepository } from '../repositories/chatter.repository';
+import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
 
 type CooldownStorage = {
   [id: string]: NodeJS.Timeout;
@@ -23,6 +27,7 @@ export class ActionService {
   public constructor(
     private readonly commandRepository: CommandRepository,
     private readonly actionRepository: ActionRepository,
+    private readonly chatterRepository: ChatterRepository,
     private readonly twitchRewardRepository: TwitchRewardRepository,
     @Inject('TWITCH_CLIENT_FACTORY')
     private readonly twitchClientFactory: TwitchClientFactory
@@ -84,6 +89,43 @@ export class ActionService {
       data: { ...action.data, ...data },
       info: message.info,
     };
+  }
+
+  public async saveChatterAction(
+    userId: number,
+    action: UserActionEntity
+  ): Promise<void> {
+    let chatter = await this.chatterRepository.getChatterById(action.userId);
+
+    if (!chatter) {
+      const data = {
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        platform: {
+          connect: {
+            id: TWITCH_PLATFORM_ID,
+          },
+        },
+        chatterId: action.userId,
+      };
+
+      chatter = await this.chatterRepository.create(data);
+    }
+
+    if (isSpriteUserActionEntity(action)) {
+      await this.chatterRepository.update(userId, chatter.id, {
+        ...chatter,
+        sprite: action.data.sprite,
+      });
+    } else if (isColorUserActionEntity(action)) {
+      await this.chatterRepository.update(userId, chatter.id, {
+        ...chatter,
+        color: action.data.color,
+      });
+    }
   }
 
   public async getUserActionByReward(

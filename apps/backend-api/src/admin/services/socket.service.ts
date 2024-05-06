@@ -129,9 +129,7 @@ export class SocketService<
         data
       );
 
-      const chatter = await this.chatterRepository.getChatterByName(
-        data.info.displayName
-      );
+      const chatter = await this.chatterRepository.getChatterById(data.userId);
 
       if (action) {
         const actionData = {
@@ -139,11 +137,14 @@ export class SocketService<
           info: {
             ...action.info,
             sprite: chatter?.sprite ?? 'dude',
+            color: chatter?.color ?? data.info.color,
           },
         };
 
         socket.emit('action', actionData);
         socket.broadcast.to(userGuid).emit('action', actionData);
+
+        this.actionService.saveChatterAction(user.userId, action);
       }
 
       const message = this.chatMessageService.formatMessage(data.message);
@@ -155,6 +156,7 @@ export class SocketService<
           info: {
             ...data.info,
             sprite: chatter?.sprite ?? 'dude',
+            color: chatter?.color ?? data.info.color,
           },
         };
 

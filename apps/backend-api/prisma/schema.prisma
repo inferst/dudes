@@ -88,6 +88,7 @@ model Platform {
   name      String      @unique @db.VarChar(255)
   userToken UserToken[]
   rewards   Reward[]
+  chatters  Chatter[]
 }
 
 model Reward {
@@ -104,9 +105,12 @@ model Reward {
 }
 
 model Chatter {
-  id          Int    @id @default(autoincrement())
-  userId      Int
-  user        User   @relation(fields: [userId], references: [id])
-  chatterName String
-  sprite      String
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  platformId Int
+  platform   Platform @relation(fields: [platformId], references: [id])
+  chatterId  String   @db.VarChar(255)
+  sprite     String   @default("")
+  color      String   @default("")
 }

@@ -9,6 +9,8 @@
     "w": 32,
     "h": 32
   },
+  "scale": 4,
+  "flip": true,
   "colored": [
     "Body"
   ]

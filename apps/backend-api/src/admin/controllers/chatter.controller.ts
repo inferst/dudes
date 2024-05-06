@@ -22,6 +22,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ChatterRepository } from '../repositories/chatter.repository';
+import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
 
 @Controller('/chatter')
 export class ChatterController {
@@ -66,7 +67,12 @@ export class ChatterController {
           id: user.userId,
         },
       },
-      chatterName: data.chatterName,
+      platform: {
+        connect: {
+          id: TWITCH_PLATFORM_ID,
+        },
+      },
+      chatterId: data.chatterId,
       sprite: data.sprite,
     };
 
