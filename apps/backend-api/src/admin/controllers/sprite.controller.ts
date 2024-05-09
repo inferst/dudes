@@ -2,7 +2,7 @@ import { ConfigService } from '@app/backend-api/config/config.service';
 import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
 import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Post } from '@nestjs/common';
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import { firstValueFrom } from 'rxjs';
 import { z } from 'zod';
 import { UserRepository } from '../repositories';
@@ -65,31 +65,34 @@ export class SpriteController {
     const src = 'apps/frontend-client/public/evotars/';
     let spriteName = name;
 
-    if (
-      !existsSync(src + spriteName + '/sprite.json') ||
-      !existsSync(src + spriteName + '/data.json')
-    ) {
+    const spriteSrc = src + spriteName + '/sprite.json';
+    const dataSrc = src + spriteName + '/data.json';
+
+    if (!existsSync(spriteSrc) || !existsSync(dataSrc)) {
       spriteName = 'dude';
     }
 
     const path = this.configService.clientUrl + '/evotars/' + spriteName;
 
-    const [sprite, data] = await Promise.all([
-      firstValueFrom(this.httpService.get(path + '/sprite.json')),
-      firstValueFrom(this.httpService.get(path + '/data.json')),
-    ]);
+    const spriteFile = readFileSync(spriteSrc);
+    const sprite = JSON.parse(spriteFile.toString());
+
+    const dataFile = readFileSync(dataSrc);
+    const data = JSON.parse(dataFile.toString());
 
     return {
-      data: data.data,
+      data: data,
       image: path + '/sprite.png',
-      sprite: sprite.data,
+      sprite: sprite,
     };
   }
 
   private async getTechSpriteData(name: string): Promise<any> {
     const src = 'apps/frontend-client/public/tech';
+    const spriteSrc = src + '/sprite.json';
+    const dataSrc = src + '/data.json';
 
-    if (!existsSync(src + '/sprite.json') || !existsSync(src + '/data.json')) {
+    if (!existsSync(spriteSrc) || !existsSync(dataSrc)) {
       return;
     }
 
@@ -101,10 +104,11 @@ export class SpriteController {
 
     const path = this.configService.clientUrl + '/tech';
 
-    const [sprite, data] = await Promise.all([
-      firstValueFrom(this.httpService.get(path + '/sprite.json')),
-      firstValueFrom(this.httpService.get(path + '/data.json')),
-    ]);
+    const spriteFile = readFileSync(spriteSrc);
+    const sprite = JSON.parse(spriteFile.toString());
+
+    const dataFile = readFileSync(dataSrc);
+    const data = JSON.parse(dataFile.toString());
 
     return {
       data: data.data,
