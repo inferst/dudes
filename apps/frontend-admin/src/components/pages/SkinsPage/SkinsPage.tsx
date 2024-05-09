@@ -26,7 +26,10 @@ import {
   TableRow,
 } from '../../ui/table';
 import { useChattersQuery } from '@app/frontend-admin/queries/chatters';
-import { useCreateChatterMutation, useDeleteChatterMutation } from '@app/frontend-admin/mutations/chatters';
+import {
+  useCreateChatterMutation,
+  useDeleteChatterMutation,
+} from '@app/frontend-admin/mutations/chatters';
 import { Loader } from '../../common/Loader';
 
 export function SkinsPage() {
@@ -57,11 +60,11 @@ export function SkinsPage() {
   const uuid = nanoid();
 
   const onSubmit = (data: CreateChatterForm) => {
-    if (chatters.some((chatter) => chatter.chatterName === data.chatterName)) {
+    if (chatters.some((chatter) => chatter.chatterId === data.chatterId)) {
       setIsError(true);
     } else {
       createMutation.mutate(data);
-      form.setValue('chatterName', '');
+      form.setValue('chatterId', '');
       setIsError(false);
     }
   };
@@ -80,20 +83,20 @@ export function SkinsPage() {
           <form id={uuid} name={uuid} onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="chatter-name" className="text-right">
-                {t('SkinsPage.chatterNameText', {
-                  defaultValue: 'Chatter name',
+                {t('SkinsPage.chatterIdText', {
+                  defaultValue: 'Chatter id',
                 })}
               </Label>
               <div className="col-span-2">
                 <Input
                   id="chatter-name"
                   className="col-span-3"
-                  {...form.register('chatterName')}
+                  {...form.register('chatterId')}
                 />
               </div>
               <ErrorMessage
                 errors={form.formState.errors}
-                name="chatterName"
+                name="chatterId"
                 render={({ message }) => (
                   <p className="col-start-2 col-span-3 text-sm mb-2 text-destructive">
                     {message}
@@ -160,9 +163,9 @@ export function SkinsPage() {
           </TableCaption>
           <TableBody>
             {chatters.map((chatter, index) => (
-              <TableRow key={chatter.chatterName}>
+              <TableRow key={chatter.chatterId}>
                 <TableCell className="w-20">{index + 1}</TableCell>
-                <TableCell>{chatter.chatterName}</TableCell>
+                <TableCell>{chatter.chatterId}</TableCell>
                 <TableCell>{chatter.sprite}</TableCell>
                 <TableCell>
                   <Button

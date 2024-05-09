@@ -5,6 +5,7 @@ import {
   isDashUserActionEntity,
   isGrowUserActionEntity,
   isJumpUserActionEntity,
+  isSpriteUserActionEntity,
 } from '../dto';
 
 export const jumpActionData = {
@@ -46,6 +47,14 @@ export const dashActionData = {
   }),
 };
 
+export const spriteActionData = {
+  data: z.object({
+    action: z.object({
+      sprite: z.string(),
+    }),
+  }),
+};
+
 export const getActionableEntityFormSchema = (
   action: ActionEntity,
   schema: ZodObject<ZodRawShape>
@@ -64,6 +73,10 @@ export const getActionableEntityFormSchema = (
 
   if (isDashUserActionEntity(action)) {
     return schema.extend(dashActionData);
+  }
+
+  if (isSpriteUserActionEntity(action)) {
+    return schema.extend(spriteActionData);
   }
 
   return schema;

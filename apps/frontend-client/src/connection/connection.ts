@@ -5,7 +5,7 @@ import {
   ServerToClientsEvents,
   SettingsEntity,
   TwitchChatterEntity,
-  UserActionEntity
+  UserActionEntity,
 } from '@lib/types';
 import { Socket, io } from 'socket.io-client';
 

@@ -6,13 +6,18 @@ import { Prisma, Chatter } from '@prisma/client';
 export class ChatterRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async getChatterByName(name: string): Promise<Chatter | null> {
+  public async getChatterById(
+    userId: number,
+    chatterId: string
+  ): Promise<Chatter | null> {
     const data = await this.prismaService.chatter.findFirst({
       where: {
-        chatterName: {
-          equals: name,
-          mode: 'insensitive'
-        }
+        user: {
+          id: userId,
+        },
+        chatterId: {
+          equals: chatterId,
+        },
       },
     });
 

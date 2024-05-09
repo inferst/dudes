@@ -1,0 +1,16 @@
+{
+  "name": "tech",
+  "collider": {
+    "x": 0,
+    "y": 0,
+    "w": 128,
+    "h": 128
+  },
+  "size": {
+    "w": 128,
+    "h": 128
+  },
+  "scale": 1,
+  "flip": false,
+  "colored": []
+}

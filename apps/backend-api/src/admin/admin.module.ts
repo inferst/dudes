@@ -4,11 +4,16 @@ import {
   ActionService,
   ChatMessageService,
   SocketService,
+  SpriteService,
 } from '@app/backend-api/admin/services';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '../config/config.service';
 import { PrismaService } from '../database/prisma.service';
-import { CommandController, UserController } from './controllers';
+import {
+  CommandController,
+  SpriteController,
+  UserController,
+} from './controllers';
 import { ActionController } from './controllers/action.controller';
 import { RewardController } from './controllers/reward.controller';
 import { SettingsController } from './controllers/settings.controller';
@@ -23,6 +28,7 @@ import { SessionController } from './controllers/session.controller';
 import { HttpModule } from '@nestjs/axios';
 import { ChatterController } from './controllers/chatter.controller';
 import { ChatterRepository } from './repositories/chatter.repository';
+import { ConfigModule } from '../config/config.module';
 
 const twitchClientFactory = {
   provide: 'TWITCH_CLIENT_FACTORY',
@@ -47,7 +53,7 @@ const twitchClientFactory = {
 };
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, ConfigModule],
   controllers: [
     UserController,
     CommandController,
@@ -56,6 +62,7 @@ const twitchClientFactory = {
     SettingsController,
     SessionController,
     ChatterController,
+    SpriteController,
   ],
   providers: [
     twitchClientFactory,
@@ -66,6 +73,7 @@ const twitchClientFactory = {
     EventsGateway,
     SocketService,
     ActionService,
+    SpriteService,
     UserRepository,
     CommandRepository,
     ActionRepository,

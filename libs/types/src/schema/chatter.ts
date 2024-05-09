@@ -2,23 +2,27 @@ import { z } from 'zod';
 
 const id = z.number().int().min(1);
 
-const chatterName = z.string().min(1).max(255);
+const chatterId = z.string().min(1).max(255);
 
 const sprite = z.string().min(1).max(255);
 
-export const updateChatterDtoSchema = z.object({
-  id,
-  chatterName: chatterName,
-  sprite: sprite,
-}).strict();
+export const updateChatterDtoSchema = z
+  .object({
+    id,
+    chatterId: chatterId,
+    sprite: sprite,
+  })
+  .strict();
 
-export const createChatterDtoSchema = z.object({
-  chatterName: chatterName,
-  sprite: sprite,
-}).strict();
+export const createChatterDtoSchema = z
+  .object({
+    chatterId: chatterId,
+    sprite: sprite,
+  })
+  .strict();
 
 export const createChatterFormSchema = z.object({
-  chatterName: chatterName,
+  chatterId: chatterId,
   sprite: sprite,
 });
 

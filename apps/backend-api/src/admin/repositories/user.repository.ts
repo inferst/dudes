@@ -18,7 +18,9 @@ export class UserRepository {
   public async getTwitchUserByGuid(guid: string): Promise<UserToken | null> {
     const user = await this.prismaService.user.findFirst({
       where: {
-        guid,
+        guid: {
+          equals: guid,
+        },
       },
     });
 
@@ -28,11 +30,11 @@ export class UserRepository {
           userId_platformId: {
             userId: user.id,
             platformId: TWITCH_PLATFORM_ID,
-          }
-        }
+          },
+        },
       });
 
-      return userToken
+      return userToken;
     }
 
     return null;
