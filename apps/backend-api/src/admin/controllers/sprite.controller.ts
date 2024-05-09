@@ -117,9 +117,9 @@ export class SpriteController {
     const data = JSON.parse(dataFile.toString());
 
     return {
-      data: data.data,
+      data: data,
       image: path + '/' + fileName,
-      sprite: sprite.data,
+      sprite: sprite,
     };
   }
 }
