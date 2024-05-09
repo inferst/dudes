@@ -55,13 +55,14 @@ jobs:
         DATABASE_URL: ${{ vars.DATABASE_URL }}
         VITE_CLIENT_SOCKET_HOST: ${{ vars.VITE_CLIENT_SOCKET_HOST }}
         VITE_CJS_IGNORE_WARNING: ${{ vars.VITE_CJS_IGNORE_WARNING }}
+        VITE_API_URL: ${{ vars.VITE_API_URL }}
       with:
         host: ${{ secrets.hostname }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         command_timeout: 30m
-        envs: ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,VITE_CJS_IGNORE_WARNING,VITE_CLIENT_SOCKET_HOST,REMIX_PORT
+        envs: ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,VITE_CJS_IGNORE_WARNING,VITE_CLIENT_SOCKET_HOST,VITE_API_URL,REMIX_PORT
         script: |
           cd /srv/dudes
           docker compose -f docker-compose.production.yaml down
@@ -71,7 +72,7 @@ jobs:
     timeout-minutes: 5
     needs: run_docker_compose_up
     steps:
-    - name: Check the deployed service URL
+    - name: Heath check
       uses: jtalk/url-health-check-action@v3
       with:
         url: https://dudes2.mikedanagam.space/api/meta
