@@ -27,12 +27,17 @@ jobs:
     steps:
     - name: Run Dockerfile
       uses: appleboy/ssh-action@v0.1.10
+      env:
+        VITE_CLIENT_SOCKET_HOST: ${{ vars.VITE_CLIENT_SOCKET_HOST }}
+        VITE_CJS_IGNORE_WARNING: ${{ vars.VITE_CJS_IGNORE_WARNING }}
+        VITE_API_URL: ${{ vars.VITE_API_URL }}
       with:
         host: ${{ secrets.hostname }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         command_timeout: 30m
+        envs: VITE_CJS_IGNORE_WARNING,VITE_CLIENT_SOCKET_HOST,VITE_API_URL
         script: |
           cd /srv/dudes
           docker system prune --all --force
@@ -53,16 +58,13 @@ jobs:
         SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
         REMIX_PORT: ${{ secrets.REMIX_PORT }}
         DATABASE_URL: ${{ vars.DATABASE_URL }}
-        VITE_CLIENT_SOCKET_HOST: ${{ vars.VITE_CLIENT_SOCKET_HOST }}
-        VITE_CJS_IGNORE_WARNING: ${{ vars.VITE_CJS_IGNORE_WARNING }}
-        VITE_API_URL: ${{ vars.VITE_API_URL }}
       with:
         host: ${{ secrets.hostname }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         command_timeout: 30m
-        envs: ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,VITE_CJS_IGNORE_WARNING,VITE_CLIENT_SOCKET_HOST,VITE_API_URL,REMIX_PORT
+        envs: ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,REMIX_PORT
         script: |
           cd /srv/dudes
           docker compose -f docker-compose.production.yaml down
