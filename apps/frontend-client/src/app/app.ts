@@ -3,6 +3,8 @@ import { Evotars } from 'evotars';
 import { Debug } from '../debug/debug';
 import { getGuid } from '../utils/utils';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export class App {
   private connection = new Connection();
 
@@ -13,19 +15,16 @@ export class App {
       sounds,
       spriteLoaderFn: async (name: string) => {
         try {
-          const data = await fetch(
-            import.meta.env.VITE_API_URL + '/admin/sprite/',
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-              },
-              body: JSON.stringify({
-                sprite: name,
-                guid: guid,
-              }),
-            }
-          );
+          const data = await fetch(apiUrl + '/admin/sprite/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=utf-8',
+            },
+            body: JSON.stringify({
+              sprite: name,
+              guid: guid,
+            }),
+          });
 
           return await data.json();
         } catch (e) {
