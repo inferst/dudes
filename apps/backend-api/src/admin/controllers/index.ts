@@ -1,2 +1,3 @@
 export { UserController } from './user.controller';
-export { CommandController as CommandController } from './command.controller';
+export { CommandController } from './command.controller';
+export { SpriteController } from './sprite.controller';

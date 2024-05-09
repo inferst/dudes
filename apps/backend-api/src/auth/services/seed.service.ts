@@ -5,6 +5,7 @@ import { defaultJumpCommandSeed } from '@app/backend-api/database/seed/commands/
 import { defaultColorCommandSeed } from '@app/backend-api/database/seed/commands/color';
 import { defaultGrowCommandSeed } from '@app/backend-api/database/seed/commands/grow';
 import { defaultDashCommandSeed } from '@app/backend-api/database/seed/commands/dash';
+import { defaultSpriteCommandSeed } from '@app/backend-api/database/seed/commands/sprite';
 
 @Injectable()
 export class SeedService {
@@ -15,5 +16,6 @@ export class SeedService {
     await defaultColorCommandSeed(this.prismaService, user);
     await defaultGrowCommandSeed(this.prismaService, user);
     await defaultDashCommandSeed(this.prismaService, user);
+    await defaultSpriteCommandSeed(this.prismaService, user);
   }
 }

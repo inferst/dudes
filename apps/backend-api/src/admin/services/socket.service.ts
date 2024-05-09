@@ -80,7 +80,7 @@ export class SocketService<
 
     const userGuid = socket.handshake.auth.userGuid;
     if (!userGuid) {
-      this.logger.warn('User guid does not provided.');
+      this.logger.warn('User guid is not provided.');
       socket.disconnect();
       return;
     }
@@ -129,22 +129,28 @@ export class SocketService<
         data
       );
 
-      const chatter = await this.chatterRepository.getChatterById(data.userId);
+      const chatter = await this.chatterRepository.getChatterById(
+        user.userId,
+        data.userId
+      );
+
+      const sprite = chatter?.sprite ? chatter.sprite : 'default';
+      const color = chatter?.color ? chatter.color : data.info.color;
 
       if (action) {
         const actionData = {
           ...action,
           info: {
             ...action.info,
-            sprite: chatter?.sprite ?? 'dude',
-            color: chatter?.color ?? data.info.color,
+            sprite,
+            color,
           },
         };
 
         socket.emit('action', actionData);
         socket.broadcast.to(userGuid).emit('action', actionData);
 
-        this.actionService.saveChatterAction(user.userId, action);
+        this.actionService.storeChatterAction(user.userId, action);
       }
 
       const message = this.chatMessageService.formatMessage(data.message);
@@ -155,8 +161,8 @@ export class SocketService<
           message,
           info: {
             ...data.info,
-            sprite: chatter?.sprite ?? 'dude',
-            color: chatter?.color ?? data.info.color,
+            sprite,
+            color,
           },
         };
 

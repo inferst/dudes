@@ -13,6 +13,7 @@ import { TwitchRewardRepository } from '../repositories/twitch-reward.repository
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 import { ChatterRepository } from '../repositories/chatter.repository';
 import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
+import { SpriteService } from './sprite.service';
 
 type CooldownStorage = {
   [id: string]: NodeJS.Timeout;
@@ -25,6 +26,7 @@ export class ActionService {
   private commandCooldownStorage: CooldownStorage = {};
 
   public constructor(
+    private readonly spriteService: SpriteService,
     private readonly commandRepository: CommandRepository,
     private readonly actionRepository: ActionRepository,
     private readonly chatterRepository: ChatterRepository,
@@ -82,20 +84,38 @@ export class ActionService {
       data = { ...Object.fromEntries(entries) };
     }
 
-    return {
+    const result = {
       userId: message.userId,
       cooldown: command.cooldown,
       ...action,
       data: { ...action.data, ...data },
       info: message.info,
     };
+
+    if (await this.isUserActionValid(userId, result)) {
+      return result;
+    }
   }
 
-  public async saveChatterAction(
+  public async isUserActionValid(
+    userId: number,
+    action: UserActionEntity
+  ): Promise<boolean> {
+    if (isSpriteUserActionEntity(action)) {
+      return this.spriteService.isSpriteAvailable(userId, action.data.sprite);
+    }
+
+    return true;
+  }
+
+  public async storeChatterAction(
     userId: number,
     action: UserActionEntity
   ): Promise<void> {
-    let chatter = await this.chatterRepository.getChatterById(action.userId);
+    let chatter = await this.chatterRepository.getChatterById(
+      userId,
+      action.userId
+    );
 
     if (!chatter) {
       const data = {

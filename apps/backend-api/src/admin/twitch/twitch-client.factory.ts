@@ -2,8 +2,10 @@ import { ConfigService } from '@app/backend-api/config/config.service';
 import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
 import {
-  MessageEntity, RaidData,
-  RewardRedemptionData, TwitchChatterEntity
+  MessageEntity,
+  RaidData,
+  RewardRedemptionData,
+  TwitchChatterEntity,
 } from '@lib/types';
 import { HttpException, Logger } from '@nestjs/common';
 import { UserToken } from '@prisma/client';
@@ -38,6 +40,8 @@ export class TwitchClientFactory {
 
     this.authProvider.onRefresh(async (userId, newTokenData) => {
       if (newTokenData.refreshToken) {
+        this.logger.log('Refreshed a token for user.', { userId });
+
         await this.prisma.userToken.update({
           where: {
             platformUserId_platformId: {
@@ -56,7 +60,7 @@ export class TwitchClientFactory {
     });
 
     this.authProvider.onRefreshFailure((userId) => {
-      this.logger.log('Failed to refresh token.', { userId });
+      this.logger.error('Failed to refresh token.', { userId });
     });
 
     this.apiClient = new ApiClient({ authProvider: this.authProvider });
@@ -134,26 +138,29 @@ export class TwitchClientFactory {
     };
 
     const onRaid = (listener: (data: RaidData) => void): void => {
-      eventSubWsListener.onChannelRaidTo(userToken.platformUserId, async (data) => {
-        const broadcaster = await data.getRaidingBroadcaster();
-        const apiClient = await this.createApiClient(userToken.userId);
-        const color = await apiClient.chat.getColorForUser(broadcaster.id);
+      eventSubWsListener.onChannelRaidTo(
+        userToken.platformUserId,
+        async (data) => {
+          const broadcaster = await data.getRaidingBroadcaster();
+          const apiClient = await this.createApiClient(userToken.userId);
+          const color = await apiClient.chat.getColorForUser(broadcaster.id);
 
-        listener({
-          broadcaster: {
-            id: broadcaster.id,
-            info: {
-              displayName: broadcaster.displayName,
-              color: color ?? undefined
-            }
-          },
-          viewers: data.viewers,
-        });
-      });
+          listener({
+            broadcaster: {
+              id: broadcaster.id,
+              info: {
+                displayName: broadcaster.displayName,
+                color: color ?? undefined,
+              },
+            },
+            viewers: data.viewers,
+          });
+        }
+      );
     };
 
     const onChatMessage = (listener: (data: MessageEntity) => void): void => {
-      chatClient.onMessage((channel, user, text, msg) => {
+      chatClient.onMessage((_channel, _user, text, msg) => {
         if (this.twitchUserFilterService.isBot(msg.userInfo.userName)) {
           return;
         }
@@ -187,7 +194,9 @@ export class TwitchClientFactory {
 
     let timerId: NodeJS.Timer;
 
-    const onChatters = (listener: (data: TwitchChatterEntity[]) => void): void => {
+    const onChatters = (
+      listener: (data: TwitchChatterEntity[]) => void
+    ): void => {
       timerId = setInterval(async () => {
         try {
           const apiClient = await this.createApiClient(userToken.userId);

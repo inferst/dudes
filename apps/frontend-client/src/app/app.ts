@@ -1,26 +1,36 @@
 import { Connection } from '@app/frontend-client/connection/connection';
 import { Evotars } from 'evotars';
 import { Debug } from '../debug/debug';
+import { getGuid } from '../utils/utils';
 
 export class App {
   private connection = new Connection();
 
   public async init(): Promise<void> {
+    const guid = getGuid();
     const sounds = { jump: { src: '/client/sounds/jump.mp3' } };
     const dudes = new Evotars(document.body, {
       sounds,
       spriteLoaderFn: async (name: string) => {
-        const path = '/client/evotars/' + name + '/';
-        const sprite = await fetch(path + 'sprite.json');
-        const spriteJson = await sprite.json();
-        const data = await fetch(path + 'data.json');
-        const dataJson = await data.json();
+        try {
+          const data = await fetch(
+            import.meta.env.VITE_API_URL + '/admin/sprite/',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+              },
+              body: JSON.stringify({
+                sprite: name,
+                guid: guid,
+              }),
+            }
+          );
 
-        return {
-          data: dataJson,
-          image: path + 'sprite.png',
-          sprite: spriteJson,
-        };
+          return await data.json();
+        } catch (e) {
+          return;
+        }
       },
     });
 

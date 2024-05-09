@@ -22,37 +22,35 @@ export class Debug {
         userId: '1',
         cooldown: 0,
         data: {
-          scale: 4,
+          sprite: 'sith',
         },
         description: '',
         id: 1,
-        name: 'grow',
-        title: 'Dash',
+        name: 'sprite',
+        title: 'Sprite',
         info: {
           displayName: 'haha',
           color: 'yellow',
           sprite: 'dude',
         },
       });
-    }, 1000);
 
-    setTimeout(() => {
       this.dudes.processAction({
         userId: '1',
         cooldown: 0,
         data: {
-          force: 15,
+          color: 'cyan',
         },
         description: '',
         id: 1,
-        name: 'dash',
-        title: 'Dash',
+        name: 'color',
+        title: 'Color',
         info: {
           displayName: 'haha',
           color: 'yellow',
           sprite: 'dude',
         },
       });
-    }, 6000);
+    }, 2000);
   }
 }

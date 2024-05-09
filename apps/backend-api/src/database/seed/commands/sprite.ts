@@ -29,9 +29,9 @@ export async function defaultSpriteCommandSeed(
   if (!foundSpriteCommand) {
     await prisma.command.create({
       data: {
-        text: `!sprite`,
+        text: `!skin`,
         cooldown: 0,
-        isActive: true,
+        isActive: false,
         action: {
           connect: {
             id: spriteAction.id,
