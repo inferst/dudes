@@ -65,11 +65,14 @@ export class SpriteController {
     const src = 'apps/frontend-client/public/evotars/';
     let spriteName = name;
 
-    const spriteSrc = src + spriteName + '/sprite.json';
-    const dataSrc = src + spriteName + '/data.json';
+    let spriteSrc = src + spriteName + '/sprite.json';
+    let dataSrc = src + spriteName + '/data.json';
 
     if (!existsSync(spriteSrc) || !existsSync(dataSrc)) {
       spriteName = 'dude';
+
+      spriteSrc = src + spriteName + '/sprite.json';
+      dataSrc = src + spriteName + '/data.json';
     }
 
     const path = this.configService.clientUrl + '/evotars/' + spriteName;
@@ -79,6 +82,8 @@ export class SpriteController {
 
     const dataFile = readFileSync(dataSrc);
     const data = JSON.parse(dataFile.toString());
+
+    console.log(spriteSrc, dataSrc);
 
     return {
       data: data,
@@ -97,6 +102,7 @@ export class SpriteController {
     }
 
     const files = readdirSync(src);
+
     const fileName =
       files.find((file: string) =>
         file.toLowerCase().startsWith(name.toLowerCase())
