@@ -83,8 +83,6 @@ export class SpriteController {
     const dataFile = readFileSync(dataSrc);
     const data = JSON.parse(dataFile.toString());
 
-    console.log(spriteSrc, dataSrc);
-
     return {
       data: data,
       image: path + '/sprite.png',
