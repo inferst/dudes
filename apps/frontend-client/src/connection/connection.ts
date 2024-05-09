@@ -16,6 +16,8 @@ export class Connection {
     const path = window.location.pathname.split('/');
     const userGuid = path[path.length - 1];
 
+    console.log(import.meta.env);
+
     const socket = io(import.meta.env.VITE_CLIENT_SOCKET_HOST, {
       transports: ['websocket'],
       auth: {
