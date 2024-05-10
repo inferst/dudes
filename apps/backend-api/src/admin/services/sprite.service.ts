@@ -26,9 +26,11 @@ export class SpriteService {
     try {
       const src = 'apps/frontend-client/public/' + setName + '/set.json';
       const file = readFileSync(src);
-      const set = JSON.parse(file.toString());
+      const set = JSON.parse(file.toString()) as string[];
 
-      return set.includes(spriteName);
+      return set.some(
+        (sprite: string) => sprite.toLowerCase() == spriteName.toLowerCase()
+      );
     } catch (e) {
       return false;
     }
