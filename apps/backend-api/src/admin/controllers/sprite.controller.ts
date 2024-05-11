@@ -1,12 +1,11 @@
 import { ConfigService } from '@app/backend-api/config/config.service';
 import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
-import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Post } from '@nestjs/common';
 import { existsSync, readFileSync, readdirSync } from 'fs';
-import { firstValueFrom } from 'rxjs';
 import { z } from 'zod';
 import { UserRepository } from '../repositories';
 import { SettingsRepository } from '../repositories/settings.repository';
+import { SpriteService } from '../services';
 
 type SpriteDto = {
   guid: string;
@@ -23,10 +22,10 @@ export const spriteDtoSchema = z
 @Controller('/sprite')
 export class SpriteController {
   constructor(
-    private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly userRepository: UserRepository,
-    private readonly settingsRepository: SettingsRepository
+    private readonly settingsRepository: SettingsRepository,
+    private readonly spriteService: SpriteService
   ) {}
 
   @Post()
@@ -101,10 +100,10 @@ export class SpriteController {
 
     const files = readdirSync(src);
 
+    const spriteName = this.spriteService.findSetSprite('tech', name) ?? 'tech';
+
     const fileName =
-      files.find((file: string) =>
-        file.toLowerCase().startsWith(name.toLowerCase())
-      ) ?? 'tech.png';
+      files.find((file: string) => file == spriteName + '.png') ?? 'tech.png';
 
     const path = this.configService.clientUrl + '/tech';
 
@@ -114,9 +113,11 @@ export class SpriteController {
     const dataFile = readFileSync(dataSrc);
     const data = JSON.parse(dataFile.toString());
 
+    const image = path + '/' + fileName;
+
     return {
       data: data,
-      image: path + '/' + fileName,
+      image: image,
       sprite: sprite,
     };
   }
