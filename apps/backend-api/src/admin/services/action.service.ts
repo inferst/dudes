@@ -75,13 +75,7 @@ export class ActionService {
 
     if (command.data.arguments && command.data.arguments.length > 0) {
       const argsMessage = message.message.split(command.text)[1];
-      const args = argsMessage.split(' ').filter((arg) => arg);
-
-      const entries = command.data.arguments
-        .map((argument, i) => [argument, args[i]])
-        .filter((item) => item[1]);
-
-      data = { ...Object.fromEntries(entries) };
+      data = this.getArgumentsFromText(command.data.arguments, argsMessage);
     }
 
     const result = {
@@ -94,6 +88,26 @@ export class ActionService {
 
     if (await this.isUserActionValid(userId, result)) {
       return result;
+    }
+  }
+
+  private getArgumentsFromText(
+    args: string[],
+    text: string
+  ): Record<string, string> {
+    if (args.length == 0) {
+      return {};
+    } else if (args.length == 1) {
+      return {
+        [args[0]]: text,
+      };
+    } else {
+      const textArgs = text.split(' ').filter((arg) => arg);
+      const entries = args
+        .map((argument, i) => [argument, textArgs[i]])
+        .filter((arg) => arg[1]);
+
+      return { ...Object.fromEntries(entries) };
     }
   }
 
@@ -184,13 +198,10 @@ export class ActionService {
     let data = { ...action.data, ...twitchReward.data.action };
 
     if (twitchReward.data.arguments && twitchReward.data.arguments.length > 0) {
-      const args = redemption.input.split(' ').filter((arg) => arg);
-
-      const entries = twitchReward.data.arguments
-        .map((argument, i) => [argument, args[i]])
-        .filter((item) => item[1]);
-
-      data = { ...Object.fromEntries(entries) };
+      data = this.getArgumentsFromText(
+        twitchReward.data.arguments,
+        redemption.input
+      );
     }
 
     return {

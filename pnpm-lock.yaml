@@ -153,8 +153,8 @@ dependencies:
     specifier: ^2.1.0
     version: 2.1.0
   evotars:
-    specifier: ^0.0.6
-    version: 0.0.6
+    specifier: ^0.0.7
+    version: 0.0.7
   express:
     specifier: ^4.18.3
     version: 4.18.3
@@ -10310,8 +10310,8 @@ packages:
     engines: {node: '>=0.8.x'}
     dev: true
 
-  /evotars@0.0.6:
-    resolution: {integrity: sha512-4jaXmqDsvjhAu/P8gs5RrXAeMeAw5Pp/Ra6PJA1phS2dscyG1s0aPO+15WMe2arNXiGwGkE3UY1gOru7LXa2wQ==}
+  /evotars@0.0.7:
+    resolution: {integrity: sha512-LqfeLjBh/vSK7n16xtDxaY3QBNEomusPL1kpVwUAsNUJNnbfsnvm/q4gS3/yzdUwsh0w+ubGkAGC4D+iUodjFw==}
     dependencies:
       '@tweenjs/tween.js': 23.1.1
       pixi.js: 7.4.2
