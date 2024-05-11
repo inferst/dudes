@@ -41,7 +41,6 @@ export class SpriteService {
         const filteredName = setSprite.toLowerCase().replace(regexp, '');
 
         if (filteredName.startsWith(name)) {
-          console.log(setSprite, filteredName, name);
           return setSprite;
         }
       }
