@@ -4,20 +4,20 @@
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 128,
-        "h": 128
+        "w": 512,
+        "h": 512
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 128,
-        "h": 128
+        "w": 512,
+        "h": 512
       },
       "sourceSize": {
-        "w": 128,
-        "h": 128
+        "w": 512,
+        "h": 512
       },
       "duration": 100
     }
@@ -28,8 +28,8 @@
     "image": "tech.png",
     "format": "RGBA8888",
     "size": {
-      "w": 128,
-      "h": 128
+      "w": 512,
+      "h": 512
     },
     "scale": "1",
     "frameTags": [

@@ -22,17 +22,43 @@ export class SpriteService {
     return this.setContainsSprite('evotars', spriteName);
   }
 
-  private setContainsSprite(setName: string, spriteName: string): boolean {
+  public findSetSprite(
+    setName: string,
+    spriteName: string
+  ): string | undefined {
     try {
-      const src = 'apps/frontend-client/public/' + setName + '/set.json';
+      const src = `apps/frontend-client/public/${setName}/set.json`;
       const file = readFileSync(src);
       const set = JSON.parse(file.toString()) as string[];
 
-      return set.some(
-        (sprite: string) => sprite.toLowerCase() == spriteName.toLowerCase()
-      );
+      const regexp = /[&\/\\#, ()$~%.'":*?<>{}-]/g;
+
+      const name = spriteName.toLowerCase().replace(regexp, '');
+
+      set.sort();
+
+      for (const setSprite of set) {
+        const filteredName = setSprite.toLowerCase().replace(regexp, '');
+
+        if (filteredName.startsWith(name)) {
+          console.log(setSprite, filteredName, name);
+          return setSprite;
+        }
+      }
+
+      for (const setSprite of set) {
+        const filteredName = setSprite.toLowerCase().replace(regexp, '');
+
+        if (filteredName.includes(name)) {
+          return setSprite;
+        }
+      }
     } catch (e) {
-      return false;
+      return;
     }
+  }
+
+  private setContainsSprite(setName: string, spriteName: string): boolean {
+    return !!this.findSetSprite(setName, spriteName);
   }
 }
