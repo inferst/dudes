@@ -74,7 +74,7 @@ export class ActionService {
     let data = { ...action.data, ...command.data.action };
 
     if (command.data.arguments && command.data.arguments.length > 0) {
-      const argsMessage = message.message.split(command.text)[1];
+      const argsMessage = message.message.split(command.text)[1].trim();
       data = this.getArgumentsFromText(command.data.arguments, argsMessage);
     }
 
@@ -102,7 +102,7 @@ export class ActionService {
         [args[0]]: text,
       };
     } else {
-      const textArgs = text.split(' ').filter((arg) => arg);
+      const textArgs = text.split(' ').filter((arg) => arg.trim());
       const entries = args
         .map((argument, i) => [argument, textArgs[i]])
         .filter((arg) => arg[1]);
