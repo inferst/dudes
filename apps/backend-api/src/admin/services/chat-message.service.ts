@@ -7,11 +7,10 @@ export class ChatMessageService {
   }
 
   public stripEmotes(message: string, emotes: string[]): string {
-    const formatted = emotes.reduce((result: string, emote: string) => {
-      return result.replaceAll(emote, '');
-    }, message);
-
-    return formatted.replace(/\s+/g, ' ');
+    return message
+      .split(' ')
+      .filter((word) => !emotes.includes(word))
+      .join(' ');
   }
 
   public formatMessage(message: string): string {
