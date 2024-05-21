@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   ActionEntity,
-  MessageEntity,
   RewardRedemptionData,
   UserActionEntity,
   isColorUserActionEntity,
@@ -17,6 +16,10 @@ import { SpriteService } from './sprite.service';
 
 type CooldownStorage = {
   [id: string]: NodeJS.Timeout;
+};
+
+export type UserActionData = {
+  data: PrismaJson.ActionData;
 };
 
 @Injectable()
@@ -37,8 +40,9 @@ export class ActionService {
 
   public async getUserActionByMessage(
     userId: number,
-    message: MessageEntity
-  ): Promise<UserActionEntity | undefined> {
+    message: string,
+    messageUserId: string
+  ): Promise<ActionEntity | undefined> {
     if (this.actions.length == 0) {
       this.actions = await this.actionRepository.getActions();
     }
@@ -47,9 +51,7 @@ export class ActionService {
       userId
     );
 
-    const command = commands.find((command) =>
-      message.message.includes(command.text)
-    );
+    const command = commands.find((command) => message.includes(command.text));
 
     if (!command) {
       return;
@@ -61,7 +63,7 @@ export class ActionService {
       return;
     }
 
-    const cooldownId = `${userId}_${message.userId}_${command.id}`;
+    const cooldownId = `${userId}_${messageUserId}_${command.id}`;
 
     if (this.commandCooldownStorage[cooldownId]) {
       return;
@@ -74,16 +76,14 @@ export class ActionService {
     let data = { ...action.data, ...command.data.action };
 
     if (command.data.arguments && command.data.arguments.length > 0) {
-      const argsMessage = message.message.split(command.text)[1].trim();
+      const argsMessage = message.split(command.text)[1].trim();
       data = this.getArgumentsFromText(command.data.arguments, argsMessage);
     }
 
     const result = {
-      userId: message.userId,
-      cooldown: command.cooldown,
       ...action,
+      cooldown: 0,
       data: { ...action.data, ...data },
-      info: message.info,
     };
 
     if (await this.isUserActionValid(userId, result)) {
@@ -113,7 +113,7 @@ export class ActionService {
 
   public async isUserActionValid(
     userId: number,
-    action: UserActionEntity
+    action: ActionEntity
   ): Promise<boolean> {
     if (isSpriteUserActionEntity(action)) {
       return this.spriteService.isSpriteAvailable(userId, action.data.sprite);
@@ -124,11 +124,12 @@ export class ActionService {
 
   public async storeChatterAction(
     userId: number,
-    action: UserActionEntity
+    action: ActionEntity,
+    actionUserId: string
   ): Promise<void> {
     let chatter = await this.chatterRepository.getChatterById(
       userId,
-      action.userId
+      actionUserId
     );
 
     if (!chatter) {
@@ -143,7 +144,7 @@ export class ActionService {
             id: TWITCH_PLATFORM_ID,
           },
         },
-        chatterId: action.userId,
+        chatterId: actionUserId,
       };
 
       chatter = await this.chatterRepository.create(data);
@@ -206,8 +207,8 @@ export class ActionService {
 
     return {
       userId: redemption.userId,
-      cooldown: 0,
       ...action,
+      cooldown: 0,
       data: { ...action.data, ...data },
       info: {
         displayName: redemption.userDisplayName,

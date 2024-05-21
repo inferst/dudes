@@ -2,7 +2,7 @@ import {
   MessageEntity,
   RaidData,
   RewardRedemptionData,
-  TwitchChatterEntity
+  TwitchChatterEntity,
 } from '@lib/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { UserToken } from '@prisma/client';

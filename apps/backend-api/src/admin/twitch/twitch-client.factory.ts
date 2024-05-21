@@ -18,6 +18,7 @@ import { EventClient } from '../event-client/event-client.factory';
 import { ChatMessageService } from '../services';
 import { TokenRevokedException } from './token-revoked.exception';
 import { TwitchUserFilterService } from './twitch-user-filter.service';
+import { EmoteService } from '../services/emote.service';
 
 const TWITCH_CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
@@ -31,7 +32,8 @@ export class TwitchClientFactory {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly twitchUserFilterService: TwitchUserFilterService,
-    private readonly chasMessageService: ChatMessageService
+    private readonly emoteService: EmoteService,
+    private readonly chatMessageService: ChatMessageService
   ) {
     this.authProvider = new RefreshingAuthProvider({
       clientId: this.configService.twitchClientId,
@@ -109,7 +111,7 @@ export class TwitchClientFactory {
     return this.apiClient;
   }
 
-  public createEventClient(userToken: UserToken): EventClient {
+  public async createEventClient(userToken: UserToken): Promise<EventClient> {
     const chatClient = new ChatClient({
       authProvider: this.authProvider,
       channels: [userToken.platformLogin],
@@ -118,6 +120,10 @@ export class TwitchClientFactory {
     const eventSubWsListener = new EventSubWsListener({
       apiClient: this.apiClient,
     });
+
+    const customEmotes = await this.emoteService.getEmotes(
+      userToken.platformUserId
+    );
 
     eventSubWsListener.start();
 
@@ -168,22 +174,47 @@ export class TwitchClientFactory {
         const name = msg.userInfo.displayName;
         const userId = msg.userInfo.userId;
 
-        const emotes = msg.emoteOffsets;
+        const emoteOffsets = msg.emoteOffsets;
 
-        const emoteNames = Array.from(emotes.entries()).map((entry) => {
-          const range = entry[1][0].split('-');
-          const start = Number(range[0]);
-          const end = Number(range[1]) + 1;
+        const twitchEmoteNames = Array.from(emoteOffsets.entries()).map(
+          (entry) => {
+            const range = entry[1][0].split('-');
+            const start = Number(range[0]);
+            const end = Number(range[1]) + 1;
 
-          return text.substring(start, end);
-        });
+            return text.substring(start, end);
+          }
+        );
 
-        const emoteIds = Array.from(emotes.entries()).map((entry) => entry[0]);
+        const emoteIds = Array.from(emoteOffsets.entries()).map(
+          (entry) => entry[0]
+        );
+
+        const otherEmotes = text
+          .split(' ')
+          .filter((word) => customEmotes[word]);
+
+        const emoteNames = twitchEmoteNames.concat(otherEmotes);
+
+        const strippedMessage = this.chatMessageService.stripEmotes(
+          text,
+          emoteNames
+        );
+
+        const twitchEmotes = emoteIds.map((emote) =>
+          this.getTwitchEmoteUrl(emote)
+        );
+
+        const emotes = twitchEmotes.concat(
+          otherEmotes
+            .map((emote) => customEmotes[emote])
+            .filter((emote) => emote)
+        );
 
         listener({
           userId: userId,
-          emotes: emoteIds.map((emote) => this.getTwitchEmoteUrl(emote)),
-          message: this.chasMessageService.stripEmotes(text, emoteNames),
+          emotes: emotes,
+          message: strippedMessage,
           info: {
             displayName: name,
             color: msg.userInfo.color,
@@ -252,6 +283,6 @@ export class TwitchClientFactory {
   }
 
   private getTwitchEmoteUrl(emote: string): string {
-    return `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/static/light/3.0`;
+    return `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/light/3.0`;
   }
 }

@@ -126,7 +126,8 @@ export class SocketService<
     eventClient.onChatMessage(async (data) => {
       const action = await this.actionService.getUserActionByMessage(
         user.userId,
-        data
+        data.message,
+        data.userId
       );
 
       const chatter = await this.chatterRepository.getChatterById(
@@ -136,12 +137,16 @@ export class SocketService<
 
       const sprite = chatter?.sprite ? chatter.sprite : 'default';
       const color = chatter?.color ? chatter.color : data.info.color;
+      const emotes = data.emotes;
 
       if (action) {
         const actionData = {
+          ...data,
           ...action,
+          emotes,
+          cooldown: 0,
           info: {
-            ...action.info,
+            ...data.info,
             sprite,
             color,
           },
@@ -150,7 +155,7 @@ export class SocketService<
         socket.emit('action', actionData);
         socket.broadcast.to(userGuid).emit('action', actionData);
 
-        this.actionService.storeChatterAction(user.userId, action);
+        this.actionService.storeChatterAction(user.userId, action, data.userId);
       }
 
       const message = this.chatMessageService.formatMessage(data.message);
@@ -159,6 +164,7 @@ export class SocketService<
         const messageData = {
           ...data,
           message,
+          emotes,
           info: {
             ...data.info,
             sprite,
