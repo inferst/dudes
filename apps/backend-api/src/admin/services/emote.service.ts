@@ -15,30 +15,34 @@ export class EmoteService {
   ) {}
 
   public async getEmotes(platformUserId: string): Promise<EmoteData> {
-    const hostUrl = this.configService.hostUrl;
-    const userUrl = `https://7tv.io/v3/users/twitch/${platformUserId}`;
-    const globalUrl = 'https://7tv.io/v3/emote-sets/global';
+    try {
+      const hostUrl = this.configService.hostUrl;
+      const userUrl = `https://7tv.io/v3/users/twitch/${platformUserId}`;
+      const globalUrl = 'https://7tv.io/v3/emote-sets/global';
 
-    const [userData, globalData] = await Promise.all<any>([
-      firstValueFrom(this.httpService.get(userUrl)),
-      firstValueFrom(this.httpService.get(globalUrl)),
-    ]);
+      const [userData, globalData] = await Promise.all<any>([
+        firstValueFrom(this.httpService.get(userUrl)),
+        firstValueFrom(this.httpService.get(globalUrl)),
+      ]);
 
-    const emotes = [
-      ...userData['data']['emote_set']['emotes'],
-      ...globalData['data']['emotes'],
-    ];
-
-    const emoteEntries = emotes.map((emote: any) => {
-      const host = emote['data']['host'];
-      const url =
-        host['url'] + (emote['data']['animated'] ? '/4x.gif' : '/4x.png');
-      return [
-        emote['name'],
-        url.replace('//cdn.7tv.app', hostUrl + '/7tv-emotes'),
+      const emotes = [
+        ...userData['data']['emote_set']['emotes'],
+        ...globalData['data']['emotes'],
       ];
-    });
 
-    return Object.fromEntries(emoteEntries);
+      const emoteEntries = emotes.map((emote: any) => {
+        const host = emote['data']['host'];
+        const url =
+          host['url'] + (emote['data']['animated'] ? '/4x.gif' : '/4x.png');
+        return [
+          emote['name'],
+          url.replace('//cdn.7tv.app', hostUrl + '/7tv-emotes'),
+        ];
+      });
+
+      return Object.fromEntries(emoteEntries);
+    } catch (e) {
+      return {};
+    }
   }
 }

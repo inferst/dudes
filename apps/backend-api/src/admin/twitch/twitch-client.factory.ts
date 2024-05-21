@@ -206,7 +206,9 @@ export class TwitchClientFactory {
         );
 
         const emotes = twitchEmotes.concat(
-          otherEmotes.map((emote) => customEmotes[emote])
+          otherEmotes
+            .map((emote) => customEmotes[emote])
+            .filter((emote) => emote)
         );
 
         listener({
