@@ -153,8 +153,8 @@ dependencies:
     specifier: ^2.1.0
     version: 2.1.0
   evotars:
-    specifier: ^0.0.7
-    version: 0.0.7
+    specifier: ^0.0.8
+    version: 0.0.8(@pixi/assets@7.3.2)(@pixi/core@7.3.2)(@pixi/display@7.3.2)(@pixi/sprite@7.3.2)
   express:
     specifier: ^4.18.3
     version: 4.18.3
@@ -4247,6 +4247,20 @@ packages:
       '@pixi/core': 7.4.2
     dependencies:
       '@pixi/core': 7.4.2
+    dev: false
+
+  /@pixi/gif@2.1.1(@pixi/assets@7.3.2)(@pixi/core@7.3.2)(@pixi/display@7.3.2)(@pixi/sprite@7.3.2):
+    resolution: {integrity: sha512-SGA0HP9/9a2gy3cylBkYOWaA13ffFYj0huGfm9c0QY6AM1XQPpsonzsObIHXgwRjJP+tTjNYU66ML2fqsblM+A==}
+    peerDependencies:
+      '@pixi/assets': ^7.0.0
+      '@pixi/core': ^7.0.0
+      '@pixi/display': ^7.0.0
+      '@pixi/sprite': ^7.0.0
+    dependencies:
+      '@pixi/assets': 7.3.2(@pixi/core@7.3.2)(@pixi/utils@7.3.2)
+      '@pixi/core': 7.3.2
+      '@pixi/display': 7.3.2(@pixi/core@7.3.2)
+      '@pixi/sprite': 7.3.2(@pixi/core@7.3.2)(@pixi/display@7.3.2)
     dev: false
 
   /@pixi/graphics@7.3.2(@pixi/core@7.3.2)(@pixi/display@7.3.2)(@pixi/sprite@7.3.2):
@@ -10310,12 +10324,18 @@ packages:
     engines: {node: '>=0.8.x'}
     dev: true
 
-  /evotars@0.0.7:
-    resolution: {integrity: sha512-LqfeLjBh/vSK7n16xtDxaY3QBNEomusPL1kpVwUAsNUJNnbfsnvm/q4gS3/yzdUwsh0w+ubGkAGC4D+iUodjFw==}
+  /evotars@0.0.8(@pixi/assets@7.3.2)(@pixi/core@7.3.2)(@pixi/display@7.3.2)(@pixi/sprite@7.3.2):
+    resolution: {integrity: sha512-dqDSP0bRAx4UNBJmhtyiBI+1teNwC4rYwrsu5aai8RlSZ6CpmBa8p+aF5/xZeZivUw0TL3RUkcJbrU0eCm70Yg==}
     dependencies:
+      '@pixi/gif': 2.1.1(@pixi/assets@7.3.2)(@pixi/core@7.3.2)(@pixi/display@7.3.2)(@pixi/sprite@7.3.2)
       '@tweenjs/tween.js': 23.1.1
       pixi.js: 7.4.2
       tinycolor2: 1.6.0
+    transitivePeerDependencies:
+      - '@pixi/assets'
+      - '@pixi/core'
+      - '@pixi/display'
+      - '@pixi/sprite'
     dev: false
 
   /execa@0.7.0:
