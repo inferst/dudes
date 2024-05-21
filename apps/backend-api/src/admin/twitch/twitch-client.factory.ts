@@ -281,6 +281,6 @@ export class TwitchClientFactory {
   }
 
   private getTwitchEmoteUrl(emote: string): string {
-    return `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/static/light/3.0`;
+    return `https://static-cdn.jtvnw.net/emoticons/v2/${emote}/default/light/3.0`;
   }
 }
