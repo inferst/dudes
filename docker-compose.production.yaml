@@ -5,6 +5,7 @@ services:
     container_name: dudes-app
     working_dir: /usr/src/dudes
     environment:
+      - HOST_URL=${HOST_URL}
       - ADMIN_URL=${ADMIN_URL}
       - CLIENT_URL=${CLIENT_URL}
       - TWITCH_CLIENT_ID=${TWITCH_CLIENT_ID}

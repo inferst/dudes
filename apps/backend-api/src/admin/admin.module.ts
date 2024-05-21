@@ -25,10 +25,11 @@ import { SettingsRepository } from './repositories/settings.repository';
 import { TwitchRewardRepository } from './repositories/twitch-reward.repository';
 import { EventClientFactory } from './event-client/event-client.factory';
 import { SessionController } from './controllers/session.controller';
-import { HttpModule } from '@nestjs/axios';
+import { HttpModule, HttpService } from '@nestjs/axios';
 import { ChatterController } from './controllers/chatter.controller';
 import { ChatterRepository } from './repositories/chatter.repository';
 import { ConfigModule } from '../config/config.module';
+import { EmoteService } from './services/emote.service';
 
 const twitchClientFactory = {
   provide: 'TWITCH_CLIENT_FACTORY',
@@ -36,19 +37,22 @@ const twitchClientFactory = {
     config: ConfigService,
     prisma: PrismaService,
     twitchUserFilterService: TwitchUserFilterService,
-    chasMessageService: ChatMessageService
+    chatMessageService: ChatMessageService,
+    emoteService: EmoteService
   ): TwitchClientFactory =>
     new TwitchClientFactory(
       config,
       prisma,
       twitchUserFilterService,
-      chasMessageService
+      emoteService,
+      chatMessageService
     ),
   inject: [
     ConfigService,
     PrismaService,
     TwitchUserFilterService,
     ChatMessageService,
+    EmoteService,
   ],
 };
 
@@ -70,6 +74,7 @@ const twitchClientFactory = {
     TwitchRewardRepository,
     TwitchUserFilterService,
     ChatMessageService,
+    EmoteService,
     EventsGateway,
     SocketService,
     ActionService,
