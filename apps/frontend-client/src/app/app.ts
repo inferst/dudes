@@ -11,7 +11,8 @@ export class App {
   public async init(): Promise<void> {
     const guid = getGuid();
     const sounds = { jump: { src: '/client/sounds/jump.mp3' } };
-    const dudes = new Evotars(document.body, {
+    const evotars = new Evotars(document.body, {
+      font: 'Rubik',
       sounds,
       spriteLoaderFn: async (name: string) => {
         try {
@@ -33,26 +34,26 @@ export class App {
       },
     });
 
-    await dudes.run();
+    await evotars.run();
 
     if (import.meta.env.DEV) {
-      new Debug(dudes);
+      new Debug(evotars);
     }
 
     this.connection.init();
 
     this.connection.onSettings((data) => {
-      dudes.updateSettings({
+      evotars.updateSettings({
         fallingEvotars: data.fallingDudes,
         fallingRaiders: data.fallingRaiders,
         showAnonymousEvotars: data.showAnonymousDudes,
       });
     });
 
-    this.connection.onMessage((data) => dudes.processMessage(data));
-    this.connection.onAction((data) => dudes.processAction(data));
-    this.connection.onChatters((data) => dudes.processChatters(data));
-    this.connection.onRaid((data) => dudes.processRaid(data));
+    this.connection.onMessage((data) => evotars.processMessage(data));
+    this.connection.onAction((data) => evotars.processAction(data));
+    this.connection.onChatters((data) => evotars.processChatters(data));
+    this.connection.onRaid((data) => evotars.processRaid(data));
   }
 }
 
