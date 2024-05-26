@@ -1,6 +1,6 @@
 import {
   MessageEntity,
-  RaidData,
+  RaidEntity,
   RewardRedemptionData,
   TwitchChatterEntity,
 } from '@lib/types';
@@ -13,7 +13,7 @@ export type EventClient = {
   disconnect: () => Promise<void>;
   onChatMessage: (listener: (data: MessageEntity) => void) => void;
   onChatters: (listener: (data: TwitchChatterEntity[]) => void) => void;
-  onRaid: (listener: (data: RaidData) => void) => void;
+  onRaid: (listener: (data: RaidEntity) => void) => void;
   onRewardRedemptionAdd: (
     listener: (data: RewardRedemptionData) => void
   ) => void;

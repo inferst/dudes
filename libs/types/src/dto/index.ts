@@ -6,4 +6,4 @@ export * from './reward';
 export * from './settings';
 export * from './user';
 export * from './action';
-export * from './event';
+export * from './raid';

@@ -60,6 +60,10 @@ export class SpriteController {
     return await this.getDudeSpriteData(body.sprite);
   }
 
+  private getFileData(src: string): any {
+    return JSON.parse(readFileSync(src).toString());
+  }
+
   private async getDudeSpriteData(name: string): Promise<any> {
     const src = 'apps/frontend-client/public/evotars/';
     let spriteName = name;
@@ -76,11 +80,8 @@ export class SpriteController {
 
     const path = this.configService.clientUrl + '/evotars/' + spriteName;
 
-    const spriteFile = readFileSync(spriteSrc);
-    const sprite = JSON.parse(spriteFile.toString());
-
-    const dataFile = readFileSync(dataSrc);
-    const data = JSON.parse(dataFile.toString());
+    const sprite = this.getFileData(spriteSrc);
+    const data = this.getFileData(dataSrc);
 
     return {
       data: data,
@@ -100,18 +101,18 @@ export class SpriteController {
 
     const files = readdirSync(src);
 
-    const spriteName = this.spriteService.findSetSprite('tech', name) ?? 'tech';
+    const spriteName = this.spriteService.findSetSprite('tech', name);
 
-    const fileName =
-      files.find((file: string) => file == spriteName + '.png') ?? 'tech.png';
+    if (!spriteName) {
+      return;
+    }
+
+    const fileName = files.find((file: string) => file == spriteName + '.png');
 
     const path = this.configService.clientUrl + '/tech';
 
-    const spriteFile = readFileSync(spriteSrc);
-    const sprite = JSON.parse(spriteFile.toString());
-
-    const dataFile = readFileSync(dataSrc);
-    const data = JSON.parse(dataFile.toString());
+    const sprite = this.getFileData(spriteSrc);
+    const data = this.getFileData(dataSrc);
 
     const image = path + '/' + fileName;
 

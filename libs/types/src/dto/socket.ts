@@ -1,6 +1,6 @@
 import { UserActionEntity } from './action';
 import { TwitchChatterEntity } from './chatter';
-import { RaidData } from './event';
+import { RaidEntity } from './raid';
 import { MessageEntity } from './message';
 import { SettingsEntity } from './settings';
 
@@ -9,7 +9,7 @@ export type ServerToClientsEvents = {
   settings: (data: SettingsEntity) => void;
   chatters: (data: TwitchChatterEntity[]) => void;
   action: (data: UserActionEntity) => void;
-  raid: (data: RaidData) => void;
+  raid: (data: RaidEntity) => void;
 };
 
 export interface ClientToServerEvents {

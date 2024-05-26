@@ -1,7 +1,11 @@
 import { UserRepository } from '@app/backend-api/admin/repositories';
 import { Injectable, Logger } from '@nestjs/common';
 import { UserToken } from '@prisma/client';
-import { ClientToServerEvents, ServerToClientsEvents } from '@lib/types';
+import {
+  ClientToServerEvents,
+  ServerToClientsEvents,
+  UserInfo,
+} from '@lib/types';
 import { Socket } from 'socket.io';
 import { SettingsRepository } from '../repositories/settings.repository';
 
@@ -130,14 +134,13 @@ export class SocketService<
         data.userId
       );
 
-      const chatter = await this.chatterRepository.getChatterById(
-        user.userId,
-        data.userId
-      );
-
-      const sprite = chatter?.sprite ? chatter.sprite : 'default';
-      const color = chatter?.color ? chatter.color : data.info.color;
       const emotes = data.emotes;
+
+      const chatterInfo = await this.getChatterInfo(
+        user.userId,
+        data.userId,
+        data.info
+      );
 
       if (action) {
         const actionData = {
@@ -145,11 +148,7 @@ export class SocketService<
           ...action,
           emotes,
           cooldown: 0,
-          info: {
-            ...data.info,
-            sprite,
-            color,
-          },
+          info: chatterInfo,
         };
 
         socket.emit('action', actionData);
@@ -165,11 +164,7 @@ export class SocketService<
           ...data,
           message,
           emotes,
-          info: {
-            ...data.info,
-            sprite,
-            color,
-          },
+          info: chatterInfo,
         };
 
         socket.emit('message', messageData);
@@ -182,9 +177,21 @@ export class SocketService<
       socket.broadcast.to(userGuid).emit('chatters', data);
     });
 
-    eventClient.onRaid((data) => {
+    eventClient.onRaid(async (data) => {
+      const chatterInfo = await this.getChatterInfo(
+        user.userId,
+        data.broadcaster.id,
+        data.broadcaster.info
+      );
+
       socket.emit('raid', data);
-      socket.broadcast.to(userGuid).emit('raid', data);
+      socket.broadcast.to(userGuid).emit('raid', {
+        ...data,
+        broadcaster: {
+          ...data.broadcaster,
+          ...chatterInfo,
+        },
+      });
     });
 
     eventClient.onRewardRedemptionAdd(async (data) => {
@@ -201,6 +208,26 @@ export class SocketService<
     });
 
     this.logger.log('Chat client initialized in room with id: ' + userGuid);
+  }
+
+  private async getChatterInfo(
+    userId: number,
+    chatterId: string,
+    info: UserInfo
+  ): Promise<UserInfo> {
+    const chatter = await this.chatterRepository.getChatterById(
+      userId,
+      chatterId
+    );
+
+    const sprite = chatter?.sprite ? chatter.sprite : 'default';
+    const color = chatter?.color ? chatter.color : info.color;
+
+    return {
+      ...info,
+      sprite,
+      color,
+    };
   }
 
   private async getUserByGuid(userGuid: string): Promise<UserToken | null> {

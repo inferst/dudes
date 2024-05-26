@@ -19,7 +19,7 @@ export const Main = () => {
         </a>
       </div>
       <div className="text-2xl text-center m-4">{t('mainTitle')}</div>
-      <div className="border border-border/60 bg-slate-900">
+      <div className="flex justify-center">
         <DudesWrapper />
       </div>
       <div className="m-6 text-2xl flex items-center justify-center">

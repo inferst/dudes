@@ -1,7 +1,7 @@
 import {
   ClientToServerEvents,
   MessageEntity,
-  RaidData,
+  RaidEntity,
   ServerToClientsEvents,
   SettingsEntity,
   TwitchChatterEntity,
@@ -42,7 +42,7 @@ export class Connection {
     this.socket.on('chatters', callback);
   }
 
-  public onRaid(callback: (data: RaidData) => void): void {
+  public onRaid(callback: (data: RaidEntity) => void): void {
     this.socket.on('raid', callback);
   }
 }

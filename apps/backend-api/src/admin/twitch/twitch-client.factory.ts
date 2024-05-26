@@ -3,7 +3,7 @@ import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@app/backend-api/constants';
 import { PrismaService } from '@app/backend-api/database/prisma.service';
 import {
   MessageEntity,
-  RaidData,
+  RaidEntity,
   RewardRedemptionData,
   TwitchChatterEntity,
 } from '@lib/types';
@@ -143,7 +143,7 @@ export class TwitchClientFactory {
       );
     };
 
-    const onRaid = (listener: (data: RaidData) => void): void => {
+    const onRaid = (listener: (data: RaidEntity) => void): void => {
       eventSubWsListener.onChannelRaidTo(
         userToken.platformUserId,
         async (data) => {
@@ -156,10 +156,14 @@ export class TwitchClientFactory {
               id: broadcaster.id,
               info: {
                 displayName: broadcaster.displayName,
+                sprite: 'default',
                 color: color ?? undefined,
               },
             },
-            viewers: data.viewers,
+            viewers: {
+              count: data.viewers,
+              sprite: 'default',
+            },
           });
         }
       );
@@ -217,6 +221,7 @@ export class TwitchClientFactory {
           message: strippedMessage,
           info: {
             displayName: name,
+            sprite: 'default',
             color: msg.userInfo.color,
           },
         });

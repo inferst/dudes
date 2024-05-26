@@ -31,7 +31,7 @@ export class SpriteService {
       const file = readFileSync(src);
       const set = JSON.parse(file.toString()) as string[];
 
-      const regexp = /[&\/\\#, ()$~%.'":*?<>{}-]/g;
+      const regexp = /[&/\\#, ()$~%.'":*?<>{}-]/g;
 
       const name = spriteName.toLowerCase().replace(regexp, '');
 

@@ -212,6 +212,7 @@ export class ActionService {
       data: { ...action.data, ...data },
       info: {
         displayName: redemption.userDisplayName,
+        sprite: 'default',
         color: redemptionUserColor ?? undefined,
       },
     };

@@ -42,6 +42,11 @@ export const handle: ExternalScriptsHandle = {
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: twStyles },
+  {
+    rel: 'preload',
+    as: 'style',
+    href: 'https://fonts.googleapis.com/css?family=Rubik',
+  },
 ];
 
 export const meta: MetaFunction = () => [

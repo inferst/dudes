@@ -8,6 +8,6 @@ export type UserEntity = {
 
 export type UserInfo = {
   displayName: string;
+  sprite: string;
   color?: string;
-  sprite?: string;
-}
+};
