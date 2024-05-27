@@ -202,8 +202,25 @@ export class SocketService<
       );
 
       if (action) {
-        socket.emit('action', action);
-        socket.broadcast.to(userGuid).emit('action', action);
+        const chatterInfo = await this.getChatterInfo(
+          user.userId,
+          data.userId,
+          action.info
+        );
+
+        const actionData = {
+          ...action,
+          info: chatterInfo,
+        };
+
+        this.actionService.storeChatterAction(
+          user.userId,
+          actionData,
+          data.userId
+        );
+
+        socket.emit('action', actionData);
+        socket.broadcast.to(userGuid).emit('action', actionData);
       }
     });
 
