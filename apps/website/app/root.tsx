@@ -37,16 +37,10 @@ export const handle: ExternalScriptsHandle = {
       preload: true,
     },
   ],
-  // i18n: 'common',
 };
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: twStyles },
-  {
-    rel: 'preload',
-    as: 'style',
-    href: 'https://fonts.googleapis.com/css?family=Rubik',
-  },
 ];
 
 export const meta: MetaFunction = () => [

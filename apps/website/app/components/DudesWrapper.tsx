@@ -83,7 +83,7 @@ export const DudesWrapper = () => {
     const sounds = { jump: { src: '/sounds/jump.mp3' } };
 
     const dudes = new Evotars(element, {
-      font: 'Rubik',
+      font: '/fonts/Rubik-VariableFont_wght.ttf',
       sounds,
       spriteLoaderFn: async (name: string) => {
         const path = '/evotars/' + name + '/';

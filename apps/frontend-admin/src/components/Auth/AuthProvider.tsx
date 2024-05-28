@@ -1,7 +1,7 @@
 import { api } from '@app/frontend-admin/api/api';
 import { useApiQuery } from '@app/frontend-admin/api/useApiQuery';
 import { UserEntity } from '@lib/types';
-import { ReactNode, createContext } from 'react';
+import { ReactNode, Suspense, createContext } from 'react';
 
 type AuthContext = {
   user?: UserEntity;
@@ -33,7 +33,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return;
   }
 
+  // TODO: check if not needed
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <Suspense fallback={'Loading...'}>
+      <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    </Suspense>
   );
 }

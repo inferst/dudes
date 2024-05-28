@@ -12,7 +12,7 @@ export class App {
     const guid = getGuid();
     const sounds = { jump: { src: '/client/sounds/jump.mp3' } };
     const evotars = new Evotars(document.body, {
-      font: 'Rubik',
+      font: '/client/fonts/Rubik-VariableFont_wght.ttf',
       sounds,
       spriteLoaderFn: async (name: string) => {
         try {
