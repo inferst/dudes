@@ -92,7 +92,13 @@ export class SocketService<
     const user = await this.getUserByGuid(userGuid);
 
     if (!user) {
-      this.logger.log('The room does not provided or user does not exist.');
+      this.logger.log('User does not exist.');
+      socket.disconnect();
+      return;
+    }
+
+    if (user.isTokenRevoked) {
+      this.logger.log(`User [${user.userId}] token is revoked.`);
       socket.disconnect();
       return;
     }
