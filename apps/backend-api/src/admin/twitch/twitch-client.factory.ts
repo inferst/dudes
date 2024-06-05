@@ -121,10 +121,6 @@ export class TwitchClientFactory {
       apiClient: this.apiClient,
     });
 
-    const customEmotes = await this.emoteService.getEmotes(
-      userToken.platformUserId
-    );
-
     eventSubWsListener.start();
 
     const onRewardRedemptionAdd = (
@@ -194,30 +190,18 @@ export class TwitchClientFactory {
           (entry) => entry[0]
         );
 
-        const otherEmotes = text
-          .split(' ')
-          .filter((word) => customEmotes[word]);
-
-        const emoteNames = twitchEmoteNames.concat(otherEmotes);
-
         const strippedMessage = this.chatMessageService.stripEmotes(
           text,
-          emoteNames
+          twitchEmoteNames
         );
 
         const twitchEmotes = emoteIds.map((emote) =>
           this.getTwitchEmoteUrl(emote)
         );
 
-        const emotes = twitchEmotes.concat(
-          otherEmotes
-            .map((emote) => customEmotes[emote])
-            .filter((emote) => emote)
-        );
-
         listener({
           userId: userId,
-          emotes: emotes,
+          emotes: twitchEmotes,
           message: strippedMessage,
           info: {
             displayName: name,

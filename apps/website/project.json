@@ -7,7 +7,9 @@
   "targets": {
     "build": {
       "executor": "@nx/remix:build",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/website"
       }
@@ -21,13 +23,15 @@
       }
     },
     "start": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "command": "remix-serve build/index.js",
       "options": {
         "cwd": "apps/website"
       }
     },
-    "typecheck": {
+    "lint-types": {
       "command": "tsc --project tsconfig.app.json",
       "options": {
         "cwd": "apps/website"

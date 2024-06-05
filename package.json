@@ -4,11 +4,11 @@
   "license": "MIT",
   "scripts": {
     "dev": "nx run-many --target=serve",
-    "website:dev": "nx run website:serve",
     "build": "pnpm run db:generate && nx run-many --target=build -c=production",
     "lint": "pnpm run lint:types && pnpm run lint:eslint",
     "lint:eslint": "nx run-many --target=lint",
     "lint:types": "nx run-many --target=lint-types",
+    "website:dev": "nx run website:serve",
     "db:generate": "prisma generate --schema=apps/backend-api/prisma/schema.prisma",
     "db:migrate:dev": "prisma migrate dev --schema=apps/backend-api/prisma/schema.prisma",
     "db:migrate:deploy": "prisma migrate deploy --schema=apps/backend-api/prisma/schema.prisma",
@@ -62,6 +62,7 @@
     "@types/express": "^4.17.21",
     "@types/js-cookie": "^3.0.6",
     "@types/passport": "^1.0.16",
+    "@types/ws": "^8.5.10",
     "axios": "1.6.7",
     "axios-auth-refresh": "^3.3.6",
     "class-transformer": "^0.5.1",
@@ -100,6 +101,7 @@
     "tmi.js": "^1.8.5",
     "tslib": "^2.6.2",
     "usehooks-ts": "^2.16.0",
+    "ws": "^8.17.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

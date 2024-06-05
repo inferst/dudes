@@ -16,6 +16,7 @@ import {
 import { ActionService } from './action.service';
 import { ChatMessageService } from './chat-message.service';
 import { ChatterRepository } from '../repositories/chatter.repository';
+import { EmoteService } from './emote.service';
 
 type SocketClient = {
   socket: Socket;
@@ -42,6 +43,7 @@ export class SocketService<
     private readonly chatterRepository: ChatterRepository,
     private readonly actionService: ActionService,
     private readonly chatMessageService: ChatMessageService,
+    private readonly emoteService: EmoteService,
     private readonly eventClinetFactory: EventClientFactory
   ) {}
 
@@ -127,6 +129,10 @@ export class SocketService<
     const eventClient = await this.eventClinetFactory.createFromUser(user);
     eventClient.connect();
 
+    const emoteClient = await this.emoteService.createClient(
+      user.platformUserId
+    );
+
     const connectedRoom = this.rooms.get(userGuid);
 
     if (connectedRoom) {
@@ -140,7 +146,9 @@ export class SocketService<
         data.userId
       );
 
-      const emotes = data.emotes;
+      const otherEmotes = emoteClient.getEmotes(data.message);
+
+      const emotes = data.emotes.concat(otherEmotes.map((emote) => emote.url));
 
       const chatterInfo = await this.getChatterInfo(
         user.userId,
@@ -163,9 +171,14 @@ export class SocketService<
         this.actionService.storeChatterAction(user.userId, action, data.userId);
       }
 
-      const message = this.chatMessageService.formatMessage(data.message);
+      const strippedMessage = this.chatMessageService.stripEmotes(
+        data.message,
+        otherEmotes.map((emote) => emote.name)
+      );
 
-      if (message || data.emotes.length > 0) {
+      const message = this.chatMessageService.formatMessage(strippedMessage);
+
+      if (message || emotes.length > 0) {
         const messageData = {
           ...data,
           message,
