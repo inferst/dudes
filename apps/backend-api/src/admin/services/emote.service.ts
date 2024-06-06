@@ -4,7 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { WebSocket } from 'ws';
 
-export type SevenTVEmoteData = {
+type SevenTVEmoteData = {
   userId: string;
   emoteSetId: string;
   data: SevenTVEmotes;
@@ -99,8 +99,10 @@ const isSeventTVEventUserUpdate = (
   return data?.d?.type == 'user.update';
 };
 
-type EmoteClient = {
+export type EmoteClient = {
   getEmotes: (text: string) => Emote[];
+  connect: () => void;
+  disconnect: () => void;
 };
 
 @Injectable()
@@ -117,7 +119,9 @@ export class EmoteService {
 
     let emotes: SevenTVEmotes = {};
 
-    const connect = async () => {
+    let connection: WebSocket | undefined;
+
+    const connect = async (): Promise<WebSocket | undefined> => {
       let emotesData = await this.getEmotesData(platformUserId);
 
       if (!emotesData) {
@@ -230,9 +234,9 @@ export class EmoteService {
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket connected`);
       };
 
-      ws.onclose = () => {
-        setTimeout(() => {
-          connect();
+      ws.onclose = async () => {
+        setTimeout(async () => {
+          connection = await connect();
         }, 10000);
 
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket closed`);
@@ -241,9 +245,9 @@ export class EmoteService {
       ws.onerror = (_: any) => {
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket error`);
       };
-    };
 
-    connect();
+      return ws;
+    };
 
     return {
       getEmotes: (text: string): Emote[] => {
@@ -253,6 +257,12 @@ export class EmoteService {
           .map((word) => ({ name: word, url: emotes[word] }));
 
         return entries;
+      },
+      connect: async () => {
+        connection = await connect();
+      },
+      disconnect: () => {
+        connection?.close();
       },
     };
   }

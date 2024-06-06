@@ -16,7 +16,7 @@ import {
 import { ActionService } from './action.service';
 import { ChatMessageService } from './chat-message.service';
 import { ChatterRepository } from '../repositories/chatter.repository';
-import { EmoteService } from './emote.service';
+import { EmoteClient, EmoteService } from './emote.service';
 
 type SocketClient = {
   socket: Socket;
@@ -26,6 +26,7 @@ type SocketClient = {
 type Room = {
   clients: Socket[];
   eventClient?: EventClient;
+  emoteClient?: EmoteClient;
 };
 
 @Injectable()
@@ -76,6 +77,7 @@ export class SocketService<
       this.rooms.set(connectedClient.roomId, { ...room, clients });
     } else {
       void room.eventClient?.disconnect();
+      room.emoteClient?.disconnect();
       this.rooms.delete(connectedClient.roomId);
       this.logger.log('Room disconnected with name: ' + connectedClient.roomId);
     }
@@ -132,11 +134,12 @@ export class SocketService<
     const emoteClient = await this.emoteService.createClient(
       user.platformUserId
     );
+    emoteClient.connect();
 
     const connectedRoom = this.rooms.get(userGuid);
 
     if (connectedRoom) {
-      this.rooms.set(userGuid, { ...connectedRoom, eventClient });
+      this.rooms.set(userGuid, { ...connectedRoom, eventClient, emoteClient });
     }
 
     eventClient.onChatMessage(async (data) => {
