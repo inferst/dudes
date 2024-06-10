@@ -121,6 +121,8 @@ export class EmoteService {
 
     let connection: WebSocket | undefined;
 
+    let isClosed = false;
+
     const connect = async (): Promise<WebSocket | undefined> => {
       let emotesData = await this.getEmotesData(platformUserId);
 
@@ -235,9 +237,11 @@ export class EmoteService {
       };
 
       ws.onclose = async () => {
-        setTimeout(async () => {
-          connection = await connect();
-        }, 10000);
+        if (!isClosed) {
+          setTimeout(async () => {
+            connection = await connect();
+          }, 10000);
+        }
 
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket closed`);
       };
@@ -263,6 +267,7 @@ export class EmoteService {
       },
       disconnect: () => {
         connection?.close();
+        isClosed = true;
       },
     };
   }
