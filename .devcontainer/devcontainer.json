@@ -21,7 +21,6 @@
   "forwardPorts": [3000, 4200, 4300],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "pnpm install --offline; echo 'alias nx=\"pnpm exec nx\"' >> ~/.bashrc",
   "postCreateCommand": "echo 'alias nx=\"pnpm exec nx\"' >> ~/.bashrc",
 
   // Configure tool-specific properties.
