@@ -1,5 +1,7 @@
 # Dudes
 
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/inferst/dudes)
+
 Animated characters for chatters in your stream.
 
 Before the installation: check that default port 5432 has not been used
@@ -10,11 +12,11 @@ Before the installation: check that default port 5432 has not been used
 2. Run `docker compose -f docker-compose.development.yaml up -d`
 3. Run `npm install -g pnpm`
 4. Run `pnpm install`
-5. Run `npx nx reset`
+5. Run `pnpm exec nx reset`
 
 ## Run scheme generation
 
-Run `npm run db:generate`
+Run `pnpm run db:generate`
 
 ## Run migration
 
