@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import tinycolor from 'tinycolor2';
 import {
   ActionEntity,
   RewardRedemptionData,
@@ -13,6 +14,7 @@ import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 import { ChatterRepository } from '../repositories/chatter.repository';
 import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
 import { SpriteService } from './sprite.service';
+import { Chatter } from '@prisma/client';
 
 type CooldownStorage = {
   [id: string]: NodeJS.Timeout;
@@ -51,7 +53,9 @@ export class ActionService {
       userId
     );
 
-    const command = commands.find((command) => message.includes(command.text));
+    const commandText = message.split(' ')[0];
+
+    const command = commands.find((command) => command.text == commandText);
 
     if (!command) {
       return;
@@ -119,6 +123,13 @@ export class ActionService {
       return this.spriteService.isSpriteAvailable(userId, action.data.sprite);
     }
 
+    if (isColorUserActionEntity(action)) {
+      const color = action.data.color;
+      const defaultColors = ['', 'default', 'reset'];
+
+      return defaultColors.includes(color) || tinycolor(color).isValid();
+    }
+
     return true;
   }
 
@@ -126,7 +137,7 @@ export class ActionService {
     userId: number,
     action: ActionEntity,
     actionUserId: string
-  ): Promise<void> {
+  ): Promise<Chatter> {
     let chatter = await this.chatterRepository.getChatterById(
       userId,
       actionUserId
@@ -151,16 +162,18 @@ export class ActionService {
     }
 
     if (isSpriteUserActionEntity(action)) {
-      await this.chatterRepository.update(userId, chatter.id, {
+      chatter = await this.chatterRepository.update(userId, chatter.id, {
         ...chatter,
         sprite: action.data.sprite,
       });
     } else if (isColorUserActionEntity(action)) {
-      await this.chatterRepository.update(userId, chatter.id, {
+      chatter = await this.chatterRepository.update(userId, chatter.id, {
         ...chatter,
         color: action.data.color,
       });
     }
+
+    return chatter;
   }
 
   public async getUserActionByReward(

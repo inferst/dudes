@@ -153,7 +153,7 @@ export class SocketService<
 
       const emotes = data.emotes.concat(otherEmotes.map((emote) => emote.url));
 
-      const chatterInfo = await this.getChatterInfo(
+      let chatterInfo = await this.getChatterInfo(
         user.userId,
         data.userId,
         data.info
@@ -171,20 +171,30 @@ export class SocketService<
         socket.emit('action', actionData);
         socket.broadcast.to(userGuid).emit('action', actionData);
 
-        this.actionService.storeChatterAction(user.userId, action, data.userId);
+        const chatter = await this.actionService.storeChatterAction(
+          user.userId,
+          action,
+          data.userId
+        );
+
+        chatterInfo = {
+          ...chatterInfo,
+          sprite: chatter.sprite,
+          color: chatter.color,
+        };
       }
 
+      const message = this.chatMessageService.formatMessage(data.message);
+
       const strippedMessage = this.chatMessageService.stripEmotes(
-        data.message,
+        message,
         otherEmotes.map((emote) => emote.name)
       );
 
-      const message = this.chatMessageService.formatMessage(strippedMessage);
-
-      if (message || emotes.length > 0) {
+      if (strippedMessage || emotes.length > 0) {
         const messageData = {
           ...data,
-          message,
+          message: strippedMessage,
           emotes,
           info: chatterInfo,
         };
