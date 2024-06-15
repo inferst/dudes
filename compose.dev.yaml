@@ -1,7 +1,8 @@
 services:
   postgres:
+    container_name: postgres
     image: postgres:15-alpine
-    container_name: dudes-postgres
+    restart: on-failure
     ports:
       - 5432:5432
     volumes:
@@ -11,5 +12,27 @@ services:
       - POSTGRES_USER=dudes
       - POSTGRES_DB=dudes
 
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM node:20
+        WORKDIR /app
+        COPY package.json pnpm-lock.yaml ./
+        RUN corepack enable && pnpm install && npx nx reset
+        COPY . .
+        CMD pnpm run db:migrate:dev && pnpm run dev --host 0.0.0.0
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://dudes:dudes@postgres:5432/dudes?schema=public
+    ports:
+      - 3000:3000
+      - 4200:4200
+      - 4300:4300
+    depends_on:
+      - postgres
+
 volumes:
   postgres-data:
+    name: dudes-postgres
