@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
+import tinycolor from 'tinycolor2';
 import {
   ActionEntity,
   RewardRedemptionData,
   UserActionEntity,
+  UserInfo,
   isColorUserActionEntity,
   isSpriteUserActionEntity,
 } from '@lib/types';
@@ -13,6 +15,7 @@ import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 import { ChatterRepository } from '../repositories/chatter.repository';
 import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
 import { SpriteService } from './sprite.service';
+import { Chatter } from '@prisma/client';
 
 type CooldownStorage = {
   [id: string]: NodeJS.Timeout;
@@ -41,8 +44,9 @@ export class ActionService {
   public async getUserActionByMessage(
     userId: number,
     message: string,
-    messageUserId: string
-  ): Promise<ActionEntity | undefined> {
+    messageUserId: string,
+    info: UserInfo
+  ): Promise<UserActionEntity | undefined> {
     if (this.actions.length == 0) {
       this.actions = await this.actionRepository.getActions();
     }
@@ -51,7 +55,9 @@ export class ActionService {
       userId
     );
 
-    const command = commands.find((command) => message.includes(command.text));
+    const commandText = message.split(' ')[0];
+
+    const command = commands.find((command) => command.text == commandText);
 
     if (!command) {
       return;
@@ -83,84 +89,26 @@ export class ActionService {
     const result = {
       ...action,
       cooldown: 0,
+      userId: messageUserId,
+      info,
       data: { ...action.data, ...data },
     };
 
-    if (await this.isUserActionValid(userId, result)) {
-      return result;
-    }
-  }
-
-  private getArgumentsFromText(
-    args: string[],
-    text: string
-  ): Record<string, string> {
-    if (args.length == 0) {
-      return {};
-    } else if (args.length == 1) {
-      return {
-        [args[0]]: text,
-      };
-    } else {
-      const textArgs = text.split(' ').filter((arg) => arg.trim());
-      const entries = args
-        .map((argument, i) => [argument, textArgs[i]])
-        .filter((arg) => arg[1]);
-
-      return { ...Object.fromEntries(entries) };
-    }
-  }
-
-  public async isUserActionValid(
-    userId: number,
-    action: ActionEntity
-  ): Promise<boolean> {
-    if (isSpriteUserActionEntity(action)) {
-      return this.spriteService.isSpriteAvailable(userId, action.data.sprite);
+    if (!(await this.isUserActionValid(userId, result))) {
+      return;
     }
 
-    return true;
-  }
+    const chatter = await this.updateChatter(userId, result, messageUserId);
 
-  public async storeChatterAction(
-    userId: number,
-    action: ActionEntity,
-    actionUserId: string
-  ): Promise<void> {
-    let chatter = await this.chatterRepository.getChatterById(
-      userId,
-      actionUserId
-    );
+    const chatterInfo = {
+      ...result.info,
+      color: chatter.color,
+      sprite: chatter.sprite,
+    };
 
-    if (!chatter) {
-      const data = {
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-        platform: {
-          connect: {
-            id: TWITCH_PLATFORM_ID,
-          },
-        },
-        chatterId: actionUserId,
-      };
+    result.info = chatterInfo;
 
-      chatter = await this.chatterRepository.create(data);
-    }
-
-    if (isSpriteUserActionEntity(action)) {
-      await this.chatterRepository.update(userId, chatter.id, {
-        ...chatter,
-        sprite: action.data.sprite,
-      });
-    } else if (isColorUserActionEntity(action)) {
-      await this.chatterRepository.update(userId, chatter.id, {
-        ...chatter,
-        color: action.data.color,
-      });
-    }
+    return this.formatAction(result, info);
   }
 
   public async getUserActionByReward(
@@ -205,16 +153,154 @@ export class ActionService {
       );
     }
 
-    return {
+    const info = {
+      displayName: redemption.userDisplayName,
+      sprite: 'default',
+      color: redemptionUserColor ?? undefined,
+    };
+
+    const result = {
       userId: redemption.userId,
       ...action,
       cooldown: 0,
       data: { ...action.data, ...data },
-      info: {
-        displayName: redemption.userDisplayName,
-        sprite: 'default',
-        color: redemptionUserColor ?? undefined,
-      },
+      info,
     };
+
+    if (!(await this.isUserActionValid(userId, result))) {
+      return;
+    }
+
+    const chatter = await this.updateChatter(userId, result, redemption.userId);
+
+    const chatterInfo = {
+      ...result.info,
+      color: chatter.color,
+      sprite: chatter.sprite,
+    };
+
+    result.info = chatterInfo;
+
+    return this.formatAction(result, info);
+  }
+
+  private getDefaultColorActionValues(): string[] {
+    return ['', 'default', 'reset'];
+  }
+
+  // if action is info action, we need to format
+  private formatAction(
+    action: UserActionEntity,
+    info: UserInfo
+  ): UserActionEntity {
+    if (isColorUserActionEntity(action)) {
+      const color = this.getDefaultColorActionValues().includes(
+        action.data.color
+      )
+        ? info.color
+        : action.data.color;
+
+      return {
+        ...action,
+        name: 'info',
+        info: {
+          ...action.info,
+          color,
+        },
+      };
+    } else if (isSpriteUserActionEntity(action)) {
+      return {
+        ...action,
+        name: 'info',
+        info: {
+          ...action.info,
+          sprite: action.data.sprite,
+        },
+      };
+    }
+
+    return action;
+  }
+
+  private getArgumentsFromText(
+    args: string[],
+    text: string
+  ): Record<string, string> {
+    if (args.length == 0) {
+      return {};
+    } else if (args.length == 1) {
+      return {
+        [args[0]]: text,
+      };
+    } else {
+      const textArgs = text.split(' ').filter((arg) => arg.trim());
+      const entries = args
+        .map((argument, i) => [argument, textArgs[i]])
+        .filter((arg) => arg[1]);
+
+      return { ...Object.fromEntries(entries) };
+    }
+  }
+
+  public async isUserActionValid(
+    userId: number,
+    action: ActionEntity
+  ): Promise<boolean> {
+    if (isSpriteUserActionEntity(action)) {
+      return this.spriteService.isSpriteAvailable(userId, action.data.sprite);
+    }
+
+    if (isColorUserActionEntity(action)) {
+      const color = action.data.color;
+      return (
+        this.getDefaultColorActionValues().includes(color) ||
+        tinycolor(color).isValid()
+      );
+    }
+
+    return true;
+  }
+
+  public async updateChatter(
+    userId: number,
+    action: ActionEntity,
+    actionUserId: string
+  ): Promise<Chatter> {
+    let chatter = await this.chatterRepository.getChatterById(
+      userId,
+      actionUserId
+    );
+
+    if (!chatter) {
+      const data = {
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        platform: {
+          connect: {
+            id: TWITCH_PLATFORM_ID,
+          },
+        },
+        chatterId: actionUserId,
+      };
+
+      chatter = await this.chatterRepository.create(data);
+    }
+
+    if (isSpriteUserActionEntity(action)) {
+      chatter = await this.chatterRepository.update(userId, chatter.id, {
+        ...chatter,
+        sprite: action.data.sprite,
+      });
+    } else if (isColorUserActionEntity(action)) {
+      chatter = await this.chatterRepository.update(userId, chatter.id, {
+        ...chatter,
+        color: action.data.color,
+      });
+    }
+
+    return chatter;
   }
 }
