@@ -143,8 +143,8 @@ export class SocketService<
     }
 
     eventClient.onChatMessage(async (data) => {
-      const otherEmotes = emoteClient.getEmotes(data.message);
-      const emotes = data.emotes.concat(otherEmotes.map((emote) => emote.url));
+      const customEmotes = emoteClient.getEmotes(data.message);
+      const emotes = data.emotes.concat(customEmotes.map((emote) => emote.url));
 
       const action = await this.actionService.getUserActionByMessage(
         user.userId,
@@ -169,7 +169,7 @@ export class SocketService<
 
       const strippedMessage = this.chatMessageService.stripEmotes(
         message,
-        otherEmotes.map((emote) => emote.name)
+        customEmotes.map((emote) => emote.name)
       );
 
       if (strippedMessage || emotes.length > 0) {
