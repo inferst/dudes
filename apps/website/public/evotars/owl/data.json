@@ -1,0 +1,16 @@
+{
+  "name": "owl",
+  "collider": {
+    "x": 6,
+    "y": 4,
+    "w": 20,
+    "h": 21
+  },
+  "size": {
+    "w": 32,
+    "h": 32
+  },
+  "scale": 4,
+  "flip": true,
+  "colored": ["Body"]
+}
