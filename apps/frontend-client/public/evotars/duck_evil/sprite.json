@@ -1,6 +1,6 @@
 {
   "frames": {
-    "duckEvil_Body_0": {
+    "duck_evil_Body_0": {
       "frame": { "x": 0, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -8,7 +8,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Body_1": {
+    "duck_evil_Body_1": {
       "frame": { "x": 32, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -16,7 +16,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Body_2": {
+    "duck_evil_Body_2": {
       "frame": { "x": 64, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -24,7 +24,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Body_3": {
+    "duck_evil_Body_3": {
       "frame": { "x": 96, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -32,7 +32,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Body_4": {
+    "duck_evil_Body_4": {
       "frame": { "x": 128, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -40,7 +40,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Body_5": {
+    "duck_evil_Body_5": {
       "frame": { "x": 160, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -48,7 +48,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Body_6": {
+    "duck_evil_Body_6": {
       "frame": { "x": 192, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -56,7 +56,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Body_7": {
+    "duck_evil_Body_7": {
       "frame": { "x": 224, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -64,7 +64,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Body_8": {
+    "duck_evil_Body_8": {
       "frame": { "x": 256, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -72,7 +72,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Body_9": {
+    "duck_evil_Body_9": {
       "frame": { "x": 288, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -80,7 +80,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Body_10": {
+    "duck_evil_Body_10": {
       "frame": { "x": 320, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -88,7 +88,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Body_11": {
+    "duck_evil_Body_11": {
       "frame": { "x": 352, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -96,7 +96,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Body_12": {
+    "duck_evil_Body_12": {
       "frame": { "x": 384, "y": 0, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -104,7 +104,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 1000
     },
-    "duckEvil_Eyes_0": {
+    "duck_evil_Eyes_0": {
       "frame": { "x": 0, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -112,7 +112,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Eyes_1": {
+    "duck_evil_Eyes_1": {
       "frame": { "x": 32, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -120,7 +120,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Eyes_2": {
+    "duck_evil_Eyes_2": {
       "frame": { "x": 64, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -128,7 +128,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Eyes_3": {
+    "duck_evil_Eyes_3": {
       "frame": { "x": 96, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -136,7 +136,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Eyes_4": {
+    "duck_evil_Eyes_4": {
       "frame": { "x": 128, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -144,7 +144,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Eyes_5": {
+    "duck_evil_Eyes_5": {
       "frame": { "x": 160, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -152,7 +152,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Eyes_6": {
+    "duck_evil_Eyes_6": {
       "frame": { "x": 192, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -160,7 +160,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Eyes_7": {
+    "duck_evil_Eyes_7": {
       "frame": { "x": 224, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -168,7 +168,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Eyes_8": {
+    "duck_evil_Eyes_8": {
       "frame": { "x": 256, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -176,7 +176,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 100
     },
-    "duckEvil_Eyes_9": {
+    "duck_evil_Eyes_9": {
       "frame": { "x": 288, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -184,7 +184,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Eyes_10": {
+    "duck_evil_Eyes_10": {
       "frame": { "x": 320, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -192,7 +192,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Eyes_11": {
+    "duck_evil_Eyes_11": {
       "frame": { "x": 352, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -200,7 +200,7 @@
       "sourceSize": { "w": 32, "h": 32 },
       "duration": 300
     },
-    "duckEvil_Eyes_12": {
+    "duck_evil_Eyes_12": {
       "frame": { "x": 384, "y": 32, "w": 32, "h": 32 },
       "rotated": false,
       "trimmed": false,
@@ -212,7 +212,7 @@
   "meta": {
     "app": "https://www.aseprite.org/",
     "version": "1.x-dev",
-    "image": "duckEvil.png",
+    "image": "duck_evil.png",
     "format": "RGBA8888",
     "size": { "w": 416, "h": 64 },
     "scale": "1",

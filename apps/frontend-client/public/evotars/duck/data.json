@@ -1,0 +1,16 @@
+{
+  "name": "duck",
+  "collider": {
+    "x": 5,
+    "y": 7,
+    "w": 18,
+    "h": 18
+  },
+  "size": {
+    "w": 32,
+    "h": 32
+  },
+  "scale": 4,
+  "flip": true,
+  "colored": ["Body"]
+}
