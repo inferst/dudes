@@ -35,7 +35,19 @@ import { Loader } from '../../common/Loader';
 export function SkinsPage() {
   const { t } = useTranslation();
 
-  const sprites = ['agent', 'sith', 'cat', 'girl', 'senior', 'nerd', 'sponge'];
+  const sprites = [
+    'agent',
+    'cat',
+    'duck',
+    'duck_evil',
+    'dude',
+    'girl',
+    'nerd',
+    'owl',
+    'senior',
+    'sith',
+    'sponge',
+  ];
 
   const form = useForm<CreateChatterForm>({
     resolver: zodResolver(createChatterFormSchema),
