@@ -26,7 +26,12 @@ services:
       - 4300:4300
     depends_on:
       - postgres
+    volumes:
+      - .:/app
+      - node-modules:/app/node_modules
 
 volumes:
   postgres-data:
     name: dudes-postgres
+  node-modules:
+    name: dudes-node-modules
