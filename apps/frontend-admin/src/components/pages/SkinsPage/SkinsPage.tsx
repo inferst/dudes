@@ -43,6 +43,7 @@ export function SkinsPage() {
     'dude',
     'girl',
     'nerd',
+    'nyan',
     'owl',
     'senior',
     'sith',
