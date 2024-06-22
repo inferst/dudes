@@ -16,13 +16,7 @@ services:
     container_name: app
     build:
       context: .
-      dockerfile_inline: |
-        FROM node:20
-        WORKDIR /app
-        COPY package.json pnpm-lock.yaml ./
-        RUN corepack enable && pnpm install && npx nx reset
-        COPY . .
-        CMD pnpm run db:migrate:dev && pnpm run dev --host 0.0.0.0
+      dockerfile: Dockerfile.dev
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://dudes:dudes@postgres:5432/dudes?schema=public
