@@ -1,33 +1,33 @@
 // For format details, see https://aka.ms/devcontainer.json
 {
-	"name": "Dudes",
-	"dockerComposeFile": "../compose.dev.yaml",
-	"service": "app",
-	"workspaceFolder": "/app",
-	"remoteUser": "root",
+    "name": "Dudes",
+    "dockerComposeFile": "../compose.dev.yaml",
+    "service": "app",
+    "workspaceFolder": "/app",
+    "remoteUser": "root",
+    "shutdownAction": "stopCompose",
 
-	// More info: https://containers.dev/features
-	"features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
-	},
+    // More info: https://containers.dev/features
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
 
-	"shutdownAction": "stopCompose",
-	"postCreateCommand": "echo alias dudes=\\'docker compose -p dudes -f compose-dev.yaml\\' >> ~/.bashrc; bash",
+    "postCreateCommand": "echo alias dudes=\\'docker compose -p dudes -f compose-dev.yaml\\' >> ~/.bashrc; bash",
 
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"EditorConfig.EditorConfig",
-				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode",
-				"ahmadalli.vscode-nginx-conf",
-				"ckolkman.vscode-postgres"
-			]
-		}
-	},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "EditorConfig.EditorConfig",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "ahmadalli.vscode-nginx-conf",
+                "ckolkman.vscode-postgres"
+            ]
+        }
+    },
 
-	"mounts": [
-		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/git,target=/root/.config/git,type=bind,readonly"
-	]
+    "mounts": [
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/git,target=/root/.config/git,type=bind,readonly"
+    ]
 }
