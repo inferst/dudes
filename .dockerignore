@@ -1,0 +1,12 @@
+dist
+node_modules
+.nx
+
+.gitconfig
+.git
+.devcontainer
+.vscode
+
+.DS_Store
+
+.env
