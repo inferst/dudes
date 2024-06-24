@@ -30,6 +30,7 @@ services:
       - 3000:3000
       - 4200:4200
       - 4300:4300
+      - 9229:9229 # Debugger
     depends_on:
       postgres:
         condition: service_healthy
