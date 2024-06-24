@@ -2,7 +2,7 @@ services:
   postgres:
     container_name: postgres
     image: postgres:15-alpine
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - 5432:5432
     volumes:
@@ -11,6 +11,12 @@ services:
       - POSTGRES_PASSWORD=dudes
       - POSTGRES_USER=dudes
       - POSTGRES_DB=dudes
+      - PGUSER=dudes
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      timeout: 10s
+      interval: 10s
+      retries: 5
 
   app:
     container_name: app
@@ -25,7 +31,8 @@ services:
       - 4200:4200
       - 4300:4300
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - .:/app
       - node-modules:/app/node_modules
