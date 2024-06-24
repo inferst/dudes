@@ -4,7 +4,6 @@
     "dockerComposeFile": "../compose.dev.yaml",
     "service": "app",
     "workspaceFolder": "/app",
-    "remoteUser": "root",
     "shutdownAction": "stopCompose",
 
     // More info: https://containers.dev/features
