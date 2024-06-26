@@ -39,6 +39,7 @@ testem.log
 Thumbs.db
 
 .nx/cache
+/.pnpm-store
 
 # Env files
 .env
