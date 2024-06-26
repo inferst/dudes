@@ -17,8 +17,19 @@ align="right"
 
 Animated characters for chatters in your stream.
 
+# Develop in devcontainer
 
+> [!IMPORTANT]
+> You need the [docker](https://docs.docker.com/get-docker/) installed and running.
 
+Just install the [extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) and build it lol.
+
+In the development container, you'll have access to `docker` and a convenient alias `dudes`. This alias executes `docker compose -p dudes -f docker-compose.development.yaml`, streamlining your workflow.
+
+For example, to view the logs in real time:
+```shell
+dudes logs -f
+```
 
 # Run the database in docker
 
