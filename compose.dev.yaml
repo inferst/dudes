@@ -1,0 +1,45 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15-alpine
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=dudes
+      - POSTGRES_USER=dudes
+      - POSTGRES_DB=dudes
+      - PGUSER=dudes
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      timeout: 10s
+      interval: 10s
+      retries: 5
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://dudes:dudes@postgres:5432/dudes?schema=public
+    ports:
+      - 3000:3000
+      - 4200:4200
+      - 4300:4300
+      - 9229:9229 # Debugger
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - node-modules:/app/node_modules
+
+volumes:
+  postgres-data:
+    name: dudes-postgres
+  node-modules:
+    name: dudes-node-modules
