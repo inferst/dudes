@@ -26,6 +26,10 @@ export class SpriteService {
     setName: string,
     spriteName: string
   ): string | undefined {
+    if (spriteName == '') {
+      return;
+    }
+
     try {
       const src = `apps/frontend-client/public/${setName}/set.json`;
       const file = readFileSync(src);

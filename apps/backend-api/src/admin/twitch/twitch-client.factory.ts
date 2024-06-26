@@ -18,7 +18,6 @@ import { EventClient } from '../event-client/event-client.factory';
 import { ChatMessageService } from '../services';
 import { TokenRevokedException } from './token-revoked.exception';
 import { TwitchUserFilterService } from './twitch-user-filter.service';
-import { EmoteService } from '../services/emote.service';
 
 const TWITCH_CHATTERS_SEND_INTERVAL = 60 * 1000; // 1 minute.
 
@@ -32,7 +31,6 @@ export class TwitchClientFactory {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly twitchUserFilterService: TwitchUserFilterService,
-    private readonly emoteService: EmoteService,
     private readonly chatMessageService: ChatMessageService
   ) {
     this.authProvider = new RefreshingAuthProvider({

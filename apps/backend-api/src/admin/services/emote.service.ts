@@ -228,7 +228,7 @@ export class EmoteService {
                 ];
               });
 
-              emotes = { ...Object.fromEntries(entries), ...data };
+              emotes = { ...emotes, ...Object.fromEntries(entries) };
             }
           }
         };
