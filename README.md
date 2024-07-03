@@ -1,41 +1,81 @@
-# Dudes
+<h1 align="center">Dudes</h1>
+<div align="center">
+  <a
+  href="https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/inferst/dudes">
+    <img
+    src="https://img.shields.io/static/v1?style=for-the-badge&logo=docker&label=devcontainer&message=supported&color=0797ff&labelColor=000000"
+    alt="Dev Containers Badge"
+    />
+  </a>
+</div>
 
-[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/inferst/dudes)
+<img
+src="https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_83ffd63c128c4fbc86784ff2914836a9/default/dark/4.0"
+width="100px"
+align="right"
+/>
 
 Animated characters for chatters in your stream.
 
-Before the installation: check that default port 5432 has not been used
 
-## Set-up the app
 
-1. Copy env `cp .env.example .env`
-2. Run `docker compose -f docker-compose.development.yaml up -d`
-3. Run `npm install -g pnpm`
-4. Run `pnpm install`
-5. Run `pnpm exec nx reset`
 
-## Run scheme generation
+# Run the database in docker
 
-Run `pnpm run db:generate`
+```shell
+docker compose -f docker-compose.development.yaml run -d
+```
 
-## Run migration
+> [!WARNING]
+> By default, PostgreSQL runs on port `5432`. Before starting, ensure this port is not already in use on your system.
 
-Run `pnpm run db:migrate:dev`
+To change the PostgreSQL port, use the following command structure:
+```shell
+docker compose -f docker-compose.development.yaml run -d -p <port>:5432
+```
 
-## Run seed
+# Run locally
 
-Run `pnpm run db:seed`
+> [!IMPORTANT]
+> You need [node](https://nodejs.org/en/download/package-manager) installed.
 
-## Start the app
+1. Copy environment variables
+    ```shell
+    cp .env.example .env
+    ```
+2. Install and run postgres
 
-Run `pnpm run dev`
+    You can install [PostgreSQL](https://www.postgresql.org/download/) directly on your system or use Docker. For Docker instructions, refer to [Run the database in docker](<#run-the-database-in-docker>).
+3. Install pnpm
+    ```shell
+    npm install -g pnpm
+    ```
+4. Install dependencies
+    ```shell
+    pnpm install
+    ```
+5. Generate schema and migrate
+    ```shell
+    pnpm run db:migrate:dev
+    ```
+6. Fill the database with data
+    ```shell
+    pnpm run db:seed
+    ```
+7. Start the server
+    ```shell
+    pnpm run dev
+    ```
 
-http://localhost:3000 - admin panel backend
+# Ports
 
-http://localhost:4200 - admin panel frontend
+- http://localhost:3000 - admin panel backend
+- http://localhost:4200 - admin panel frontend
+- http://localhost:4300 - client
 
-http://localhost:4300 - client
+# Run the linter
 
-## Linters
+```shell
+pnpm run lint
+```
 
-Run `pnpm run lint`
