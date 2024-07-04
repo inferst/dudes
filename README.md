@@ -23,7 +23,7 @@ Animated characters for chatters in your stream.
 # Run the database in docker
 
 ```shell
-docker compose -f docker-compose.development.yaml run -d
+docker compose -f compose.dev.yaml run -d
 ```
 
 > [!WARNING]
@@ -31,7 +31,7 @@ docker compose -f docker-compose.development.yaml run -d
 
 To change the PostgreSQL port, use the following command structure:
 ```shell
-docker compose -f docker-compose.development.yaml run -d -p <port>:5432
+docker compose -f compose.dev.yaml run -d -p <port>:5432
 ```
 
 # Run locally
