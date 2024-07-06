@@ -82,7 +82,7 @@ export function EditRewardForm(props: EditRewardFormProps) {
           })}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px]">
         <Form {...form}>
           <form id={uuid} name={uuid} onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
