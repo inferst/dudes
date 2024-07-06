@@ -3,7 +3,7 @@ WORKDIR /app
 RUN --mount=type=cache,target=/root/.local/share/pnpm/ \
 --mount=source=package.json,target=package.json \
 --mount=source=pnpm-lock.yaml,target=pnpm-lock.yaml \
-corepack enable && pnpm install && npx nx reset
+npm install -g pnpm && pnpm install && npx nx reset
 ENV PATH /app/node_modules/.bin:$PATH
 COPY . .
 CMD pnpm run db:migrate:dev && pnpm run dev --host 0.0.0.0 --inspect
