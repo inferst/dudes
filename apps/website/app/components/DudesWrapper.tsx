@@ -51,7 +51,6 @@ export const DudesWrapper = () => {
       data: data ?? {},
       info: mikeInfo,
       name: action,
-      cooldown: 0,
     });
 
     let userId = 1;

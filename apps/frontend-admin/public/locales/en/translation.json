@@ -62,5 +62,17 @@
   "SettingsForm.fallingRaidersText": "Falling raiders",
   "SettingsForm.fallingRaidersDescription": "Drop raiders in the top of screen",
   "SettingsPage.title": "Settings",
-  "DeleteDialog.cancelButtonText": "Cancel"
+  "DeleteDialog.cancelButtonText": "Cancel",
+  "AddJumpHitsActionDataForm.addJumpHitsText": "Jumps",
+  "AddJumpHitsActionDataForm.userArgumentText": "User argument",
+  "AddJumpHitsActionDataForm.valueText": "Value",
+  "SpriteActionDataForm.spriteText": "Sprite",
+  "SpriteActionDataForm.userArgumentText": "User argument",
+  "SpriteActionDataForm.valueText": "Value",
+  "SkinsPage.title": "Skins",
+  "SkinsPage.chatterIdText": "Chatter id",
+  "SkinsPage.spriteText": "Sprite",
+  "SkinsPage.addChatterSkinButtonText": "Add",
+  "SkinsPage.caption": "A list of chatters",
+  "SkinsPage.deleteButtonText": "Delete"
 }

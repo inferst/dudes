@@ -62,5 +62,17 @@
   "SettingsForm.fallingRaidersText": "Падающие рейдеры",
   "SettingsForm.fallingRaidersDescription": "Рейдеры падают сверху экрана",
   "SettingsPage.title": "Настройки",
-  "DeleteDialog.cancelButtonText": "Отмена"
+  "DeleteDialog.cancelButtonText": "Отмена",
+  "AddJumpHitsActionDataForm.addJumpHitsText": "Прыжки",
+  "AddJumpHitsActionDataForm.userArgumentText": "Аргумент",
+  "AddJumpHitsActionDataForm.valueText": "Значение",
+  "SpriteActionDataForm.spriteText": "Скин",
+  "SpriteActionDataForm.userArgumentText": "Аргумент",
+  "SpriteActionDataForm.valueText": "Значение",
+  "SkinsPage.title": "Скины",
+  "SkinsPage.chatterIdText": "Id чатера",
+  "SkinsPage.spriteText": "Скин",
+  "SkinsPage.addChatterSkinButtonText": "Добавить",
+  "SkinsPage.caption": "Список чатеров",
+  "SkinsPage.deleteButtonText": "Удалить"
 }
