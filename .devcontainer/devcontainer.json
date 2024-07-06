@@ -12,7 +12,7 @@
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
     },
 
-    "onCreateCommand": "pnpm run db:seed",
+    "onCreateCommand": "pnpm run db:migrate:dev && pnpm run db:seed",
 
     "postCreateCommand": "echo alias dudes=\\'docker compose -p dudes -f compose.dev.yaml\\' >> ~/.bashrc; bash",
 

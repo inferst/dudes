@@ -6,4 +6,4 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/ \
 npm install -g pnpm && pnpm install && npx nx reset
 ENV PATH /app/node_modules/.bin:$PATH
 COPY . .
-CMD pnpm run db:migrate:dev && pnpm run dev --host 0.0.0.0 --inspect
+CMD pnpm run dev --host 0.0.0.0 --inspect
