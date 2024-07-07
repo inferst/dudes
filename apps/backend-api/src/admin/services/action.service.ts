@@ -96,24 +96,24 @@ export class ActionService {
   ): Promise<UserInfo> {
     const chatter = await this.chatterService.getChatter(userId, chatterId);
 
-    // TODO: check that chatter data doesn't overwrite default user info
-    // if there is no values in chatter data
     let userInfo = {
       ...userAction.info,
-      sprite: chatter.sprite,
-      color: chatter.color,
+      sprite: chatter.sprite != '' ? chatter.sprite : userAction.info.sprite,
+      color: chatter.color != '' ? chatter.color : userAction.info.color,
     };
 
-    if (isColorUserActionEntity(userAction)) {
-      const info = { ...userInfo, color: userAction.data.color };
-      await this.chatterService.updateChatter(userId, chatterId, info);
+    if (await this.isUserActionValid(userId, userAction)) {
+      if (isColorUserActionEntity(userAction)) {
+        const info = { ...userInfo, color: userAction.data.color };
+        await this.chatterService.updateChatter(userId, chatterId, info);
 
-      return info;
-    } else if (isSpriteUserActionEntity(userAction)) {
-      const info = { ...userInfo, sprite: userAction.data.sprite };
-      await this.chatterService.updateChatter(userId, chatterId, info);
+        return info;
+      } else if (isSpriteUserActionEntity(userAction)) {
+        const info = { ...userInfo, sprite: userAction.data.sprite };
+        await this.chatterService.updateChatter(userId, chatterId, info);
 
-      return info;
+        return info;
+      }
     }
 
     return userInfo;
@@ -170,8 +170,6 @@ export class ActionService {
       userActionWithDefaultUserInfo
     );
 
-    // TODO: format color and sprite action to info
-    // probably it's better to place it in socket receiver
     const userInfo = await this.collectUserInfo(
       userActionWithUserDefaultData,
       userId,
@@ -196,7 +194,7 @@ export class ActionService {
       return;
     }
 
-    const action = await this.getActionById(command.id);
+    const action = await this.getActionById(command.actionId);
 
     if (!action) {
       return;
