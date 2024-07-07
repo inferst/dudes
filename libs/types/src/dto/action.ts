@@ -1,5 +1,7 @@
 import { Action } from '@prisma/client';
 import { UserInfo } from './user';
+import { testActionDtoSchema } from '..';
+import { z } from 'zod';
 
 export type ActionEntity = Action;
 
@@ -85,3 +87,5 @@ export const isAddJumpHitsUserActionEntity = (
 export const isResurrectUserActionEntity = (
   entity: ActionEntity
 ): entity is ResurrectUserActionEntity => entity.name == 'resurrect';
+
+export type TestActionDto = z.infer<typeof testActionDtoSchema>;

@@ -22,6 +22,7 @@ import {
 import { AddRewardForm, AddRewardFormInput } from './AddRewardForm';
 import { EditRewardForm, EditRewardFormInput } from './EditRewardForm';
 import { useTranslation } from 'react-i18next';
+import { TestForm } from '../../common/form/test/TestRewardForm';
 
 export function RewardsPage() {
   const { t } = useTranslation();
@@ -87,6 +88,14 @@ export function RewardsPage() {
   const getAction = (id: number): ActionEntity | undefined =>
     actions.find((action) => action.id === id);
 
+  const rewardTestForm = (reward: TwitchRewardEntity) => {
+    const action = actions.find((action) => action.id === reward.actionId);
+
+    if (action) {
+      return <TestForm action={action} data={reward.data}></TestForm>;
+    }
+  };
+
   const rewardForm = (reward: TwitchRewardEntity, index: number) => {
     const action = actions.find((action) => action.id === reward.actionId);
 
@@ -141,6 +150,7 @@ export function RewardsPage() {
               </TableHead>
               <TableHead className="w-[10px]"></TableHead>
               <TableHead className="w-[10px]"></TableHead>
+              <TableHead className="w-[10px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -160,6 +170,7 @@ export function RewardsPage() {
                 <TableCell>{getAction(reward.actionId)?.title}</TableCell>
                 <TableCell>{reward.cost}</TableCell>
                 <TableCell>{reward.title}</TableCell>
+                <TableCell>{rewardTestForm(reward)}</TableCell>
                 <TableCell>{rewardForm(reward, index)}</TableCell>
                 <TableCell className="text-right">
                   <DeleteDialog

@@ -11,6 +11,7 @@ import {
   CreateTwitchRewardDto,
   ChatterEntity,
   CreateChatterDto,
+  TestActionDto,
 } from '@lib/types';
 import axios, { GenericAbortSignal } from 'axios';
 
@@ -37,12 +38,19 @@ export const api = {
 
     return data;
   },
-  updateReward: async (reward: UpdateTwitchRewardDto): Promise<TwitchRewardEntity> => {
-    const { data } = await appAxios.put('/admin/reward/twitch/' + reward.id, reward);
+  updateReward: async (
+    reward: UpdateTwitchRewardDto
+  ): Promise<TwitchRewardEntity> => {
+    const { data } = await appAxios.put(
+      '/admin/reward/twitch/' + reward.id,
+      reward
+    );
 
     return data;
   },
-  createReward: async (reward: CreateTwitchRewardDto): Promise<TwitchRewardEntity> => {
+  createReward: async (
+    reward: CreateTwitchRewardDto
+  ): Promise<TwitchRewardEntity> => {
     const { data } = await appAxios.post('/admin/reward/twitch', reward);
 
     return data;
@@ -81,6 +89,11 @@ export const api = {
     const { data } = await appAxios.get('/admin/action/list', {
       signal,
     });
+
+    return data;
+  },
+  testAction: async (action: TestActionDto): Promise<void> => {
+    const { data } = await appAxios.post('/admin/action/test', action);
 
     return data;
   },
