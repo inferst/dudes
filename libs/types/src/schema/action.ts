@@ -105,3 +105,12 @@ export const getActionableEntityFormSchema = (
 
   return schema;
 };
+
+export const testActionFormSchema = z.object({});
+
+export const testActionDtoSchema = z
+  .object({
+    action: z.string(),
+    data: z.object({}),
+  })
+  .strict();

@@ -52,6 +52,10 @@ export class SocketService<
     return this.rooms;
   }
 
+  public getRoomByUserGuid(guid: string): Room | undefined {
+    return this.rooms.get(guid);
+  }
+
   public handleDisconnect(socket: TSocket): void {
     this.processDisconnect(socket);
     this.connectedClients.delete(socket.id);

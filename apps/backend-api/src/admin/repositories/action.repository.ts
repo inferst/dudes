@@ -6,6 +6,14 @@ import { Action } from '@prisma/client';
 export class ActionRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
+  public async getActionByName(name: string): Promise<Action | null> {
+    return await this.prismaService.action.findFirst({
+      where: {
+        name,
+      },
+    });
+  }
+
   public async getActions(): Promise<Action[]> {
     return this.prismaService.action.findMany({
       orderBy: {

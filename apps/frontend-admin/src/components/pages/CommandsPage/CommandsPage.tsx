@@ -17,6 +17,7 @@ import { useCommandsQuery } from '@app/frontend-admin/queries/commands';
 import { CommandEntity } from '@lib/types';
 import { Loader } from '../../common/Loader';
 import { useTranslation } from 'react-i18next';
+import { TestForm } from '../../common/form/test/TestRewardForm';
 
 export function CommandsPage() {
   const { t } = useTranslation();
@@ -70,6 +71,14 @@ export function CommandsPage() {
     }
   };
 
+  const testCommandForm = (command: CommandEntity) => {
+    const action = actions.find((action) => action.id === command.actionId);
+
+    if (action) {
+      return <TestForm action={action} data={command.data}></TestForm>;
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -96,6 +105,7 @@ export function CommandsPage() {
                 {t('CommandsPage.columnCooldown', { defaultValue: 'Cooldown' })}
               </TableHead>
               <TableHead className="w-[10px]"></TableHead>
+              <TableHead className="w-[10px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -112,6 +122,7 @@ export function CommandsPage() {
                 </TableCell>
                 <TableCell>{command.text}</TableCell>
                 <TableCell>{command.cooldown}</TableCell>
+                <TableCell>{testCommandForm(command)}</TableCell>
                 <TableCell>{commandForm(command, index)}</TableCell>
               </TableRow>
             ))}
