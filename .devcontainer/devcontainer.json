@@ -23,7 +23,12 @@
                 "dbaeumer.vscode-eslint",
                 "esbenp.prettier-vscode",
                 "ahmadalli.vscode-nginx-conf",
-                "ckolkman.vscode-postgres"
+                "ckolkman.vscode-postgres",
+                "Prisma.prisma",
+                "bradlc.vscode-tailwindcss",
+                "psulek-solo.zodschema-generator",
+                "CodeForge.remix-forge",
+                "ovi-ispas.remix-docs"
             ]
         }
     },
