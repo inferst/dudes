@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json
 {
     "name": "Dudes",
-    "dockerComposeFile": "../compose.dev.yaml",
+    "dockerComposeFile": "../compose.dev.app.yaml",
     "service": "app",
     "workspaceFolder": "/app",
     "shutdownAction": "stopCompose",

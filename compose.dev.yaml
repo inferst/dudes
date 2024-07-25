@@ -32,45 +32,6 @@ services:
     extra_hosts:
     - "host.docker.internal:host-gateway"
 
-  app:
-    container_name: app
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    env_file: .env
-    environment:
-      - DATABASE_URL=postgresql://dudes:dudes@postgres:5432/dudes?schema=public
-      - TWITCH_CALLBACK_URL=http://localhost:8080/api/auth/callback
-      - HOST_URL=http://localhost:8080
-      - ADMIN_URL=http://localhost:8080/admin
-      - CLIENT_URL=http://localhost:8080/client
-      - VITE_API_URL=http://localhost:8080/api
-    ports:
-      - 3000:3000
-      - 4200:4200
-      - 4300:4300
-      - 9229:9229 # Debugger
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - .:/app
-      - node-modules:/app/node_modules
-
-  website:
-    container_name: website
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    command: pnpm run website:dev --host 0.0.0.0
-    ports:
-      - 8000:4200
-    volumes:
-      - .:/app
-      - node-modules:/app/node_modules
-
 volumes:
   postgres-data:
     name: dudes-postgres
-  node-modules:
-    name: dudes-node-modules
