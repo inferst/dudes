@@ -34,7 +34,14 @@ dudes logs -f
 > [!TIP]
 > If you need your favorite extensions in the devcontainer, you can use the [defaultExtensions](https://code.visualstudio.com/docs/devcontainers/containers#_always-installed-extensions) option in VS Code.
 
-# Run the database in docker
+# Run project in docker
+
+To run the project in dev mode in docker compose run:
+```shell
+docker compose -f compose.dev.app.yaml run -d
+```
+
+## Run the database in docker
 
 ```shell
 docker compose -f compose.dev.yaml up -d
