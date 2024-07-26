@@ -31,6 +31,9 @@ For example, to view the logs in real time:
 dudes logs -f
 ```
 
+> [!TIP]
+> If you need your favorite extensions in the devcontainer, you can use the [defaultExtensions](https://code.visualstudio.com/docs/devcontainers/containers#_always-installed-extensions) option in VS Code.
+
 # Run the database in docker
 
 ```shell
