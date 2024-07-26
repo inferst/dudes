@@ -114,7 +114,7 @@ If you run the project locally, you need to run the docker compose file `compose
 - http://localhost:3000 - admin panel backend
 - http://localhost:4200 - admin panel frontend
 - http://localhost:4300 - client
-- http://localhost:8080 - full project ( provided you have nginx enabled)
+- http://localhost:8080 - full project (provided you have nginx enabled)
 
 # Run the linter
 
