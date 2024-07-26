@@ -24,7 +24,7 @@ Animated characters for chatters in your stream.
 
 Just install the [extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) and build it lol.
 
-In the development container, you'll have access to `docker` and a convenient alias `dudes`. This alias executes `docker compose -p dudes -f docker-compose.development.yaml`, streamlining your workflow.
+In the development container, you'll have access to `docker` and a convenient alias `dudes`. This alias executes `docker compose -p dudes -f compose.dev.app.yaml`, streamlining your workflow.
 
 For example, to view the logs in real time:
 ```shell

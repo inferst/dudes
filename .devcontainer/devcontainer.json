@@ -14,7 +14,7 @@
 
     "onCreateCommand": "pnpm run db:migrate:dev && pnpm run db:seed",
 
-    "postCreateCommand": "echo alias dudes=\\'docker compose -p dudes -f compose.dev.yaml\\' >> ~/.bashrc; bash",
+    "postCreateCommand": "echo alias dudes=\\'docker compose -p dudes -f compose.dev.app.yaml\\' >> ~/.bashrc; bash",
 
     "customizations": {
         "vscode": {
