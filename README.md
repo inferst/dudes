@@ -105,7 +105,7 @@ To connect to the PostgreSQL database, use the following credentials:
 
 Proxying will allow you to test 7TV emotes as well as proxy request parameters.
 
-If you use devcontainer or run the project in docker this will already work, you don't need to do anything.
+If you use [devcontainer](<#develop-in-devcontainer>) or [run the project in docker](<#run-project-in-docker>) this will already work, you don't need to do anything.
 
 If you run the project locally, you need to run the docker compose file `compose.dev.yaml` and also uncomment the variables in the `.env` file.
 
