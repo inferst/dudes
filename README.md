@@ -87,6 +87,19 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
 - http://localhost:4200 - admin panel frontend
 - http://localhost:4300 - client
 
+# Database Connection
+
+To connect to the PostgreSQL database, use the following credentials:
+
+- **Host**: localhost
+- **Port**: 5432
+- **Database**: dudes
+- **Username**: dudes
+- **Password**: dudes
+
+> [!TIP]
+> If you use Visual Studio Code, consider installing the [PostgreSQL extension](https://marketplace.visualstudio.com/items?itemName=ckolkman.vscode-postgres) for easier database management.
+
 # Run the linter
 
 ```shell
