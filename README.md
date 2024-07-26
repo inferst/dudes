@@ -81,12 +81,6 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
     pnpm run dev
     ```
 
-# Ports
-
-- http://localhost:3000 - admin panel backend
-- http://localhost:4200 - admin panel frontend
-- http://localhost:4300 - client
-
 # Database Connection
 
 To connect to the PostgreSQL database, use the following credentials:
@@ -99,6 +93,21 @@ To connect to the PostgreSQL database, use the following credentials:
 
 > [!TIP]
 > If you use Visual Studio Code, consider installing the [PostgreSQL extension](https://marketplace.visualstudio.com/items?itemName=ckolkman.vscode-postgres) for easier database management.
+
+# Proxying via nginx
+
+Proxying will allow you to test 7TV emotes as well as proxy request parameters.
+
+If you use devcontainer or run the project in docker this will already work, you don't need to do anything.
+
+If you run the project locally, you need to run the docker compose file `compose.dev.yaml` and also uncomment the variables in the `.env` file.
+
+# Ports
+
+- http://localhost:3000 - admin panel backend
+- http://localhost:4200 - admin panel frontend
+- http://localhost:4300 - client
+- http://localhost:8080 - full project ( provided you have nginx enabled)
 
 # Run the linter
 
