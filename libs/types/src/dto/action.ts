@@ -1,5 +1,6 @@
 import { Action } from '@prisma/client';
 import { UserInfo } from './user';
+import { Record } from '@prisma/client/runtime/library';
 
 export type ActionEntity = Action;
 
@@ -55,7 +56,7 @@ export type AddJumpHitsUserActionEntity = {
 
 export type ResurrectUserActionEntity = {
   name: 'resurrect';
-  data: {};
+  data: Record<string, never>;
 } & UserActionEntity;
 
 export const isJumpUserActionEntity = (

@@ -25,7 +25,7 @@ import { SettingsRepository } from './repositories/settings.repository';
 import { TwitchRewardRepository } from './repositories/twitch-reward.repository';
 import { EventClientFactory } from './event-client/event-client.factory';
 import { SessionController } from './controllers/session.controller';
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
 import { ChatterController } from './controllers/chatter.controller';
 import { ChatterRepository } from './repositories/chatter.repository';
 import { ConfigModule } from '../config/config.module';
