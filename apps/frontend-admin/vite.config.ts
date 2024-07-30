@@ -20,7 +20,7 @@ export default defineConfig({
   },
 
   preview: {
-    port: 4300,
+    port: 4200,
     host: 'localhost',
   },
 

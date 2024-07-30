@@ -143,18 +143,12 @@ export class SocketService<
     }
 
     eventClient.onChatMessage(async (data) => {
+      const customEmotes = emoteClient.getEmotes(data.message);
+      const emotes = data.emotes.concat(customEmotes.map((emote) => emote.url));
+
       const action = await this.actionService.getUserActionByMessage(
         user.userId,
         data.message,
-        data.userId
-      );
-
-      const otherEmotes = emoteClient.getEmotes(data.message);
-
-      const emotes = data.emotes.concat(otherEmotes.map((emote) => emote.url));
-
-      const chatterInfo = await this.getChatterInfo(
-        user.userId,
         data.userId,
         data.info
       );
@@ -165,26 +159,29 @@ export class SocketService<
           ...action,
           emotes,
           cooldown: 0,
-          info: chatterInfo,
         };
 
         socket.emit('action', actionData);
         socket.broadcast.to(userGuid).emit('action', actionData);
-
-        this.actionService.storeChatterAction(user.userId, action, data.userId);
       }
 
+      const message = this.chatMessageService.formatMessage(data.message);
+
       const strippedMessage = this.chatMessageService.stripEmotes(
-        data.message,
-        otherEmotes.map((emote) => emote.name)
+        message,
+        customEmotes.map((emote) => emote.name)
       );
 
-      const message = this.chatMessageService.formatMessage(strippedMessage);
+      if (strippedMessage || emotes.length > 0) {
+        let chatterInfo = await this.getChatterInfo(
+          user.userId,
+          data.userId,
+          data.info
+        );
 
-      if (message || emotes.length > 0) {
         const messageData = {
           ...data,
-          message,
+          message: strippedMessage,
           emotes,
           info: chatterInfo,
         };
@@ -234,12 +231,6 @@ export class SocketService<
           ...action,
           info: chatterInfo,
         };
-
-        this.actionService.storeChatterAction(
-          user.userId,
-          actionData,
-          data.userId
-        );
 
         socket.emit('action', actionData);
         socket.broadcast.to(userGuid).emit('action', actionData);
