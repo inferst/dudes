@@ -37,7 +37,7 @@ export function SettingsForm(props: SettingsFormProps) {
   );
 
   useEffect(() => {
-    const watcher = form.watch((data) => {
+    const watcher = form.watch(() => {
       handleSubmit();
     });
 
