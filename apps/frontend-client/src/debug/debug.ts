@@ -20,7 +20,6 @@ export class Debug {
     setTimeout(() => {
       this.dudes.processAction({
         userId: '1',
-        cooldown: 0,
         data: {
           sprite: 'sith',
         },
@@ -37,7 +36,6 @@ export class Debug {
 
       this.dudes.processAction({
         userId: '1',
-        cooldown: 0,
         data: {
           color: 'cyan',
         },

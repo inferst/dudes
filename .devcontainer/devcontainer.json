@@ -6,7 +6,7 @@
   // "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
   // "build": { "dockerfile": "Dockerfile" },
   "dockerComposeFile": [
-    "../docker-compose.development.yaml",
+    "../compose.dev.yaml",
     "devcontainer.extend.yml"
   ],
 

@@ -159,8 +159,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.1
       evotars:
-        specifier: 0.0.12
-        version: 0.0.12
+        specifier: ^0.0.14
+        version: 0.0.14
       express:
         specifier: ^4.18.3
         version: 4.19.2
@@ -3454,8 +3454,8 @@ packages:
   '@webassemblyjs/wast-printer@1.12.1':
     resolution: {integrity: sha512-+X4WAlOisVWQMikjbcvY2e0rwPsKQ9F688lksZhBcPycBBuii3O7m8FACbDMWDojpAqvjIncrG8J0XHKyQfVeA==}
 
-  '@webgpu/types@0.1.42':
-    resolution: {integrity: sha512-uvJtt4OD1Vjdebrrz3kNLgpOicYbikwnM8WPG6YD2lkCOHDtPdEtCINJFIFtbOCtPfA8SreR/vKyUNbAt92IwQ==}
+  '@webgpu/types@0.1.43':
+    resolution: {integrity: sha512-HoP+d+m+Kuq8CsE63BZ3+BYBKAemrqbHUNrCalxrUju5XW+q/094Q3oeIa+2pTraEbO8ckJmGpibzyGT4OV4YQ==}
 
   '@xmldom/xmldom@0.8.10':
     resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
@@ -4954,8 +4954,8 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
-  evotars@0.0.12:
-    resolution: {integrity: sha512-PSNfznK/Uj/UXcYtHqsWZSBSQzoEorWSFaM7uB4vVPzKBRRpOga++7XSEKcwAkiTOcWtwJzBAIXY/7nVTO9H6A==}
+  evotars@0.0.14:
+    resolution: {integrity: sha512-fF1nQZdsKuSlgdjlK2+9GVrWPiJal1ZDjCh2lBUfcqXgPKQlIULVscY7ELXArFwilpq2fIntwDzVJPzDQLwHTA==}
 
   execa@0.7.0:
     resolution: {integrity: sha512-RztN09XglpYI7aBBrJCPW95jEH7YF1UEPOoX9yDhUTPdp7mK+CQvnLTuD10BNXZ3byLTu2uehZ8EcKT/4CGiFw==}
@@ -7030,8 +7030,8 @@ packages:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
 
-  pixi.js@8.1.6:
-    resolution: {integrity: sha512-FZT/dLZ9Tdw8eN6odgunSQHORsgHcvLlfOWm7cpR4ZxVGPRqFgDQ4hXpwVxeY9UK4PZtlJ4U910H1QZ4XNLJxg==}
+  pixi.js@8.2.2:
+    resolution: {integrity: sha512-L/EmsJ74bYyFIZoF4RdaU0yOuWGR179/QMLnptCVjRhhhg4tgW7ABs7uvp2Z0psOKvpNanaRF/kIliD8Rm5dVw==}
 
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
@@ -11304,9 +11304,9 @@ snapshots:
 
   '@pixi/colord@2.9.6': {}
 
-  '@pixi/gif@3.0.1(pixi.js@8.1.6)':
+  '@pixi/gif@3.0.1(pixi.js@8.2.2)':
     dependencies:
-      pixi.js: 8.1.6
+      pixi.js: 8.2.2
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -13112,7 +13112,7 @@ snapshots:
       '@webassemblyjs/ast': 1.12.1
       '@xtuc/long': 4.2.2
 
-  '@webgpu/types@0.1.42': {}
+  '@webgpu/types@0.1.43': {}
 
   '@xmldom/xmldom@0.8.10': {}
 
@@ -14902,11 +14902,11 @@ snapshots:
 
   events@3.3.0: {}
 
-  evotars@0.0.12:
+  evotars@0.0.14:
     dependencies:
-      '@pixi/gif': 3.0.1(pixi.js@8.1.6)
+      '@pixi/gif': 3.0.1(pixi.js@8.2.2)
       '@tweenjs/tween.js': 23.1.2
-      pixi.js: 8.1.6
+      pixi.js: 8.2.2
       tinycolor2: 1.6.0
 
   execa@0.7.0:
@@ -17491,12 +17491,12 @@ snapshots:
 
   pirates@4.0.6: {}
 
-  pixi.js@8.1.6:
+  pixi.js@8.2.2:
     dependencies:
       '@pixi/colord': 2.9.6
       '@types/css-font-loading-module': 0.0.12
       '@types/earcut': 2.1.4
-      '@webgpu/types': 0.1.42
+      '@webgpu/types': 0.1.43
       '@xmldom/xmldom': 0.8.10
       earcut: 2.2.4
       eventemitter3: 5.0.1

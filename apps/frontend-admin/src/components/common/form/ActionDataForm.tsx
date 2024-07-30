@@ -1,5 +1,6 @@
 import {
   ActionEntity,
+  isAddJumpHitsUserActionEntity,
   isColorUserActionEntity,
   isDashUserActionEntity,
   isGrowUserActionEntity,
@@ -12,6 +13,7 @@ import { DashActionDataForm } from './DashActionDataForm';
 import { GrowActionDataForm } from './GrowActionDataForm';
 import { JumpActionDataForm } from './JumpActionDataForm';
 import { SpriteActionDataForm } from './SpriteActionDataForm';
+import { AddJumpHitsActionDataForm } from './AddJumpHitsActionDataForm';
 
 export type ActionDataInput = { data: PrismaJson.ActionableData };
 
@@ -41,6 +43,10 @@ export function ActionDataForm(props: ActionDataFormProps) {
 
   if (isSpriteUserActionEntity(action)) {
     return <SpriteActionDataForm form={form} />;
+  }
+
+  if (isAddJumpHitsUserActionEntity(action)) {
+    return <AddJumpHitsActionDataForm form={form} />;
   }
 
   return;

@@ -13,7 +13,7 @@ jobs:
     - name: Copy folder content recursively to remote
       uses: appleboy/scp-action@v0.1.7
       with:
-        source: "apps,libs,nginx,docker-compose.production.yaml,Dockerfile,nx.json,package-lock.json,package.json,pnpm-lock.yaml,tsconfig.base.json"
+        source: "apps,libs,nginx,compose.prod.yaml,Dockerfile,nx.json,package-lock.json,package.json,pnpm-lock.yaml,tsconfig.base.json"
         target: /srv/dudes
         host: ${{ secrets.hostname }}
         username: ${{ secrets.USERNAME }}
@@ -68,8 +68,8 @@ jobs:
         envs: HOST_URL,ADMIN_URL,CLIENT_URL,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_CALLBACK_URL,SESSION_SECRET,DATABASE_URL,REMIX_PORT
         script: |
           cd /srv/dudes
-          docker compose -f docker-compose.production.yaml down
-          docker compose -f docker-compose.production.yaml up -d
+          docker compose -f compose.prod.yaml down
+          docker compose -f compose.prod.yaml up -d
   health_check:
     runs-on: ubuntu-latest
     timeout-minutes: 5

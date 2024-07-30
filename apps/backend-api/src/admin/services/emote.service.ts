@@ -134,7 +134,7 @@ export class EmoteService {
 
       const ws = new WebSocket('wss://events.7tv.io/v3');
 
-      let emoteSetId = emotesData.emoteSetId;
+      const emoteSetId = emotesData.emoteSetId;
 
       const userUpdateSubscribe = {
         op: 35,
@@ -146,7 +146,7 @@ export class EmoteService {
         },
       };
 
-      ws.onopen = () => {
+      ws.onopen = (): void => {
         ws.send(
           JSON.stringify({
             op: 35,
@@ -161,7 +161,7 @@ export class EmoteService {
 
         ws.send(JSON.stringify(userUpdateSubscribe));
 
-        ws.onmessage = async (event: any) => {
+        ws.onmessage = async (event: any): Promise<void> => {
           const data = JSON.parse(event.data);
 
           if (isSeventTVEventUserUpdate(data)) {
@@ -210,7 +210,7 @@ export class EmoteService {
             if (pulled) {
               const data = pulled.map((emote) => emote.old_value.name);
 
-              for (let name of data) {
+              for (const name of data) {
                 delete emotes[name];
               }
             }
@@ -236,7 +236,7 @@ export class EmoteService {
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket connected`);
       };
 
-      ws.onclose = async () => {
+      ws.onclose = async (): Promise<void> => {
         if (!isClosed) {
           setTimeout(async () => {
             connection = await connect();
@@ -246,7 +246,7 @@ export class EmoteService {
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket closed`);
       };
 
-      ws.onerror = (_: any) => {
+      ws.onerror = (_: any): void => {
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket error`);
       };
 
@@ -262,10 +262,10 @@ export class EmoteService {
 
         return entries;
       },
-      connect: async () => {
+      connect: async (): Promise<void> => {
         connection = await connect();
       },
-      disconnect: () => {
+      disconnect: (): void => {
         connection?.close();
         isClosed = true;
       },

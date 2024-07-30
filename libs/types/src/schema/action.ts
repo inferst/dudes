@@ -1,10 +1,12 @@
 import { ZodObject, ZodRawShape, z } from 'zod';
 import {
   ActionEntity,
+  isAddJumpHitsUserActionEntity,
   isColorUserActionEntity,
   isDashUserActionEntity,
   isGrowUserActionEntity,
   isJumpUserActionEntity,
+  isResurrectUserActionEntity,
   isSpriteUserActionEntity,
 } from '../dto';
 
@@ -55,6 +57,20 @@ export const spriteActionData = {
   }),
 };
 
+export const addJumpHitsActionData = {
+  data: z.object({
+    action: z.object({
+      count: z.number(),
+    }),
+  }),
+};
+
+export const resurrectActionData = {
+  data: z.object({
+    action: z.object({}),
+  }),
+};
+
 export const getActionableEntityFormSchema = (
   action: ActionEntity,
   schema: ZodObject<ZodRawShape>
@@ -77,6 +93,14 @@ export const getActionableEntityFormSchema = (
 
   if (isSpriteUserActionEntity(action)) {
     return schema.extend(spriteActionData);
+  }
+
+  if (isAddJumpHitsUserActionEntity(action)) {
+    return schema.extend(addJumpHitsActionData);
+  }
+
+  if (isResurrectUserActionEntity(action)) {
+    return schema.extend(resurrectActionData);
   }
 
   return schema;

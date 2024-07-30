@@ -9,12 +9,13 @@
     "lint:eslint": "nx run-many --target=lint",
     "lint:types": "nx run-many --target=lint-types",
     "website:dev": "nx run website:serve",
+    "shadcn-ui": "TS_NODE_PROJECT=tsconfig.base.json npx shadcn-ui@latest",
     "db:generate": "prisma generate --schema=apps/backend-api/prisma/schema.prisma",
     "db:migrate:dev": "prisma migrate dev --schema=apps/backend-api/prisma/schema.prisma",
     "db:migrate:deploy": "prisma migrate deploy --schema=apps/backend-api/prisma/schema.prisma",
     "db:seed": "prisma db seed --schema=apps/backend-api/prisma/schema.prisma",
-    "shadcn-ui": "TS_NODE_PROJECT=tsconfig.base.json npx shadcn-ui@latest",
-    "scan": "pnpm run i18next-scanner --output /locales 'src/**/*.{ts,tsx}'"
+    "i18n:admin": "i18next-scanner --output locales 'apps/frontend-admin/src/**/*.{ts,tsx}'",
+    "i18n:website": "i18next-scanner --output locales 'apps/website/src/**/*.{ts,tsx}'"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} apps/backend-api/src/database/seed/seed.ts"
@@ -70,7 +71,7 @@
     "class-validator": "^0.14.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "evotars": "0.0.12",
+    "evotars": "^0.0.14",
     "express": "^4.18.3",
     "express-session": "^1.18.0",
     "i18next": "^23.10.1",

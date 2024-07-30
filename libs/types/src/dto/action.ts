@@ -1,5 +1,6 @@
 import { Action } from '@prisma/client';
 import { UserInfo } from './user';
+import { Record } from '@prisma/client/runtime/library';
 
 export type ActionEntity = Action;
 
@@ -45,6 +46,18 @@ export type SpriteUserActionEntity = {
   };
 } & UserActionEntity;
 
+export type AddJumpHitsUserActionEntity = {
+  name: 'add_jump_hits';
+  data: {
+    count: number;
+  };
+} & UserActionEntity;
+
+export type ResurrectUserActionEntity = {
+  name: 'resurrect';
+  data: Record<string, never>;
+} & UserActionEntity;
+
 export const isJumpUserActionEntity = (
   entity: ActionEntity
 ): entity is JumpUserActionEntity => entity.name == 'jump';
@@ -64,3 +77,11 @@ export const isDashUserActionEntity = (
 export const isSpriteUserActionEntity = (
   entity: ActionEntity
 ): entity is SpriteUserActionEntity => entity.name == 'sprite';
+
+export const isAddJumpHitsUserActionEntity = (
+  entity: ActionEntity
+): entity is AddJumpHitsUserActionEntity => entity.name == 'add_jump_hits';
+
+export const isResurrectUserActionEntity = (
+  entity: ActionEntity
+): entity is ResurrectUserActionEntity => entity.name == 'resurrect';
