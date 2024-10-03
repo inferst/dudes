@@ -23,7 +23,7 @@ Animated characters for chatters in your stream.
 # Run the database in docker
 
 ```shell
-docker compose -f compose.dev.yaml run -d
+docker compose -f compose.dev.yaml up -d
 ```
 
 > [!WARNING]
