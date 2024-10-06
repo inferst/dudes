@@ -4,13 +4,13 @@ import {
   UpdateSettingsForm,
   updateSettingsDtoSchema,
 } from '@lib/types';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Form, FormField } from '../../ui/form';
 import { Label } from '../../ui/label';
 import { Switch } from '../../ui/switch';
 import { Separator } from '../../ui/separator';
 import { useTranslation } from 'react-i18next';
+import { Input } from '../../ui/input';
 
 type FormInput = UpdateSettingsDto;
 
@@ -35,14 +35,6 @@ export function SettingsForm(props: SettingsFormProps) {
       console.log('invalid: ', error);
     }
   );
-
-  useEffect(() => {
-    const watcher = form.watch(() => {
-      handleSubmit();
-    });
-
-    return () => watcher.unsubscribe();
-  }, [form, handleSubmit]);
 
   return (
     <Form {...form}>
@@ -74,6 +66,7 @@ export function SettingsForm(props: SettingsFormProps) {
                   id="fallingDudes"
                   onCheckedChange={(value) => {
                     field.onChange(value);
+                    handleSubmit();
                   }}
                   checked={field.value}
                   value={`${field.value}`}
@@ -108,6 +101,7 @@ export function SettingsForm(props: SettingsFormProps) {
                   id="showAnonymousDudes"
                   onCheckedChange={(value) => {
                     field.onChange(value);
+                    handleSubmit();
                   }}
                   checked={field.value}
                   value={`${field.value}`}
@@ -148,10 +142,47 @@ export function SettingsForm(props: SettingsFormProps) {
                   id="fallingRaiders"
                   onCheckedChange={(value) => {
                     field.onChange(value);
+                    handleSubmit();
                   }}
                   checked={field.value}
                   value={`${field.value}`}
                 ></Switch>
+              );
+            }}
+          ></FormField>
+        </div>
+      </div>
+      <Separator className="mt-4 mb-8" />
+      <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+        {t('SettingsForm.usersTitle', {
+          defaultValue: 'Users',
+        })}
+      </h4>
+      <Separator className="my-4" />
+      <div className="grid grid-cols-4 gap-4 mt-4">
+        <div>
+          <Label htmlFor="hiddenUsers" className="text-xl">
+            {t('SettingsForm.hiddenUsersText', {
+              defaultValue: 'Hidden Users',
+            })}
+          </Label>
+          <p className="text-sm text-muted-foreground">
+            {t('SettingsForm.hiddenUsersDescription', {
+              defaultValue: 'Hidden Users',
+            })}
+          </p>
+        </div>
+        <div className="col-span-3">
+          <FormField
+            control={form.control}
+            name={'hiddenUsers'}
+            render={() => {
+              return (
+                <Input
+                  id="hiddenUsers"
+                  {...form.register('hiddenUsers')}
+                  onBlur={handleSubmit}
+                />
               );
             }}
           ></FormField>
