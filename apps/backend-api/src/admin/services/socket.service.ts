@@ -1,6 +1,6 @@
 import { UserRepository } from '@app/backend-api/admin/repositories';
 import { Injectable, Logger } from '@nestjs/common';
-import { UserToken } from '@prisma/client';
+import { Settings, UserToken } from '@prisma/client';
 import {
   ClientToServerEvents,
   ServerToClientsEvents,
@@ -143,6 +143,10 @@ export class SocketService<
     }
 
     eventClient.onChatMessage(async (data) => {
+      if (this.isHiddenChatter(data.info.displayName, settings)) {
+        return;
+      }
+
       const customEmotes = emoteClient.getEmotes(data.message);
       const emotes = data.emotes.concat(customEmotes.map((emote) => emote.url));
 
@@ -173,7 +177,7 @@ export class SocketService<
       );
 
       if (strippedMessage || emotes.length > 0) {
-        let chatterInfo = await this.getChatterInfo(
+        const chatterInfo = await this.getChatterInfo(
           user.userId,
           data.userId,
           data.info
@@ -192,8 +196,12 @@ export class SocketService<
     });
 
     eventClient.onChatters((data) => {
-      socket.emit('chatters', data);
-      socket.broadcast.to(userGuid).emit('chatters', data);
+      const entities = data.filter(
+        (entity) => !this.isHiddenChatter(entity.name, settings)
+      );
+
+      socket.emit('chatters', entities);
+      socket.broadcast.to(userGuid).emit('chatters', entities);
     });
 
     eventClient.onRaid(async (data) => {
@@ -214,6 +222,10 @@ export class SocketService<
     });
 
     eventClient.onRewardRedemptionAdd(async (data) => {
+      if (this.isHiddenChatter(data.userDisplayName, settings)) {
+        return;
+      }
+
       const action = await this.actionService.getUserActionByReward(
         user.userId,
         user.platformUserId,
@@ -238,6 +250,14 @@ export class SocketService<
     });
 
     this.logger.log('Chat client initialized in room with id: ' + userGuid);
+  }
+
+  private isHiddenChatter(userName: string, settings: Settings): boolean {
+    return (
+      settings.data.hiddenUsers
+        ?.split(' ')
+        .some((user) => user.toLowerCase() == userName.toLowerCase()) ?? false
+    );
   }
 
   private async getChatterInfo(

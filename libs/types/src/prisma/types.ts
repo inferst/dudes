@@ -5,6 +5,7 @@ declare global {
       showAnonymousDudes?: boolean;
       fallingDudes?: boolean;
       fallingRaiders?: boolean;
+      hiddenUsers?: string;
       sprites?: {
         sets?: string[];
       };
