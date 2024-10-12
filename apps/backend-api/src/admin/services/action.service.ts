@@ -96,7 +96,7 @@ export class ActionService {
   ): Promise<UserInfo> {
     const chatter = await this.chatterService.getChatter(userId, chatterId);
 
-    let userInfo = {
+    const userInfo = {
       ...userAction.info,
       sprite: chatter.sprite != '' ? chatter.sprite : userAction.info.sprite,
       color: chatter.color != '' ? chatter.color : userAction.info.color,
