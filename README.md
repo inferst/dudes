@@ -38,13 +38,13 @@ dudes logs -f
 
 To run the project in dev mode in docker compose run:
 ```shell
-docker compose -f compose.dev.app.yaml run -d
+docker compose -f compose.dev.app.yaml up -d
 ```
 
 ## Run the database in docker
 
 ```shell
-docker compose -f compose.dev.yaml up -d
+docker compose -f compose.dev.yaml run -d postgres
 ```
 
 > [!WARNING]
@@ -52,7 +52,7 @@ docker compose -f compose.dev.yaml up -d
 
 To change the PostgreSQL port, use the following command structure:
 ```shell
-docker compose -f compose.dev.yaml run -d -p <port>:5432
+docker compose -f compose.dev.yaml run -d -p <port>:5432 postgres
 ```
 
 # Run locally
