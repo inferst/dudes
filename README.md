@@ -41,8 +41,9 @@ To run the project in dev mode in docker compose run:
 docker compose -f compose.dev.app.yaml up -d
 ```
 
-## Run the database in docker
+# Run the database in docker
 
+If you only need to run the database:
 ```shell
 docker compose -f compose.dev.yaml run -d postgres
 ```
@@ -53,6 +54,17 @@ docker compose -f compose.dev.yaml run -d postgres
 To change the PostgreSQL port, use the following command structure:
 ```shell
 docker compose -f compose.dev.yaml run -d -p <port>:5432 postgres
+```
+
+# Proxying via nginx
+
+Proxying will allow you to test 7TV emotes as well as proxy request parameters.
+
+If you use [devcontainer](<#develop-in-devcontainer>) or [run the project in docker](<#run-project-in-docker>) this will already work, you don't need to do anything.
+
+If you run the project locally, you need to run the docker compose file `compose.dev.yaml` and also uncomment the variables in the `.env` file:
+```shell
+docker compose -f compose.dev.yaml run -d nginx
 ```
 
 # Run locally
@@ -101,17 +113,6 @@ To connect to the PostgreSQL database, use the following credentials:
 > [!TIP]
 > If you use Visual Studio Code, consider installing the [PostgreSQL extension](https://marketplace.visualstudio.com/items?itemName=ckolkman.vscode-postgres) for easier database management.
 
-# Proxying via nginx
-
-Proxying will allow you to test 7TV emotes as well as proxy request parameters.
-
-If you use [devcontainer](<#develop-in-devcontainer>) or [run the project in docker](<#run-project-in-docker>) this will already work, you don't need to do anything.
-
-If you run the project locally, you need to run the docker compose file `compose.dev.yaml` and also uncomment the variables in the `.env` file:
-```shell
-docker compose -f compose.dev.yaml run -d
-```
-
 # Ports
 
 - http://localhost:3000 - admin panel backend
@@ -124,4 +125,3 @@ docker compose -f compose.dev.yaml run -d
 ```shell
 pnpm run lint
 ```
-
