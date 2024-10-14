@@ -17,13 +17,35 @@ align="right"
 
 Animated characters for chatters in your stream.
 
+# Develop in devcontainer
 
+> [!IMPORTANT]
+> You need the [docker](https://docs.docker.com/get-docker/) installed and running.
 
+Just install the [extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) and build it lol.
+
+In the development container, you'll have access to `docker` and a convenient alias `dudes`. This alias executes `docker compose -p dudes -f compose.dev.app.yaml`, streamlining your workflow.
+
+For example, to view the logs in real time:
+```shell
+dudes logs -f
+```
+
+> [!TIP]
+> If you need your favorite extensions in the devcontainer, you can use the [defaultExtensions](https://code.visualstudio.com/docs/devcontainers/containers#_always-installed-extensions) option in VS Code.
+
+# Run project in docker
+
+To run the project in dev mode in docker compose run:
+```shell
+docker compose -f compose.dev.app.yaml up -d
+```
 
 # Run the database in docker
 
+If you only need to run the database:
 ```shell
-docker compose -f compose.dev.yaml up -d
+docker compose -f compose.dev.yaml run -d postgres
 ```
 
 > [!WARNING]
@@ -31,7 +53,18 @@ docker compose -f compose.dev.yaml up -d
 
 To change the PostgreSQL port, use the following command structure:
 ```shell
-docker compose -f compose.dev.yaml run -d -p <port>:5432
+docker compose -f compose.dev.yaml run -d -p <port>:5432 postgres
+```
+
+# Proxying via nginx
+
+Proxying will allow you to test 7TV emotes as well as proxy request parameters.
+
+If you use [devcontainer](<#develop-in-devcontainer>) or [run the project in docker](<#run-project-in-docker>) this will already work, you don't need to do anything.
+
+If you run the project locally, you need to run the docker compose file `compose.dev.yaml` and also uncomment the variables in the `.env` file:
+```shell
+docker compose -f compose.dev.yaml run -d nginx
 ```
 
 # Run locally
@@ -67,15 +100,28 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
     pnpm run dev
     ```
 
+# Database Connection
+
+To connect to the PostgreSQL database, use the following credentials:
+
+- **Host**: localhost
+- **Port**: 5432
+- **Database**: dudes
+- **Username**: dudes
+- **Password**: dudes
+
+> [!TIP]
+> If you use Visual Studio Code, consider installing the [PostgreSQL extension](https://marketplace.visualstudio.com/items?itemName=ckolkman.vscode-postgres) for easier database management.
+
 # Ports
 
 - http://localhost:3000 - admin panel backend
 - http://localhost:4200 - admin panel frontend
 - http://localhost:4300 - client
+- http://localhost:8080 - full project (provided you have nginx enabled)
 
 # Run the linter
 
 ```shell
 pnpm run lint
 ```
-

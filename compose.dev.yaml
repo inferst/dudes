@@ -1,7 +1,8 @@
 services:
   postgres:
+    container_name: postgres
     image: postgres:15-alpine
-    container_name: dudes-postgres
+    restart: unless-stopped
     ports:
       - 5432:5432
     volumes:
@@ -10,6 +11,27 @@ services:
       - POSTGRES_PASSWORD=dudes
       - POSTGRES_USER=dudes
       - POSTGRES_DB=dudes
+      - PGUSER=dudes
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      timeout: 10s
+      interval: 10s
+      retries: 5
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    entrypoint: /dev-entrypoint.sh
+    command: nginx -g 'daemon off;'
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx/dev-entrypoint.sh:/dev-entrypoint.sh
+      - ./nginx/default.conf:/default.conf
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
 
 volumes:
   postgres-data:
+    name: dudes-postgres

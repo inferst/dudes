@@ -1,47 +1,39 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+// For format details, see https://aka.ms/devcontainer.json
 {
-  "name": "Dudes",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  // "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye",
-  // "build": { "dockerfile": "Dockerfile" },
-  "dockerComposeFile": [
-    "../compose.dev.yaml",
-    "devcontainer.extend.yml"
-  ],
+    "name": "Dudes",
+    "dockerComposeFile": "../compose.dev.app.yaml",
+    "service": "app",
+    "workspaceFolder": "/app",
+    "shutdownAction": "stopCompose",
 
-  "service": "devcontainer",
-  "workspaceFolder": "/workspaces",
-  "shutdownAction": "stopCompose",
+    // More info: https://containers.dev/features
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
 
-  // Features to add to the dev container. More info: https://containers.dev/features.
-  "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-  },
+    "onCreateCommand": "pnpm run db:migrate:dev && pnpm run db:seed",
 
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000, 4200, 4300],
+    "postCreateCommand": "echo alias dudes=\\'docker compose -p dudes -f compose.dev.app.yaml\\' >> ~/.bashrc; bash",
 
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "echo 'alias nx=\"pnpm exec nx\"' >> ~/.bashrc",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "EditorConfig.EditorConfig",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "ahmadalli.vscode-nginx-conf",
+                "ckolkman.vscode-postgres",
+                "Prisma.prisma",
+                "bradlc.vscode-tailwindcss",
+                "psulek-solo.zodschema-generator",
+                "CodeForge.remix-forge",
+                "ovi-ispas.remix-docs"
+            ]
+        }
+    },
 
-  // Configure tool-specific properties.
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-azuretools.vscode-docker",
-        "EditorConfig.EditorConfig",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "eamodio.gitlens"
-      ]
-    }
-  },
-
-  "containerEnv": {
-    "DATABASE_URL": "postgresql://dudes:dudes@postgres:5432/dudes?schema=public"
-  }
-
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  // "remoteUser": "root"
+    "mounts": [
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/git,target=/root/.config/git,type=bind,readonly"
+    ]
 }
