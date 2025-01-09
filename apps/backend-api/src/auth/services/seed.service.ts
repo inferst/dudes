@@ -6,6 +6,7 @@ import { defaultColorCommandSeed } from '@app/backend-api/database/seed/commands
 import { defaultGrowCommandSeed } from '@app/backend-api/database/seed/commands/grow';
 import { defaultDashCommandSeed } from '@app/backend-api/database/seed/commands/dash';
 import { defaultSpriteCommandSeed } from '@app/backend-api/database/seed/commands/sprite';
+import { defaultSkins } from '@app/backend-api/database/seed/skins';
 
 @Injectable()
 export class SeedService {
@@ -17,5 +18,10 @@ export class SeedService {
     await defaultGrowCommandSeed(this.prismaService, user);
     await defaultDashCommandSeed(this.prismaService, user);
     await defaultSpriteCommandSeed(this.prismaService, user);
+  }
+
+  public async createDefaultData(user: User): Promise<void> {
+    await this.createDefaultCommands(user);
+    await defaultSkins(this.prismaService, user);
   }
 }

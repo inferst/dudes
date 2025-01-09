@@ -53,7 +53,7 @@ export class AuthService {
 
     const user = await this.userRepository.getByIdOrCreate(userToken.userId);
 
-    await this.commandRepository.createDefaultCommands(user);
+    await this.commandRepository.createDefaultData(user);
 
     return {
       userId: user.id,
