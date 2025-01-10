@@ -1,4 +1,5 @@
 FROM node:20-alpine
+RUN apt-get install -y openssl
 ARG VITE_CLIENT_SOCKET_HOST
 ARG VITE_CJS_IGNORE_WARNING
 ARG VITE_API_URL
