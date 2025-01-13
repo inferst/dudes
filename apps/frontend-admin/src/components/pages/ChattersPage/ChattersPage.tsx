@@ -32,7 +32,7 @@ import {
 } from '@app/frontend-admin/mutations/chatters';
 import { Loader } from '../../common/Loader';
 
-export function SkinsPage() {
+export function ChattersPage() {
   const { t } = useTranslation();
 
   const sprites = [
@@ -89,14 +89,14 @@ export function SkinsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('SkinsPage.title', { defaultValue: 'Skins' })}</CardTitle>
+        <CardTitle>{t('ChattersPage.title', { defaultValue: 'Chatters' })}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form id={uuid} name={uuid} onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="chatter-name" className="text-right">
-                {t('SkinsPage.chatterIdText', {
+                {t('ChattersPage.chatterIdText', {
                   defaultValue: 'Chatter id',
                 })}
               </Label>
@@ -125,7 +125,7 @@ export function SkinsPage() {
 
             <div className="grid grid-cols-4 items-center gap-4 mt-4">
               <Label htmlFor="chatter-sprite" className="text-right">
-                {t('SkinsPage.spriteText', {
+                {t('ChattersPage.spriteText', {
                   defaultValue: 'Sprite',
                 })}
               </Label>
@@ -159,7 +159,7 @@ export function SkinsPage() {
             <div className="grid grid-cols-4 items-center gap-4 mt-4">
               <div className="col-start-2">
                 <Button type="submit">
-                  {t('SkinsPage.addChatterSkinButtonText', {
+                  {t('ChattersPage.addChatterSkinButtonText', {
                     defaultValue: 'Add',
                   })}
                 </Button>
@@ -170,7 +170,7 @@ export function SkinsPage() {
 
         <Table className="mt-4">
           <TableCaption>
-            {t('SkinsPage.caption', {
+            {t('ChattersPage.caption', {
               defaultValue: 'A list of chatters',
             })}
           </TableCaption>
@@ -185,7 +185,7 @@ export function SkinsPage() {
                     variant={'secondary'}
                     onClick={() => handleDelete(chatter.id)}
                   >
-                    {t('SkinsPage.deleteButtonText', {
+                    {t('ChattersPage.deleteButtonText', {
                       defaultValue: 'Delete',
                     })}
                   </Button>

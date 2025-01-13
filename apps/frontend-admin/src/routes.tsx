@@ -5,7 +5,7 @@ import { RewardsPage } from './components/pages/RewardsPage/RewardsPage';
 import { CommandsPage } from './components/pages/CommandsPage/CommandsPage';
 import { SettingsPage } from './components/pages/SettingsPage/SettingsPage';
 import { PreviewPage } from './components/pages/PreviewPage/PreviewPage';
-import { SkinsPage } from './components/pages/SkinsPage/SkinsPage';
+import { ChattersPage } from './components/pages/ChattersPage/ChattersPage';
 
 export function Routes() {
   return (
@@ -15,7 +15,7 @@ export function Routes() {
         <Route path="/admin/settings" element={<SettingsPage />} />
         <Route path="/admin/commands" element={<CommandsPage />} />
         <Route path="/admin/rewards" element={<RewardsPage />} />
-        <Route path="/admin/skins" element={<SkinsPage />} />
+        <Route path="/admin/chatters" element={<ChattersPage />} />
       </Route>
       <Route path="/admin/login" element={<Login />} />
     </ReactRoutes>
