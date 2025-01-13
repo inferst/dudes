@@ -42,6 +42,12 @@ CREATE UNIQUE INDEX "SkinCollection_name_key" ON "SkinCollection"("name");
 -- CreateIndex
 CREATE UNIQUE INDEX "Skin_collectionId_name_key" ON "Skin"("collectionId", "name");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "UserSkinCollection_skinCollectionId_userId_key" ON "UserSkinCollection"("skinCollectionId", "userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserSkin_skinId_userId_key" ON "UserSkin"("skinId", "userId");
+
 -- AddForeignKey
 ALTER TABLE "Skin" ADD CONSTRAINT "Skin_collectionId_fkey" FOREIGN KEY ("collectionId") REFERENCES "SkinCollection"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

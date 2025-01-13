@@ -1,4 +1,4 @@
-import { useAuth } from '@app/frontend-admin/components/Auth/useAuth';
+import { useAuth } from '@app/frontend-admin/components/Auth/use-auth';
 import { Button } from '../../ui/button';
 import { AlertTriangle, Copy, CopyCheck } from 'lucide-react';
 import { useState } from 'react';

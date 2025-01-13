@@ -1,5 +1,5 @@
 import { api } from '@app/frontend-admin/api/api';
-import { useApiQuery } from '@app/frontend-admin/api/useApiQuery';
+import { useApiQuery } from '@app/frontend-admin/api/use-api-query';
 import { UserEntity } from '@lib/types';
 import { ReactNode, Suspense, createContext } from 'react';
 

@@ -1,4 +1,4 @@
-export const dudeSkins = [
+export const skins = [
   'agent',
   'cat',
   'duck',

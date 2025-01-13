@@ -1,13 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import { TWITCH_PLATFORM_ID } from '../../constants';
 import { actionSeed } from './actions';
-import { skinSeed } from './skins';
+import { dudesSkinCollectionSeed } from './skins';
 
 const prisma = new PrismaClient();
 
 async function main(): Promise<void> {
   await actionSeed(prisma);
-  await skinSeed(prisma);
+  await dudesSkinCollectionSeed(prisma);
 
   await prisma.platform.upsert({
     where: { id: TWITCH_PLATFORM_ID },

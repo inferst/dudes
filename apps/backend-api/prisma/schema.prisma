@@ -142,6 +142,8 @@ model UserSkinCollection {
   user             User           @relation(fields: [userId], references: [id])
   skinCollectionId Int
   skinCollection   SkinCollection @relation(fields: [skinCollectionId], references: [id])
+
+  @@unique([skinCollectionId, userId])
 }
 
 model UserSkin {
@@ -151,4 +153,6 @@ model UserSkin {
   user     User    @relation(fields: [userId], references: [id])
   skinId   Int
   skin     Skin    @relation(fields: [skinId], references: [id])
+
+  @@unique([skinId, userId])
 }
