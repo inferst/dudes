@@ -23,3 +23,34 @@ export async function skinSeed(
     },
   });
 }
+
+export async function defaultUserSkins(
+  prisma: PrismaClient,
+  userId: number
+): Promise<void> {
+  const skins = await prisma.skin.findMany({
+    where: {
+      collection: {
+        name: 'dudes',
+      },
+    },
+  });
+
+  for (const skin of skins) {
+    await prisma.userSkin.upsert({
+      where: {
+        skinId_userId: {
+          userId,
+          skinId: skin.id,
+        },
+      },
+      update: {},
+      create: {
+        userId,
+        skinId: skin.id,
+        isActive: true,
+        isDefault: skin.name == 'dude',
+      },
+    });
+  }
+}

@@ -1,83 +1,35 @@
 import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { UserSkinEntity } from '@lib/types';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Prisma, UserSkin } from '@prisma/client';
 
 @Injectable()
 export class UserSkinRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async getUserSkinsByUserId(
+  public async upsert(
     userId: number,
-    collectionId: number
-  ): Promise<UserSkinEntity[]> {
-    const skins = await this.prismaService.skin.findMany({
+    id: number,
+    data: Prisma.UserSkinCreateInput
+  ): Promise<UserSkin> {
+    return this.prismaService.userSkin.upsert({
+      create: data,
+      update: data,
       where: {
-        collectionId: collectionId,
+        id,
+        user: {
+          id: userId,
+        },
       },
     });
+  }
 
-    const skinIds = skins.map((skin) => skin.id);
-
-    const userSkins = await this.prismaService.userSkin.findMany({
+  public async getUserSkins(userId: number): Promise<UserSkin[]> {
+    return await this.prismaService.userSkin.findMany({
       where: {
         user: {
           id: userId,
         },
-        skin: {
-          id: {
-            in: skinIds,
-          },
-        },
       },
     });
-
-    const data = skins.map((skin) => {
-      const userSkin = userSkins.find((userSkin) => userSkin.skinId == skin.id);
-
-      return {
-        ...skin,
-        isActive: userSkin ? userSkin.isActive : false,
-      };
-    });
-
-    return data;
-  }
-
-  public async update(
-    userId: number,
-    skinId: number,
-    isActive: boolean
-  ): Promise<UserSkinEntity> {
-    const skin = await this.prismaService.skin.findFirst({
-      where: {
-        id: skinId,
-      },
-    });
-
-    if (skin) {
-      const userSkin = await this.prismaService.userSkin.upsert({
-        create: {
-          skinId,
-          userId,
-          isActive,
-        },
-        update: {
-          isActive,
-        },
-        where: {
-          skinId_userId: {
-            skinId,
-            userId,
-          },
-        },
-      });
-
-      return {
-        ...userSkin,
-        name: skin.name,
-      };
-    }
-
-    throw new NotFoundException();
   }
 }

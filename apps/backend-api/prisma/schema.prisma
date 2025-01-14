@@ -147,12 +147,13 @@ model UserSkinCollection {
 }
 
 model UserSkin {
-  id       Int     @id @default(autoincrement())
-  isActive Boolean
-  userId   Int
-  user     User    @relation(fields: [userId], references: [id])
-  skinId   Int
-  skin     Skin    @relation(fields: [skinId], references: [id])
+  id        Int     @id @default(autoincrement())
+  isActive  Boolean
+  isDefault Boolean @default(false)
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  skinId    Int
+  skin      Skin    @relation(fields: [skinId], references: [id])
 
   @@unique([skinId, userId])
 }

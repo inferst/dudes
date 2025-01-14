@@ -37,6 +37,8 @@ import { ChatterService } from './services/chatter.service';
 import { EmoteService } from './services/emote.service';
 import { TwitchClientFactory } from './twitch/twitch-client.factory';
 import { TwitchUserFilterService } from './twitch/twitch-user-filter.service';
+import { UserSkinCollectionService } from './services/user-skin-collection.service';
+import { UserSkinService } from './services/user-skin.service';
 
 const twitchClientFactory = {
   provide: 'TWITCH_CLIENT_FACTORY',
@@ -94,6 +96,8 @@ const twitchClientFactory = {
     ChatterRepository,
     UserSkinRepository,
     UserSkinCollectionRepository,
+    UserSkinCollectionService,
+    UserSkinService,
   ],
 })
 export class AdminModule {}

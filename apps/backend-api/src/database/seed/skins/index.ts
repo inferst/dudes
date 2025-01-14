@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { skinCollectionSeed } from './collection';
+import { defaultUserSkinCollection, skinCollectionSeed } from './collection';
 import { skins } from './dudes';
-import { skinSeed } from './skin';
+import { defaultUserSkins, skinSeed } from './skin';
 
 export async function dudesSkinCollectionSeed(
   prisma: PrismaClient
@@ -10,5 +10,12 @@ export async function dudesSkinCollectionSeed(
 
   for (const name of skins) {
     skinSeed(prisma, name, collection);
+  }
+
+  const users = await prisma.user.findMany();
+
+  for (const user of users) {
+    await defaultUserSkinCollection(prisma, user.id);
+    await defaultUserSkins(prisma, user.id);
   }
 }

@@ -40,6 +40,12 @@ export function Sidebar() {
       }),
     },
     {
+      path: '/admin/skins',
+      title: t('Sidebar.skinsText', {
+        defaultValue: 'Skins',
+      }),
+    },
+    {
       path: '/admin/chatters',
       title: t('Sidebar.chattersText', {
         defaultValue: 'Chatters',

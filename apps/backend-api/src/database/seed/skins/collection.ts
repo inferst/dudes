@@ -18,3 +18,31 @@ export async function skinCollectionSeed(
 
   return collection;
 }
+
+export async function defaultUserSkinCollection(
+  prisma: PrismaClient,
+  userId: number
+): Promise<void> {
+  const collection = await prisma.skinCollection.findFirst({
+    where: {
+      name: 'dudes',
+    },
+  });
+
+  if (collection) {
+    await prisma.userSkinCollection.upsert({
+      where: {
+        skinCollectionId_userId: {
+          userId,
+          skinCollectionId: collection.id,
+        },
+      },
+      update: {},
+      create: {
+        userId,
+        skinCollectionId: collection.id,
+        isActive: true,
+      },
+    });
+  }
+}

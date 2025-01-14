@@ -30,6 +30,7 @@ CREATE TABLE "UserSkinCollection" (
 CREATE TABLE "UserSkin" (
     "id" SERIAL NOT NULL,
     "isActive" BOOLEAN NOT NULL,
+    "isDefault" BOOLEAN NOT NULL DEFAULT false,
     "userId" INTEGER NOT NULL,
     "skinId" INTEGER NOT NULL,
 

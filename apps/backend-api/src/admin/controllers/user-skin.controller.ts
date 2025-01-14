@@ -16,22 +16,19 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { UserSkinRepository } from '../repositories/user-skin.repository';
+import { UserSkinService } from '../services/user-skin.service';
 
 @Controller('/user-skin')
 export class UserSkinController {
-  public constructor(private readonly userSkinRepository: UserSkinRepository) {}
+  public constructor(private readonly userSkinService: UserSkinService) {}
 
-  @Get('/list')
+  @Get('/list/:id')
   @UseGuards(AuthGuard)
   public async getChatters(
     @Auth() user: AuthUserProps,
-    collectionId: number
+    @Param('id', ParseIntPipe) collectionId: number
   ): Promise<UserSkinEntity[]> {
-    return this.userSkinRepository.getUserSkinsByUserId(
-      user.userId,
-      collectionId
-    );
+    return this.userSkinService.getUserSkinsByUserId(user.userId, collectionId);
   }
 
   @Put('/:id')
@@ -39,8 +36,8 @@ export class UserSkinController {
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Auth() user: AuthUserProps,
-    @Body(new ZodPipe(updateUserSkinDtoSchema)) userSkin: UpdateUserSkinDto
+    @Body(new ZodPipe(updateUserSkinDtoSchema)) data: UpdateUserSkinDto
   ): Promise<UserSkinEntity> {
-    return this.userSkinRepository.update(user.userId, id, userSkin.isActive);
+    return this.userSkinService.update(user.userId, id, data);
   }
 }

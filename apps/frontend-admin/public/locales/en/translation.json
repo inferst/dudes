@@ -18,6 +18,7 @@
   "Sidebar.settingsText": "Settings",
   "Sidebar.commandsText": "Commands",
   "Sidebar.rewardsText": "Twitch Rewards",
+  "Sidebar.skinsText": "Skins",
   "Sidebar.chattersText": "Chatters",
   "Sidebar.donationsText": "Donations",
   "CommandForm.editButtonText": "Edit",
@@ -74,5 +75,14 @@
   "ChattersPage.spriteText": "Sprite",
   "ChattersPage.addChatterSkinButtonText": "Add",
   "ChattersPage.caption": "A list of chatters",
-  "ChattersPage.deleteButtonText": "Delete"
+  "ChattersPage.deleteButtonText": "Delete",
+  "UserSkinsPage.columnName": "Name",
+  "UserSkinsPage.columnDefault": "Default",
+  "UserSkinsPage.columnActive": "Active",
+  "UserSkinsPage.caption": "A list of user skins",
+  "UserSkinsPage.title": "Skins",
+  "UserSkinCollectionsPage.columnName": "Name",
+  "UserSkinCollectionsPage.columnActive": "Active",
+  "UserSkinCollectionsPage.caption": "A list of user skin collections",
+  "UserSkinCollectionsPage.title": "Skin Collections"
 }

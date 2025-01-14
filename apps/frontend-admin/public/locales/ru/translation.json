@@ -18,6 +18,7 @@
   "Sidebar.settingsText": "Настройки",
   "Sidebar.commandsText": "Команды",
   "Sidebar.rewardsText": "Twitch Награды",
+  "Sidebar.skinsText": "Скины",
   "Sidebar.chattersText": "Чатеры",
   "Sidebar.donationsText": "Донаты",
   "CommandForm.editButtonText": "Редактировать",
@@ -74,5 +75,14 @@
   "ChattersPage.spriteText": "Скин",
   "ChattersPage.addChatterSkinButtonText": "Добавить",
   "ChattersPage.caption": "Список чатеров",
-  "ChattersPage.deleteButtonText": "Удалить"
+  "ChattersPage.deleteButtonText": "Удалить",
+  "UserSkinsPage.columnName": "Имя",
+  "UserSkinsPage.columnDefault": "По умолчанию",
+  "UserSkinsPage.columnActive": "Активный",
+  "UserSkinsPage.caption": "Список скинов",
+  "UserSkinsPage.title": "Скины",
+  "UserSkinCollectionsPage.columnName": "Имя",
+  "UserSkinCollectionsPage.columnActive": "Активный",
+  "UserSkinCollectionsPage.caption": "Список коллекций скинов",
+  "UserSkinCollectionsPage.title": "Коллекции скинов"
 }
