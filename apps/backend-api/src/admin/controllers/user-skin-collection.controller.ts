@@ -38,12 +38,8 @@ export class UserSkinCollectionController {
     @Param('id', ParseIntPipe) id: number,
     @Auth() user: AuthUserProps,
     @Body(new ZodPipe(updateUserSkinCollectionDtoSchema))
-    userSkinCollection: UpdateUserSkinCollectionDto
+    data: UpdateUserSkinCollectionDto
   ): Promise<UserSkinCollectionEntity> {
-    return this.userSkinService.update(
-      user.userId,
-      id,
-      userSkinCollection.isActive
-    );
+    return this.userSkinService.update(user.userId, id, data);
   }
 }

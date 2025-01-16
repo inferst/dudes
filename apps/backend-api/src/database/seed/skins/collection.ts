@@ -42,6 +42,7 @@ export async function defaultUserSkinCollection(
         userId,
         skinCollectionId: collection.id,
         isActive: true,
+        isDefault: true,
       },
     });
   }

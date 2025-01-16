@@ -42,6 +42,9 @@ export const useUpdateUserSkinCollectionMutation = () => {
         context ?? []
       );
     },
+    onSettled: async () => {
+      queryClient.invalidateQueries(userSkinCollectionsKeys.list);
+    },
   });
 };
 

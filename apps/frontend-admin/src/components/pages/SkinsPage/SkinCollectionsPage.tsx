@@ -15,6 +15,7 @@ import {
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUpdateUserSkinCollectionMutation } from '@app/frontend-admin/mutations/user-skins';
+import { Switch } from '../../ui/switch';
 
 export function SkinCollectionsPage() {
   const { t } = useTranslation();
@@ -40,6 +41,14 @@ export function SkinCollectionsPage() {
     },
     [navigate]
   );
+
+  const handleIsDefaultChange = (index: number, value: boolean) => {
+    const skin = userSkinCollections[index];
+
+    if (skin) {
+      updateMutation.mutate({ id: skin.id, isDefault: value });
+    }
+  };
 
   if (userSkinCollectionsQuery.isLoading) {
     return <Loader />;
@@ -68,6 +77,11 @@ export function SkinCollectionsPage() {
                   defaultValue: 'Active',
                 })}
               </TableHead>
+              <TableHead className="w-[100px]">
+                {t('UserSkinCollectionsPage.columnDefault', {
+                  defaultValue: 'Default',
+                })}
+              </TableHead>
               <TableHead>
                 {t('UserSkinCollectionsPage.columnName', {
                   defaultValue: 'Name',
@@ -93,6 +107,18 @@ export function SkinCollectionsPage() {
                     checked={collection.isActive}
                     className="block"
                   ></Checkbox>
+                </TableCell>
+                <TableCell className="font-medium">
+                  <Switch
+                    onClick={(event: React.MouseEvent) => {
+                      event.stopPropagation();
+                    }}
+                    onCheckedChange={(value: boolean) =>
+                      handleIsDefaultChange(index, value)
+                    }
+                    checked={collection.isDefault}
+                    className="block"
+                  />
                 </TableCell>
                 <TableCell>{collection.name}</TableCell>
               </TableRow>

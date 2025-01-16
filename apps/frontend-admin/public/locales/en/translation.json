@@ -83,6 +83,7 @@
   "UserSkinsPage.title": "Skins",
   "UserSkinCollectionsPage.columnName": "Name",
   "UserSkinCollectionsPage.columnActive": "Active",
+  "UserSkinCollectionsPage.columnDefault": "Default",
   "UserSkinCollectionsPage.caption": "A list of user skin collections",
   "UserSkinCollectionsPage.title": "Skin Collections"
 }

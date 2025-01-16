@@ -1,9 +1,13 @@
 import { useUpdateUserSkinMutation } from '@app/frontend-admin/mutations/user-skins';
 import { useUserSkinsQuery } from '@app/frontend-admin/queries/user-skins';
+import { ArrowLeftIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Loader } from '../../common/Loader';
+import { Button } from '../../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Checkbox } from '../../ui/checkbox';
+import { Switch } from '../../ui/switch';
 import {
   Table,
   TableBody,
@@ -13,14 +17,10 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { useParams } from 'react-router-dom';
-import { Switch } from '../../ui/switch';
 
 export function SkinsPage() {
   const { t } = useTranslation();
   const { id } = useParams();
-
-  console.log('SkinsPage');
 
   const filters = {
     collectionId: Number(id),
@@ -31,6 +31,8 @@ export function SkinsPage() {
   const updateMutation = useUpdateUserSkinMutation(filters);
 
   const userSkins = userSkinsQuery.data ?? [];
+
+  const navigate = useNavigate();
 
   const handleIsActiveChange = (index: number, value: boolean) => {
     const skin = userSkins[index];
@@ -55,7 +57,15 @@ export function SkinsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="flex items-center">
+          <Button
+            variant={'ghost'}
+            size={'icon'}
+            onClick={() => navigate(-1)}
+            className="mr-2"
+          >
+            <ArrowLeftIcon />
+          </Button>
           {t('UserSkinsPage.title', {
             defaultValue: 'Skins',
           })}

@@ -1,5 +1,8 @@
 import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { UserSkinCollectionEntity } from '@lib/types';
+import {
+  UpdateUserSkinCollectionDto,
+  UserSkinCollectionEntity,
+} from '@lib/types';
 import {
   BadRequestException,
   Injectable,
@@ -40,6 +43,7 @@ export class UserSkinCollectionService {
       return {
         ...collection,
         isActive: userSkinCollection ? userSkinCollection.isActive : false,
+        isDefault: userSkinCollection ? userSkinCollection.isDefault : false,
       };
     });
 
@@ -49,7 +53,7 @@ export class UserSkinCollectionService {
   public async update(
     userId: number,
     collectionId: number,
-    isActive: boolean
+    data: UpdateUserSkinCollectionDto
   ): Promise<UserSkinCollectionEntity> {
     const collection = await this.prismaService.skinCollection.findFirst({
       where: {
@@ -58,33 +62,69 @@ export class UserSkinCollectionService {
     });
 
     if (collection) {
-      const activeOrCurrent =
-        await this.prismaService.userSkinCollection.findMany({
+      const create = {
+        skinCollectionId: collectionId,
+        userId,
+        isActive: data.isActive ?? false,
+        isDefault: data.isDefault ?? false,
+      };
+
+      const update = {
+        isActive: data.isActive,
+        isDefault: data.isDefault,
+      };
+
+      if (data.isDefault) {
+        await this.prismaService.$transaction([
+          this.prismaService.userSkinCollection.updateMany({
+            where: {
+              userId,
+              isDefault: true,
+            },
+            data: {
+              isDefault: false,
+            },
+          }),
+          this.prismaService.userSkinCollection.upsert({
+            where: {
+              skinCollectionId_userId: {
+                userId,
+                skinCollectionId: collectionId,
+              },
+            },
+            create: {
+              ...create,
+              isActive: true,
+            },
+            update: {
+              ...update,
+              isActive: true,
+            },
+          }),
+        ]);
+      } else {
+        const current = await this.prismaService.userSkinCollection.findUnique({
           where: {
-            userId,
-            OR: [
-              { skinCollectionId: collectionId, isActive: true },
-              { isActive: true },
-            ],
+            skinCollectionId_userId: {
+              userId,
+              skinCollectionId: collectionId,
+            },
           },
         });
 
-      if (!isActive && activeOrCurrent.length == 1) {
-        throw new BadRequestException('Must be at least one active collection');
+        if (
+          current &&
+          current.isDefault &&
+          (data.isDefault === false || data.isActive === false)
+        ) {
+          throw new BadRequestException('Must be one default skin collection');
+        }
       }
-
-      console.log(activeOrCurrent);
 
       const userSkinCollection =
         await this.prismaService.userSkinCollection.upsert({
-          create: {
-            skinCollectionId: collectionId,
-            userId,
-            isActive,
-          },
-          update: {
-            isActive,
-          },
+          create,
+          update,
           where: {
             skinCollectionId_userId: {
               skinCollectionId: collectionId,

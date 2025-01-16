@@ -138,6 +138,7 @@ model Skin {
 model UserSkinCollection {
   id               Int            @id @default(autoincrement())
   isActive         Boolean
+  isDefault        Boolean        @default(false)
   userId           Int
   user             User           @relation(fields: [userId], references: [id])
   skinCollectionId Int

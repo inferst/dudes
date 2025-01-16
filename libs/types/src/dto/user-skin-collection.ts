@@ -5,6 +5,7 @@ export type UserSkinCollectionEntity = {
   id: number;
   name: string;
   isActive: boolean;
+  isDefault: boolean;
 };
 
 export type UpdateUserSkinCollectionDto = z.infer<

@@ -83,6 +83,7 @@
   "UserSkinsPage.title": "Скины",
   "UserSkinCollectionsPage.columnName": "Имя",
   "UserSkinCollectionsPage.columnActive": "Активный",
+  "UserSkinCollectionsPage.columnDefault": "По умолчанию",
   "UserSkinCollectionsPage.caption": "Список коллекций скинов",
   "UserSkinCollectionsPage.title": "Коллекции скинов"
 }

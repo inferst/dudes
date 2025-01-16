@@ -96,8 +96,8 @@ export class UserSkinService {
       const create = {
         skinId,
         userId,
-        isActive: data.isActive,
-        isDefault: data.isDefault,
+        isActive: data.isActive ?? false,
+        isDefault: data.isDefault ?? false,
       };
 
       const update = {
@@ -109,7 +109,11 @@ export class UserSkinService {
         await this.prismaService.$transaction([
           this.prismaService.userSkin.updateMany({
             where: {
+              userId,
               isDefault: true,
+              skin: {
+                collectionId: skin.collectionId,
+              },
             },
             data: {
               isDefault: false,
@@ -152,11 +156,7 @@ export class UserSkinService {
       }
 
       const userSkin = await this.prismaService.userSkin.upsert({
-        create: {
-          ...create,
-          isActive: false,
-          isDefault: false,
-        },
+        create,
         update,
         where: {
           skinId_userId: {
