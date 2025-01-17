@@ -1,13 +1,8 @@
-import { useUpdateUserSkinMutation } from '@app/frontend-admin/mutations/user-skins';
-import { useUserSkinsQuery } from '@app/frontend-admin/queries/user-skins';
-import { ArrowLeftIcon } from 'lucide-react';
+import { useUserSkinCollectionsQuery } from '@app/frontend-admin/queries/user-skins';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Loader } from '../../common/Loader';
-import { Button } from '../../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Checkbox } from '../../ui/checkbox';
-import { Switch } from '../../ui/switch';
 import {
   Table,
   TableBody,
@@ -17,108 +12,115 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUpdateUserSkinCollectionMutation } from '@app/frontend-admin/mutations/user-skins';
+import { Switch } from '../../ui/switch';
 
-export function SkinsPage() {
+export function SkinCollectionsPage() {
   const { t } = useTranslation();
-  const { id } = useParams();
 
-  const filters = {
-    collectionId: Number(id),
-  };
+  const userSkinCollectionsQuery = useUserSkinCollectionsQuery();
+  const updateMutation = useUpdateUserSkinCollectionMutation();
 
-  const userSkinsQuery = useUserSkinsQuery(filters);
-
-  const updateMutation = useUpdateUserSkinMutation(filters);
-
-  const userSkins = userSkinsQuery.data ?? [];
-
-  const navigate = useNavigate();
+  const userSkinCollections = userSkinCollectionsQuery.data ?? [];
 
   const handleIsActiveChange = (index: number, value: boolean) => {
-    const skin = userSkins[index];
+    const collection = userSkinCollections[index];
 
-    if (skin) {
-      updateMutation.mutate({ id: skin.id, isActive: value });
+    if (collection) {
+      updateMutation.mutate({ id: collection.id, isActive: value });
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleRowClick = useCallback(
+    (id: number) => {
+      navigate(`/admin/skins/${id}`);
+    },
+    [navigate]
+  );
+
   const handleIsDefaultChange = (index: number, value: boolean) => {
-    const skin = userSkins[index];
+    const skin = userSkinCollections[index];
 
     if (skin) {
       updateMutation.mutate({ id: skin.id, isDefault: value });
     }
   };
 
-  if (userSkinsQuery.isLoading) {
+  if (userSkinCollectionsQuery.isLoading) {
     return <Loader />;
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Button
-            variant={'ghost'}
-            size={'icon'}
-            onClick={() => navigate(-1)}
-            className="mr-2"
-          >
-            <ArrowLeftIcon />
-          </Button>
-          {t('UserSkinsPage.title', {
-            defaultValue: 'Skins',
+        <CardTitle>
+          {t('UserSkinCollectionsPage.title', {
+            defaultValue: 'Skin Collections',
           })}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableCaption>
-            {t('UserSkinsPage.caption', {
-              defaultValue: 'A list of user skins',
+            {t('UserSkinCollectionsPage.caption', {
+              defaultValue: 'A list of user skin collections',
             })}
           </TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">
-                {t('UserSkinsPage.columnActive', {
+                {t('UserSkinCollectionsPage.columnActive', {
                   defaultValue: 'Active',
                 })}
               </TableHead>
               <TableHead className="w-[100px]">
-                {t('UserSkinsPage.columnDefault', {
+                {t('UserSkinCollectionsPage.columnDefault', {
                   defaultValue: 'Default',
                 })}
               </TableHead>
               <TableHead>
-                {t('UserSkinsPage.columnName', {
+                {t('UserSkinCollectionsPage.columnName', {
                   defaultValue: 'Name',
                 })}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {userSkins.map((skin, index) => (
-              <TableRow key={skin.id}>
+            {userSkinCollections.map((collection, index) => (
+              <TableRow
+                key={collection.id}
+                className="cursor-pointer"
+                onClick={() => handleRowClick(collection.id)}
+              >
                 <TableCell className="font-medium">
                   <Checkbox
+                    onClick={(event: React.MouseEvent) => {
+                      event.stopPropagation();
+                    }}
                     onCheckedChange={(value: boolean) =>
                       handleIsActiveChange(index, value)
                     }
-                    checked={skin.isActive}
+                    checked={collection.isActive}
                     className="block"
                   ></Checkbox>
                 </TableCell>
                 <TableCell className="font-medium">
                   <Switch
+                    onClick={(event: React.MouseEvent) => {
+                      event.stopPropagation();
+                    }}
                     onCheckedChange={(value: boolean) =>
                       handleIsDefaultChange(index, value)
                     }
-                    checked={skin.isDefault}
+                    checked={collection.isDefault}
                     className="block"
                   />
                 </TableCell>
-                <TableCell>{skin.name}</TableCell>
+                <TableCell>{collection.name}</TableCell>
               </TableRow>
             ))}
           </TableBody>

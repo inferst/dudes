@@ -15,15 +15,17 @@ datasource db {
 }
 
 model User {
-  id        Int         @id @default(autoincrement())
-  guid      String      @unique @default(uuid()) @db.Uuid
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  commands  Command[]
-  reward    Reward[]
-  settings  Settings[]
-  userToken UserToken[]
-  chatters  Chatter[]
+  id                 Int                  @id @default(autoincrement())
+  guid               String               @unique @default(uuid()) @db.Uuid
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  commands           Command[]
+  reward             Reward[]
+  settings           Settings[]
+  userToken          UserToken[]
+  chatters           Chatter[]
+  UserSkinCollection UserSkinCollection[]
+  UserSkin           UserSkin[]
 }
 
 model UserToken {
@@ -113,4 +115,46 @@ model Chatter {
   chatterId  String   @db.VarChar(255)
   sprite     String   @default("")
   color      String   @default("")
+}
+
+model SkinCollection {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique @db.VarChar(255)
+  parentId           Int?
+  skin               Skin[]
+  userSkinCollection UserSkinCollection[]
+}
+
+model Skin {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  collectionId Int
+  collection   SkinCollection @relation(fields: [collectionId], references: [id])
+  userSkin     UserSkin[]
+
+  @@unique([collectionId, name])
+}
+
+model UserSkinCollection {
+  id               Int            @id @default(autoincrement())
+  isActive         Boolean
+  isDefault        Boolean        @default(false)
+  userId           Int
+  user             User           @relation(fields: [userId], references: [id])
+  skinCollectionId Int
+  skinCollection   SkinCollection @relation(fields: [skinCollectionId], references: [id])
+
+  @@unique([skinCollectionId, userId])
+}
+
+model UserSkin {
+  id        Int     @id @default(autoincrement())
+  isActive  Boolean
+  isDefault Boolean @default(false)
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  skinId    Int
+  skin      Skin    @relation(fields: [skinId], references: [id])
+
+  @@unique([skinId, userId])
 }

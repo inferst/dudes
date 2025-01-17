@@ -1,4 +1,4 @@
-import { useAuth } from '@app/frontend-admin/components/Auth/useAuth';
+import { useAuth } from '@app/frontend-admin/components/Auth/use-auth';
 import { cn } from '@app/frontend-admin/lib/utils';
 import { ChevronDown, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

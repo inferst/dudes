@@ -6,9 +6,6 @@ declare global {
       fallingDudes?: boolean;
       fallingRaiders?: boolean;
       hiddenUsers?: string;
-      sprites?: {
-        sets?: string[];
-      };
     };
 
     type ActionData = Record<string, string | number | undefined>;

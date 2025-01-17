@@ -46,6 +46,12 @@ export function Sidebar() {
       }),
     },
     {
+      path: '/admin/chatters',
+      title: t('Sidebar.chattersText', {
+        defaultValue: 'Chatters',
+      }),
+    },
+    {
       path: '/admin/donations',
       title: t('Sidebar.donationsText', {
         defaultValue: 'Donations',

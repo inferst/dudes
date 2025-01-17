@@ -11,6 +11,10 @@ import {
   CreateTwitchRewardDto,
   ChatterEntity,
   CreateChatterDto,
+  UserSkinCollectionEntity,
+  UserSkinEntity,
+  UpdateUserSkinCollectionDto,
+  UpdateUserSkinDto,
 } from '@lib/types';
 import axios, { GenericAbortSignal } from 'axios';
 
@@ -37,12 +41,19 @@ export const api = {
 
     return data;
   },
-  updateReward: async (reward: UpdateTwitchRewardDto): Promise<TwitchRewardEntity> => {
-    const { data } = await appAxios.put('/admin/reward/twitch/' + reward.id, reward);
+  updateReward: async (
+    reward: UpdateTwitchRewardDto
+  ): Promise<TwitchRewardEntity> => {
+    const { data } = await appAxios.put(
+      '/admin/reward/twitch/' + reward.id,
+      reward
+    );
 
     return data;
   },
-  createReward: async (reward: CreateTwitchRewardDto): Promise<TwitchRewardEntity> => {
+  createReward: async (
+    reward: CreateTwitchRewardDto
+  ): Promise<TwitchRewardEntity> => {
     const { data } = await appAxios.post('/admin/reward/twitch', reward);
 
     return data;
@@ -112,6 +123,45 @@ export const api = {
   },
   createChatter: async (command: CreateChatterDto): Promise<ChatterEntity> => {
     const { data } = await appAxios.post('/admin/chatter/', command);
+
+    return data;
+  },
+  getUserSkinCollections: async ({
+    signal,
+  }: WithSignal): Promise<UserSkinCollectionEntity[]> => {
+    const { data } = await appAxios.get('/admin/user-skin-collection/list', {
+      signal,
+    });
+
+    return data;
+  },
+  updateUserSkinCollection: async (
+    collection: UpdateUserSkinCollectionDto
+  ): Promise<UserSkinCollectionEntity> => {
+    const { data } = await appAxios.put(
+      '/admin/user-skin-collection/' + collection.id,
+      collection
+    );
+
+    return data;
+  },
+  getUserSkins: async ({
+    filters,
+    signal,
+  }: WithSignal & { filters: { collectionId: number } }): Promise<
+    UserSkinEntity[]
+  > => {
+    const { data } = await appAxios.get(
+      '/admin/user-skin/list/' + filters.collectionId,
+      {
+        signal,
+      }
+    );
+
+    return data;
+  },
+  updateUserSkin: async (skin: UpdateUserSkinDto): Promise<UserSkinEntity> => {
+    const { data } = await appAxios.put('/admin/user-skin/' + skin.id, skin);
 
     return data;
   },

@@ -1,11 +1,17 @@
 import { ConfigService } from '@app/backend-api/config/config.service';
+import { PrismaService } from '@app/backend-api/database/prisma.service';
 import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
-import { Body, Controller, Post } from '@nestjs/common';
-import { existsSync, readFileSync, readdirSync } from 'fs';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  NotFoundException,
+  Post,
+} from '@nestjs/common';
+import { JsonObject } from '@prisma/client/runtime/library';
+import { existsSync, readFileSync } from 'fs';
 import { z } from 'zod';
 import { UserRepository } from '../repositories';
-import { SettingsRepository } from '../repositories/settings.repository';
-import { SpriteService } from '../services';
 
 type SpriteDto = {
   guid: string;
@@ -19,106 +25,110 @@ export const spriteDtoSchema = z
   })
   .strict();
 
+export type SpriteEntity = {
+  data: JsonObject;
+  image: string;
+  sprite: JsonObject;
+};
+
 @Controller('/sprite')
 export class SpriteController {
   constructor(
     private readonly configService: ConfigService,
     private readonly userRepository: UserRepository,
-    private readonly settingsRepository: SettingsRepository,
-    private readonly spriteService: SpriteService
+    private readonly prismaService: PrismaService
   ) {}
 
   @Post()
   public async getSprite(
     @Body(new ZodPipe(spriteDtoSchema)) body: SpriteDto
-  ): Promise<any> {
+  ): Promise<JsonObject> {
     const user = await this.userRepository.getUserByGuid(body.guid);
 
     if (!user) {
-      return;
+      throw new BadRequestException();
     }
 
-    const settings = await this.settingsRepository.get(user.id);
+    const data = await this.prismaService.skin.findFirst({
+      where: {
+        name: body.sprite,
+        collection: {
+          userSkinCollection: {
+            some: {
+              userId: user.id,
+              isActive: true,
+            },
+          },
+        },
+        userSkin: {
+          some: {
+            userId: user.id,
+            isActive: true,
+          },
+        },
+      },
+      select: {
+        name: true,
+        collection: true,
+      },
+    });
 
-    const providers: Record<string, any> = {
-      dudes: this.getDudeSpriteData.bind(this),
-      tech: this.getTechSpriteData.bind(this),
-    };
+    if (data) {
+      return this.prepareSprite(data.collection.name, data.name);
+    } else {
+      const data = await this.prismaService.userSkin.findFirst({
+        where: {
+          userId: user.id,
+          isDefault: true,
+          skin: {
+            collection: {
+              userSkinCollection: {
+                some: {
+                  userId: user.id,
+                  isActive: true,
+                  isDefault: true,
+                },
+              },
+            },
+          },
+        },
+        select: {
+          skin: {
+            include: {
+              collection: true,
+            },
+          },
+        },
+      });
 
-    for (const set of settings.data.sprites?.sets ?? []) {
-      const fn = providers[set];
-
-      if (fn) {
-        const data = await fn(body.sprite);
-
-        if (data) {
-          return data;
-        }
+      if (data) {
+        return this.prepareSprite(data.skin.collection.name, data.skin.name);
       }
     }
 
-    return await this.getDudeSpriteData(body.sprite);
+    throw new NotFoundException();
   }
 
-  private getFileData(src: string): any {
-    return JSON.parse(readFileSync(src).toString());
-  }
+  private prepareSprite(collectionName: string, skinName: string): JsonObject {
+    const src = `apps/frontend-client/public/${collectionName}/`;
+    const spriteName = skinName;
 
-  private async getDudeSpriteData(name: string): Promise<any> {
-    const src = 'apps/frontend-client/public/evotars/';
-    let spriteName = name;
-
-    let spriteSrc = src + spriteName + '/sprite.json';
-    let dataSrc = src + spriteName + '/data.json';
+    const spriteSrc = src + spriteName + '/sprite.json';
+    const dataSrc = src + spriteName + '/data.json';
 
     if (!existsSync(spriteSrc) || !existsSync(dataSrc)) {
-      spriteName = 'dude';
-
-      spriteSrc = src + spriteName + '/sprite.json';
-      dataSrc = src + spriteName + '/data.json';
+      throw new NotFoundException();
     }
 
-    const path = this.configService.clientUrl + '/evotars/' + spriteName;
+    const path =
+      this.configService.clientUrl + `/${collectionName}/` + spriteName;
 
-    const sprite = this.getFileData(spriteSrc);
-    const data = this.getFileData(dataSrc);
+    const sprite = JSON.parse(readFileSync(spriteSrc).toString());
+    const data = JSON.parse(readFileSync(dataSrc).toString());
 
     return {
       data: data,
       image: path + '/sprite.png',
-      sprite: sprite,
-    };
-  }
-
-  private async getTechSpriteData(name: string): Promise<any> {
-    const src = 'apps/frontend-client/public/tech';
-    const spriteSrc = src + '/sprite.json';
-    const dataSrc = src + '/data.json';
-
-    if (!existsSync(spriteSrc) || !existsSync(dataSrc)) {
-      return;
-    }
-
-    const files = readdirSync(src);
-
-    const spriteName = this.spriteService.findSetSprite('tech', name);
-
-    if (!spriteName) {
-      return;
-    }
-
-    const fileName = files.find((file: string) => file == spriteName + '.png');
-
-    const path = this.configService.clientUrl + '/tech';
-
-    const sprite = this.getFileData(spriteSrc);
-    const data = this.getFileData(dataSrc);
-
-    const image = path + '/' + fileName;
-
-    return {
-      data: data,
-      image: image,
       sprite: sprite,
     };
   }
