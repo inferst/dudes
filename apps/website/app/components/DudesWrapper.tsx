@@ -86,7 +86,7 @@ export const DudesWrapper = () => {
       font: '/fonts/Rubik-VariableFont_wght.ttf',
       sounds,
       spriteLoaderFn: async (name: string) => {
-        const path = '/evotars/' + name + '/';
+        const path = '/dudes/' + name + '/';
         const sprite = await fetch(path + 'sprite.json');
         const spriteJson = await sprite.json();
         const data = await fetch(path + 'data.json');
