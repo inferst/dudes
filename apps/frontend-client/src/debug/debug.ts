@@ -21,7 +21,7 @@ export class Debug {
       this.dudes.processAction({
         userId: '1',
         data: {
-          sprite: 'laskdjflkaj',
+          sprite: 'sith',
         },
         description: '',
         id: 1,
