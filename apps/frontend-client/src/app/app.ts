@@ -10,10 +10,16 @@ export class App {
 
   public async init(): Promise<void> {
     const guid = getGuid();
-    const sounds = { jump: { src: '/client/sounds/jump.mp3' } };
     const evotars = new Evotars(document.body, {
-      font: '/client/fonts/Rubik-VariableFont_wght.ttf',
-      sounds,
+      font: '/static/fonts/Rubik-VariableFont_wght.ttf',
+      sounds: { jump: { src: '/static/sounds/jump.mp3' } },
+      assets: {
+        poof: '/static/poof.json',
+        rip1: '/static/rip1.png',
+        rip2: '/static/rip2.png',
+        skull: '/static/skull.png',
+        weight: '/static/weight.png',
+      },
       spriteLoaderFn: async (name: string) => {
         try {
           const data = await fetch(apiUrl + '/admin/sprite/', {

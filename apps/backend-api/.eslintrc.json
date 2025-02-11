@@ -6,7 +6,9 @@
       "files": ["*.ts"],
       "extends": ["plugin:@nx/typescript"],
       "rules": {
-        "@typescript-eslint/explicit-function-return-type": "error"
+        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     },
     {

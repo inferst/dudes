@@ -16,8 +16,10 @@ export default defineConfig({
       },
     },
     port: 4200,
-    host: 'localhost',
+    host: true,
   },
+
+  logLevel: 'warn',
 
   preview: {
     port: 4200,

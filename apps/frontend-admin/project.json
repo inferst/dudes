@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/frontend-admin/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
@@ -51,7 +52,8 @@
         "production": {
           "buildTarget": "frontend-admin:build:production"
         }
-      }
+      },
+      "dependsOn": ["build"]
     },
     "test": {
       "executor": "@nx/vite:test",
@@ -73,6 +75,5 @@
     "shadcn": {
       "command": "TS_NODE_PROJECT=tsconfig.base.json npx shadcn-ui@latest"
     }
-  },
-  "tags": []
+  }
 }

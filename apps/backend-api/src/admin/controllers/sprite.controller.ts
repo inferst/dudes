@@ -110,7 +110,7 @@ export class SpriteController {
   }
 
   private prepareSprite(collectionName: string, skinName: string): JsonObject {
-    const src = `apps/frontend-client/public/${collectionName}/`;
+    const src = `static/skins/${collectionName}/`;
     const spriteName = skinName;
 
     const spriteSrc = src + spriteName + '/sprite.json';
