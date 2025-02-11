@@ -1,6 +1,6 @@
-import { Evotars, ActionData } from 'evotars';
-import { useCallback, useState } from 'react';
 import { SettingsEntity, UserActionEntity } from '@lib/types';
+import { ActionData, Evotars } from 'evotars';
+import { useCallback, useState } from 'react';
 
 export const DudesWrapper = () => {
   const [isInit, setIsInit] = useState(false);
@@ -51,7 +51,6 @@ export const DudesWrapper = () => {
       data: data ?? {},
       info: mikeInfo,
       name: action,
-      cooldown: 0,
     });
 
     let userId = 1;
@@ -80,11 +79,16 @@ export const DudesWrapper = () => {
       fallingRaiders: true,
     };
 
-    const sounds = { jump: { src: '/sounds/jump.mp3' } };
-
     const dudes = new Evotars(element, {
-      font: '/fonts/Rubik-VariableFont_wght.ttf',
-      sounds,
+      font: '/static/fonts/Rubik-VariableFont_wght.ttf',
+      sounds: { jump: { src: '/static/sounds/jump.mp3' } },
+      assets: {
+        poof: '/static/poof.json',
+        rip1: '/static/rip1.png',
+        rip2: '/static/rip2.png',
+        skull: '/static/skull.png',
+        weight: '/static/weight.png',
+      },
       spriteLoaderFn: async (name: string) => {
         const path = '/dudes/' + name + '/';
         const sprite = await fetch(path + 'sprite.json');
