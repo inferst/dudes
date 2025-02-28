@@ -1,6 +1,6 @@
-import { ConfigService } from '@app/backend-api/config/config.service';
-import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
+import { ConfigService } from '@/config/config.service';
+import { PrismaService } from '@/database/prisma.service';
+import { ZodPipe } from '@/pipes/zod.pipe';
 import {
   BadRequestException,
   Body,
@@ -8,8 +8,9 @@ import {
   NotFoundException,
   Post,
 } from '@nestjs/common';
-import { JsonObject } from '@prisma/client/runtime/library';
+import { JsonObject } from '@repo/database/generated/client/runtime/library';
 import { existsSync, readFileSync } from 'fs';
+import path from 'path';
 import { z } from 'zod';
 import { UserRepository } from '../repositories';
 
@@ -34,14 +35,14 @@ export type SpriteEntity = {
 @Controller('/sprite')
 export class SpriteController {
   constructor(
-    private readonly configService: ConfigService,
+    private readonly config: ConfigService,
     private readonly userRepository: UserRepository,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
   ) {}
 
   @Post()
   public async getSprite(
-    @Body(new ZodPipe(spriteDtoSchema)) body: SpriteDto
+    @Body(new ZodPipe(spriteDtoSchema)) body: SpriteDto,
   ): Promise<JsonObject> {
     const user = await this.userRepository.getUserByGuid(body.guid);
 
@@ -113,22 +114,30 @@ export class SpriteController {
     const src = `static/skins/${collectionName}/`;
     const spriteName = skinName;
 
-    const spriteSrc = src + spriteName + '/sprite.json';
-    const dataSrc = src + spriteName + '/data.json';
+    const spriteSrc = path.resolve(
+      this.config.root,
+      '../../',
+      src + spriteName + '/sprite.json',
+    );
+
+    const dataSrc = path.resolve(
+      this.config.root,
+      '../../',
+      src + spriteName + '/data.json',
+    );
 
     if (!existsSync(spriteSrc) || !existsSync(dataSrc)) {
       throw new NotFoundException();
     }
 
-    const path =
-      this.configService.clientUrl + `/${collectionName}/` + spriteName;
+    const imagePath = `/static/skins/${collectionName}/` + spriteName;
 
     const sprite = JSON.parse(readFileSync(spriteSrc).toString());
     const data = JSON.parse(readFileSync(dataSrc).toString());
 
     return {
       data: data,
-      image: path + '/sprite.png',
+      image: imagePath + '/sprite.png',
       sprite: sprite,
     };
   }

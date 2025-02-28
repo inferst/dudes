@@ -1,8 +1,8 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import {
   UpdateUserSkinCollectionDto,
   UserSkinCollectionEntity,
-} from '@lib/types';
+} from '@repo/types';
 import {
   BadRequestException,
   Injectable,
@@ -14,7 +14,7 @@ export class UserSkinCollectionService {
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async getUserSkinCollectionsByUserId(
-    userId: number
+    userId: number,
   ): Promise<UserSkinCollectionEntity[]> {
     const collections = await this.prismaService.skinCollection.findMany();
 
@@ -37,7 +37,7 @@ export class UserSkinCollectionService {
     const data = collections.map((collection) => {
       const userSkinCollection = userSkinCollections.find(
         (userSkinCollection) =>
-          userSkinCollection.skinCollectionId == collection.id
+          userSkinCollection.skinCollectionId == collection.id,
       );
 
       return {
@@ -53,7 +53,7 @@ export class UserSkinCollectionService {
   public async update(
     userId: number,
     collectionId: number,
-    data: UpdateUserSkinCollectionDto
+    data: UpdateUserSkinCollectionDto,
   ): Promise<UserSkinCollectionEntity> {
     const collection = await this.prismaService.skinCollection.findFirst({
       where: {

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 import { defaultSpriteCommandSeed } from '../commands/sprite';
 
 export async function spriteActionSeed(prisma: PrismaClient): Promise<void> {

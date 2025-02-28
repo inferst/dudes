@@ -1,7 +1,7 @@
-import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { TWITCH_PLATFORM_ID } from '@/constants';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { UserToken } from '@prisma/client';
+import { UserToken } from '@repo/database';
 
 export type TwitchUserTokenProps = {
   userId: string;
@@ -18,8 +18,8 @@ export class UserTokenRepository {
     return await this.prismaService.userToken.findFirst({
       where: {
         userId,
-      }
-    })
+      },
+    });
   }
 
   public async updateOrCreate(data: TwitchUserTokenProps): Promise<UserToken> {

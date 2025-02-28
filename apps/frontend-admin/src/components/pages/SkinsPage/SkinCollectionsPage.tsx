@@ -1,4 +1,4 @@
-import { useUserSkinCollectionsQuery } from '@app/frontend-admin/queries/user-skins';
+import { useUserSkinCollectionsQuery } from '@/queries/user-skins';
 import { useTranslation } from 'react-i18next';
 import { Loader } from '../../common/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
@@ -14,7 +14,7 @@ import {
 } from '../../ui/table';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUpdateUserSkinCollectionMutation } from '@app/frontend-admin/mutations/user-skins';
+import { useUpdateUserSkinCollectionMutation } from '@/mutations/user-skins';
 import { Switch } from '../../ui/switch';
 
 export function SkinCollectionsPage() {

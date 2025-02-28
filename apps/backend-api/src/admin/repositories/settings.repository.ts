@@ -1,7 +1,7 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Settings } from '@prisma/client';
-import { defaultSettingsValues } from '@lib/types';
+import { Prisma, Settings } from '@repo/database';
+import { defaultSettingsValues } from '@repo/types';
 
 @Injectable()
 export class SettingsRepository {
@@ -34,7 +34,7 @@ export class SettingsRepository {
 
   public async update(
     userId: number,
-    data: Prisma.SettingsUpdateInput
+    data: Prisma.SettingsUpdateInput,
   ): Promise<Settings> {
     const settings = await this.prismaService.settings.findFirst({
       where: {

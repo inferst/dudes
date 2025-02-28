@@ -9,7 +9,6 @@ import { TwitchHttpException } from '../exceptions/twitch-http.exception';
 
 @Catch(TwitchHttpException)
 export class TwitchHttpExceptionFilter implements ExceptionFilter {
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build",
+        "prebuild"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
+    },
+    "db:migrate:dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:migrate:deploy": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "generate": {
+      "dependsOn": [
+        "^generate"
+      ],
+      "cache": false
+    },
+    "prebuild": {
+      "dependsOn": [
+        "^prebuild"
+      ],
+      "cache": false
+    },
+    "lint": {}
+  },
+  "globalEnv": [
+    "HOST_URL",
+    "ADMIN_URL",
+    "CLIENT_URL",
+    "VITE_API_URL",
+    "VITE_CLIENT_SOCKET_HOST",
+    "TWITCH_CLIENT_ID",
+    "TWITCH_CLIENT_SECRET",
+    "TWITCH_CALLBACK_URL",
+    "SESSION_SECRET",
+    "DATABASE_URL",
+    "VITE_CJS_IGNORE_WARNING"
+  ]
+}

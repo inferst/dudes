@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 import { defaultDashCommandSeed } from '../commands/dash';
 
 export async function dashActionSeed(prisma: PrismaClient): Promise<void> {

@@ -1,6 +1,6 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Action } from '@prisma/client';
+import { Action } from '@repo/database';
 
 @Injectable()
 export class ActionRepository {

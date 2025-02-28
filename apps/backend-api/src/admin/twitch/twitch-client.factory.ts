@@ -1,14 +1,14 @@
-import { ConfigService } from '@app/backend-api/config/config.service';
-import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@app/backend-api/constants';
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { ConfigService } from '@/config/config.service';
+import { TWITCH_PLATFORM_ID, TWITCH_SCOPE } from '@/constants';
+import { PrismaService } from '@/database/prisma.service';
 import {
   MessageEntity,
   RaidEntity,
   RewardRedemptionData,
   TwitchChatterEntity,
-} from '@lib/types';
+} from '@repo/types';
 import { HttpException, Logger } from '@nestjs/common';
-import { UserToken } from '@prisma/client';
+import { UserToken } from '@repo/database';
 import { ApiClient } from '@twurple/api';
 import { RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
@@ -31,7 +31,7 @@ export class TwitchClientFactory {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly twitchUserFilterService: TwitchUserFilterService,
-    private readonly chatMessageService: ChatMessageService
+    private readonly chatMessageService: ChatMessageService,
   ) {
     this.authProvider = new RefreshingAuthProvider({
       clientId: this.configService.twitchClientId,
@@ -68,7 +68,7 @@ export class TwitchClientFactory {
 
   public async addUserToken(
     userId: number,
-    intents: string[] = []
+    intents: string[] = [],
   ): Promise<UserToken> {
     const userToken = await this.prisma.userToken.findUnique({
       where: {
@@ -83,7 +83,7 @@ export class TwitchClientFactory {
       // TODO: check prod error
       throw new HttpException(
         `User token with user id (${userId}) hasn't been found.`,
-        HttpStatusCode.InternalServerError
+        HttpStatusCode.InternalServerError,
       );
     }
 
@@ -98,7 +98,7 @@ export class TwitchClientFactory {
         obtainmentTimestamp: obtainmentTimestamp ?? 0,
         scope: TWITCH_SCOPE,
       },
-      intents
+      intents,
     );
 
     return userToken;
@@ -122,7 +122,7 @@ export class TwitchClientFactory {
     eventSubWsListener.start();
 
     const onRewardRedemptionAdd = (
-      listener: (data: RewardRedemptionData) => void
+      listener: (data: RewardRedemptionData) => void,
     ): void => {
       eventSubWsListener.onChannelRedemptionAdd(
         userToken.platformUserId,
@@ -133,7 +133,7 @@ export class TwitchClientFactory {
             userDisplayName: data.userDisplayName,
             input: data.input,
           });
-        }
+        },
       );
     };
 
@@ -159,7 +159,7 @@ export class TwitchClientFactory {
               sprite: 'default',
             },
           });
-        }
+        },
       );
     };
 
@@ -181,20 +181,20 @@ export class TwitchClientFactory {
             const end = Number(range[1]) + 1;
 
             return text.substring(start, end);
-          }
+          },
         );
 
         const emoteIds = Array.from(emoteOffsets.entries()).map(
-          (entry) => entry[0]
+          (entry) => entry[0],
         );
 
         const strippedMessage = this.chatMessageService.stripEmotes(
           text,
-          twitchEmoteNames
+          twitchEmoteNames,
         );
 
         const twitchEmotes = emoteIds.map((emote) =>
-          this.getTwitchEmoteUrl(emote)
+          this.getTwitchEmoteUrl(emote),
         );
 
         listener({
@@ -213,7 +213,7 @@ export class TwitchClientFactory {
     let timerId: NodeJS.Timer;
 
     const onChatters = (
-      listener: (data: TwitchChatterEntity[]) => void
+      listener: (data: TwitchChatterEntity[]) => void,
     ): void => {
       timerId = setInterval(async () => {
         try {
@@ -221,13 +221,13 @@ export class TwitchClientFactory {
 
           apiClient.asUser(userToken.platformUserId, async (ctx) => {
             const chatters = await ctx.chat.getChatters(
-              userToken.platformUserId
+              userToken.platformUserId,
             );
 
             const users = chatters.data
               .filter(
                 (chatter) =>
-                  !this.twitchUserFilterService.isBot(chatter.userName)
+                  !this.twitchUserFilterService.isBot(chatter.userName),
               )
               .map((chatter) => ({
                 userId: chatter.userId,
@@ -253,7 +253,7 @@ export class TwitchClientFactory {
       chatClient.connect();
 
       this.logger.log(
-        `User [${userToken.platformUserId}] TwitchClientFactory client has been connected`
+        `User [${userToken.platformUserId}] TwitchClientFactory client has been connected`,
       );
     };
 
@@ -263,7 +263,7 @@ export class TwitchClientFactory {
       eventSubWsListener.stop();
 
       this.logger.log(
-        `User [${userToken.platformUserId}] TwitchClientFactory client has been disconnected`
+        `User [${userToken.platformUserId}] TwitchClientFactory client has been disconnected`,
       );
     };
 
@@ -273,7 +273,7 @@ export class TwitchClientFactory {
           disconnect();
 
           this.logger.error(
-            `User [${userId}] event client has been disconnected because of failed refresh token.`
+            `User [${userId}] event client has been disconnected because of failed refresh token.`,
           );
 
           await this.prisma.userToken.update({
@@ -290,7 +290,7 @@ export class TwitchClientFactory {
 
           refreshTokenFailureListener.unbind();
         }
-      }
+      },
     );
 
     return {

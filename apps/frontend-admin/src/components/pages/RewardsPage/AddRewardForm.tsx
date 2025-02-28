@@ -4,7 +4,7 @@ import {
   ActionEntity,
   createTwitchRewardFormSchema,
   getActionableEntityFormSchema,
-} from '@lib/types';
+} from '@repo/types';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';

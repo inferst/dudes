@@ -1,23 +1,25 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { ConfigService } from './config.service';
-import Joi from 'joi';
+import z from 'zod';
+
+const schema = z.object({
+  HOST_URL: z.string(),
+  ADMIN_URL: z.string(),
+  CLIENT_URL: z.string(),
+  TWITCH_CLIENT_ID: z.string(),
+  TWITCH_CLIENT_SECRET: z.string(),
+  TWITCH_CALLBACK_URL: z.string(),
+  SESSION_SECRET: z.string(),
+  DATABASE_URL: z.string(),
+});
 
 @Global()
 @Module({
   exports: [ConfigService],
   imports: [
     NestConfigModule.forRoot({
-      validationSchema: Joi.object({
-        HOST_URL: Joi.string(),
-        ADMIN_URL: Joi.string(),
-        CLIENT_URL: Joi.string(),
-        TWITCH_CLIENT_ID: Joi.string(),
-        TWITCH_CLIENT_SECRET: Joi.string(),
-        TWITCH_CALLBACK_URL: Joi.string(),
-        SESSION_SECRET: Joi.string(),
-        DATABASE_URL: Joi.string(),
-      }),
+      validate: (env) => schema.parse(env),
       validationOptions: {
         abortEarly: true,
       },

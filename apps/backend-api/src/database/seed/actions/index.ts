@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 import { addJumpHitsActionSeed } from './add_jump_hits';
 import { colorActionSeed } from './color';
 import { dashActionSeed } from './dash';

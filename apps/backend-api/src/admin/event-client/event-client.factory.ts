@@ -3,9 +3,9 @@ import {
   RaidEntity,
   RewardRedemptionData,
   TwitchChatterEntity,
-} from '@lib/types';
+} from '@repo/types';
 import { Inject, Injectable } from '@nestjs/common';
-import { UserToken } from '@prisma/client';
+import { UserToken } from '@repo/database';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
 
 export type EventClient = {
@@ -15,7 +15,7 @@ export type EventClient = {
   onChatters: (listener: (data: TwitchChatterEntity[]) => void) => void;
   onRaid: (listener: (data: RaidEntity) => void) => void;
   onRewardRedemptionAdd: (
-    listener: (data: RewardRedemptionData) => void
+    listener: (data: RewardRedemptionData) => void,
   ) => void;
 };
 
@@ -23,7 +23,7 @@ export type EventClient = {
 export class EventClientFactory {
   public constructor(
     @Inject('TWITCH_CLIENT_FACTORY')
-    private readonly twitchClientFactory: TwitchClientFactory
+    private readonly twitchClientFactory: TwitchClientFactory,
   ) {}
 
   // TODO: create YoutubeEventClientFactory

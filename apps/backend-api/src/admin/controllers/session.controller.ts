@@ -1,6 +1,6 @@
-import { AdminGuard } from '@app/backend-api/auth/guards/admin.guard';
+import { AdminGuard } from '@/auth/guards/admin.guard';
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ClientToServerEvents, ServerToClientsEvents } from '@lib/types';
+import { ClientToServerEvents, ServerToClientsEvents } from '@repo/types';
 import { Socket } from 'socket.io';
 import { SocketService } from '../services';
 
@@ -9,12 +9,12 @@ export class SessionController {
   public constructor(
     private readonly socketService: SocketService<
       Socket<ServerToClientsEvents, ClientToServerEvents>
-    >
+    >,
   ) {}
 
   @Get()
   @UseGuards(AdminGuard)
-  public async getSessions(): Promise<unknown> {
+  public getSessions(): unknown {
     const entries = this.socketService.getRooms().entries();
     return Array.from(entries).map((entry) => {
       return {

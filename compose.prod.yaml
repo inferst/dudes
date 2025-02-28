@@ -1,7 +1,9 @@
 services:
   app:
     image: dudes-build
-    command: sh -c "pnpm run db:migrate:deploy && node dist/apps/backend-api/main.js"
+    build:
+      context: .
+    command: sh -c "pnpm --filter database run db:migrate:deploy && node apps/backend-api/dist/main.js"
     container_name: dudes-app
     working_dir: /app
     environment:
@@ -17,7 +19,7 @@ services:
 
   website:
     image: dudes-build
-    command: sh -c "cd apps/website && npx remix-serve build/index.js"
+    command: sh -c "cd apps/website && pnpm run start"
     environment:
       - PORT=${REMIX_PORT}
     container_name: dudes-website
@@ -49,5 +51,4 @@ volumes:
 
 networks:
   default:
-    external: true
     name: scoobydoo

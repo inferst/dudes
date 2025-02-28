@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { getActionableEntityFormSchema } from '@lib/types';
+import { getActionableEntityFormSchema } from '@repo/types';
 import { ZodObject, ZodRawShape } from 'zod';
 import { ActionRepository } from '../admin/repositories/action.repository';
 
@@ -11,7 +11,7 @@ import { ActionRepository } from '../admin/repositories/action.repository';
 export class ActionZodPipe<T> implements PipeTransform {
   constructor(
     private readonly zodObject: ZodObject<ZodRawShape>,
-    private readonly actionRepository: ActionRepository
+    private readonly actionRepository: ActionRepository,
   ) {}
 
   async transform(value: T): Promise<T> {
@@ -22,7 +22,7 @@ export class ActionZodPipe<T> implements PipeTransform {
 
       if (typeof dto['actionId'] == 'number') {
         const action = (await this.actionRepository.getActions()).find(
-          (action) => action.id == dto['actionId']
+          (action) => action.id == dto['actionId'],
         );
 
         if (action) {

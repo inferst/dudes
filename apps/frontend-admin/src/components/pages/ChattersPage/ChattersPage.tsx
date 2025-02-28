@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateChatterForm, createChatterFormSchema } from '@lib/types';
+import { CreateChatterForm, createChatterFormSchema } from '@repo/types';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -25,11 +25,11 @@ import {
   TableCell,
   TableRow,
 } from '../../ui/table';
-import { useChattersQuery } from '@app/frontend-admin/queries/chatters';
+import { useChattersQuery } from '@/queries/chatters';
 import {
   useCreateChatterMutation,
   useDeleteChatterMutation,
-} from '@app/frontend-admin/mutations/chatters';
+} from '@/mutations/chatters';
 import { Loader } from '../../common/Loader';
 
 export function ChattersPage() {

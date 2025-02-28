@@ -1,12 +1,6 @@
-import { AuthGuard } from '@app/backend-api/auth/guards';
-import {
-  Controller,
-  Get,
-  UseGuards
-} from '@nestjs/common';
-import {
-  ActionEntity
-} from '@lib/types';
+import { AuthGuard } from '@/auth/guards';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ActionEntity } from '@repo/types';
 import { ActionRepository } from '../repositories/action.repository';
 
 @Controller('/action')

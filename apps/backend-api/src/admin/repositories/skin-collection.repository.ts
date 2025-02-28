@@ -1,6 +1,6 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { SkinCollection } from '@prisma/client';
+import { SkinCollection } from '@repo/database';
 
 @Injectable()
 export class SkinCollectionRepository {

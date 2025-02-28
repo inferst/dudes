@@ -1,7 +1,7 @@
-import { Connection } from '@app/frontend-client/connection/connection';
+import { Connection } from '@/connection/connection';
+import { Debug } from '@/debug/debug';
+import { getGuid } from '@/utils/utils';
 import { Evotars } from 'evotars';
-import { Debug } from '../debug/debug';
-import { getGuid } from '../utils/utils';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -35,6 +35,7 @@ export class App {
 
           return await data.json();
         } catch (e) {
+          console.error(e);
           return;
         }
       },

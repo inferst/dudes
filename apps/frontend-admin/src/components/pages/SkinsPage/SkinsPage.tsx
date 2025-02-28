@@ -1,5 +1,5 @@
-import { useUpdateUserSkinMutation } from '@app/frontend-admin/mutations/user-skins';
-import { useUserSkinsQuery } from '@app/frontend-admin/queries/user-skins';
+import { useUpdateUserSkinMutation } from '@/mutations/user-skins';
+import { useUserSkinsQuery } from '@/queries/user-skins';
 import { ArrowLeftIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';

@@ -6,7 +6,7 @@ import {
   isGrowUserActionEntity,
   isJumpUserActionEntity,
   isSpriteUserActionEntity,
-} from '@lib/types';
+} from '@repo/types';
 import { UseFormReturn } from 'react-hook-form';
 import { ColorActionDataForm } from './ColorActionDataForm';
 import { DashActionDataForm } from './DashActionDataForm';

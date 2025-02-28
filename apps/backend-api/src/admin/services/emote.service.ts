@@ -1,4 +1,4 @@
-import { ConfigService } from '@app/backend-api/config/config.service';
+import { ConfigService } from '@/config/config.service';
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
@@ -88,13 +88,13 @@ type GlobalData = {
 };
 
 const isSeventTVEventEmoteSetUpdate = (
-  data: any
+  data: any,
 ): data is SevenTVEmoteSetUpdateEvent => {
   return data?.d?.type == 'emote_set.update';
 };
 
 const isSeventTVEventUserUpdate = (
-  data: any
+  data: any,
 ): data is SevenTVUserUpdateEvent => {
   return data?.d?.type == 'user.update';
 };
@@ -111,7 +111,7 @@ export class EmoteService {
 
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   public async createClient(platformUserId: string): Promise<EmoteClient> {
@@ -156,7 +156,7 @@ export class EmoteService {
                 object_id: emoteSetId,
               },
             },
-          })
+          }),
         );
 
         ws.send(JSON.stringify(userUpdateSubscribe));
@@ -179,7 +179,7 @@ export class EmoteService {
                       object_id: event.old_value,
                     },
                   },
-                })
+                }),
               );
 
               ws.send(
@@ -191,7 +191,7 @@ export class EmoteService {
                       object_id: event.value,
                     },
                   },
-                })
+                }),
               );
 
               emotesData = await this.getEmotesData(platformUserId);
@@ -273,7 +273,7 @@ export class EmoteService {
   }
 
   public async getEmotesData(
-    platformUserId: string
+    platformUserId: string,
   ): Promise<SevenTVEmoteData | undefined> {
     try {
       const hostUrl = this.configService.hostUrl;

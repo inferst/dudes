@@ -1,9 +1,9 @@
-import { Action, PrismaClient, User } from '@prisma/client';
+import { Action, PrismaClient, User } from '@repo/database';
 
 export async function defaultJumpCommandSeed(
   prisma: PrismaClient,
   user: User,
-  action?: Action
+  action?: Action,
 ): Promise<void> {
   const jumpAction =
     action ??
@@ -49,8 +49,8 @@ export async function defaultJumpCommandSeed(
             velocityX: 3.5,
             velocityY: -8,
           },
-          arguments: []
-        }
+          arguments: [],
+        },
       },
     });
   }

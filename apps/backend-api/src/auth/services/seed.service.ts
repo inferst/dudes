@@ -1,13 +1,13 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { defaultColorCommandSeed } from '@app/backend-api/database/seed/commands/color';
-import { defaultDashCommandSeed } from '@app/backend-api/database/seed/commands/dash';
-import { defaultGrowCommandSeed } from '@app/backend-api/database/seed/commands/grow';
-import { defaultJumpCommandSeed } from '@app/backend-api/database/seed/commands/jump';
-import { defaultSpriteCommandSeed } from '@app/backend-api/database/seed/commands/sprite';
-import { defaultUserSkinCollection } from '@app/backend-api/database/seed/skins/collection';
-import { defaultUserSkins } from '@app/backend-api/database/seed/skins/skin';
+import { PrismaService } from '@/database/prisma.service';
+import { defaultColorCommandSeed } from '@/database/seed/commands/color';
+import { defaultDashCommandSeed } from '@/database/seed/commands/dash';
+import { defaultGrowCommandSeed } from '@/database/seed/commands/grow';
+import { defaultJumpCommandSeed } from '@/database/seed/commands/jump';
+import { defaultSpriteCommandSeed } from '@/database/seed/commands/sprite';
+import { defaultUserSkinCollection } from '@/database/seed/skins/collection';
+import { defaultUserSkins } from '@/database/seed/skins/skin';
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { User } from '@repo/database';
 
 @Injectable()
 export class SeedService {
@@ -24,10 +24,9 @@ export class SeedService {
   }
 
   public async createDefaultData(user: User): Promise<void> {
-    Promise.all([
-      this.createDefaultCommands(user),
-      defaultUserSkinCollection(this.prismaService, user.id),
-      defaultUserSkins(this.prismaService, user.id),
-    ]);
+    Promise.all([])
+    await this.createDefaultCommands(user);
+    await defaultUserSkinCollection(this.prismaService, user.id);
+    await defaultUserSkins(this.prismaService, user.id);
   }
 }

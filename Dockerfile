@@ -10,5 +10,4 @@ WORKDIR /app
 COPY . /app
 RUN npm install -g pnpm
 RUN pnpm install
-RUN npx nx reset
 RUN pnpm run build

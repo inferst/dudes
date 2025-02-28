@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 
 export async function resurrectActionSeed(prisma: PrismaClient): Promise<void> {
   const spriteAction = await prisma.action.upsert({

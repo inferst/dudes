@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 import { defaultGrowCommandSeed } from '../commands/grow';
 
 export async function growActionSeed(prisma: PrismaClient): Promise<void> {

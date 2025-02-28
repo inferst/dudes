@@ -1,12 +1,12 @@
-import { Auth } from '@app/backend-api/auth/decorators';
-import { AuthGuard } from '@app/backend-api/auth/guards';
-import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
-import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
+import { Auth } from '@/auth/decorators';
+import { AuthGuard } from '@/auth/guards';
+import { AuthUserProps } from '@/auth/services/auth.service';
+import { ZodPipe } from '@/pipes/zod.pipe';
 import {
   UpdateUserSkinDto,
   UserSkinEntity,
   updateUserSkinDtoSchema,
-} from '@lib/types';
+} from '@repo/types';
 import {
   Body,
   Controller,
@@ -26,7 +26,7 @@ export class UserSkinController {
   @UseGuards(AuthGuard)
   public async getChatters(
     @Auth() user: AuthUserProps,
-    @Param('id', ParseIntPipe) collectionId: number
+    @Param('id', ParseIntPipe) collectionId: number,
   ): Promise<UserSkinEntity[]> {
     return this.userSkinService.getUserSkinsByUserId(user.userId, collectionId);
   }
@@ -36,7 +36,7 @@ export class UserSkinController {
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Auth() user: AuthUserProps,
-    @Body(new ZodPipe(updateUserSkinDtoSchema)) data: UpdateUserSkinDto
+    @Body(new ZodPipe(updateUserSkinDtoSchema)) data: UpdateUserSkinDto,
   ): Promise<UserSkinEntity> {
     return this.userSkinService.update(user.userId, id, data);
   }

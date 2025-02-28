@@ -1,5 +1,5 @@
-import { UserRepository } from '@app/backend-api/auth/repositories/user.repository';
-import { ConfigService } from '@app/backend-api/config/config.service';
+import { UserRepository } from '@/auth/repositories/user.repository';
+import { ConfigService } from '@/config/config.service';
 import { HttpService } from '@nestjs/axios';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
@@ -35,12 +35,12 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly userRepository: UserRepository,
     private readonly userTokenRepository: UserTokenRepository,
-    private readonly commandRepository: SeedService
+    private readonly commandRepository: SeedService,
   ) {}
 
   public async validate(
     accessToken: string,
-    refreshToken: string
+    refreshToken: string,
   ): Promise<AuthUserProps> {
     const result = await this.getTwitchUserInfo(accessToken);
 
@@ -74,8 +74,8 @@ export class AuthService {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
             },
-          }
-        )
+          },
+        ),
       );
     } catch (error) {
       // TODO: check prod error
@@ -97,15 +97,15 @@ export class AuthService {
             Accept: 'application/vnd.twitchtv.v5+json',
             'Client-Id': this.configService.twitchClientId,
           },
-        }
-      )
+        },
+      ),
     );
 
     if (data.length === 0) {
       // TODO: convert to more precise exception.
       throw new HttpException(
         'Twitch user is not found.',
-        HttpStatusCode.InternalServerError
+        HttpStatusCode.InternalServerError,
       );
     }
 

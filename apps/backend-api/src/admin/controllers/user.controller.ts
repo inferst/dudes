@@ -1,9 +1,9 @@
-import { Auth } from '@app/backend-api/auth/decorators';
-import { AuthGuard } from '@app/backend-api/auth/guards';
-import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
-import { ConfigService } from '@app/backend-api/config/config.service';
+import { Auth } from '@/auth/decorators';
+import { AuthGuard } from '@/auth/guards';
+import { AuthUserProps } from '@/auth/services/auth.service';
+import { ConfigService } from '@/config/config.service';
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { UserEntity } from '@lib/types';
+import { UserEntity } from '@repo/types';
 
 @Controller('/user')
 export class UserController {

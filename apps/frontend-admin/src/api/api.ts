@@ -15,7 +15,7 @@ import {
   UserSkinEntity,
   UpdateUserSkinCollectionDto,
   UpdateUserSkinDto,
-} from '@lib/types';
+} from '@repo/types';
 import axios, { GenericAbortSignal } from 'axios';
 
 export type WithSignal = {

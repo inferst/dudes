@@ -1,6 +1,6 @@
-import { TwitchAuthGuard } from '@app/backend-api/auth/guards/twitch-auth.guard';
-import { AuthService } from '@app/backend-api/auth/services';
-import { ConfigService } from '@app/backend-api/config/config.service';
+import { TwitchAuthGuard } from '@/auth/guards/twitch-auth.guard';
+import { AuthService } from '@/auth/services';
+import { ConfigService } from '@/config/config.service';
 import {
   Controller,
   Get,
@@ -23,7 +23,7 @@ export class AuthController {
   public constructor(
     private readonly authService: AuthService,
     private readonly userTokenRepository: UserTokenRepository,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   @Get('/login')
@@ -35,7 +35,7 @@ export class AuthController {
   @Get('/callback')
   @UseGuards(TwitchAuthGuard)
   public handleRedirect(
-    @Response({ passthrough: true }) res: ExpressResponse
+    @Response({ passthrough: true }) res: ExpressResponse,
   ): void {
     res.redirect(this.configService.adminUrl);
   }
@@ -43,13 +43,13 @@ export class AuthController {
   @Get('/logout')
   public async handleLogout(
     @Request() req: ExpressRequest,
-    @Response({ passthrough: true }) res: ExpressResponse
+    @Response({ passthrough: true }) res: ExpressResponse,
   ): Promise<void> {
     const user = req.user as AuthUserProps | undefined;
 
     if (user) {
       const userToken = await this.userTokenRepository.findByUserId(
-        user.userId
+        user.userId,
       );
 
       if (userToken) {
