@@ -1,15 +1,15 @@
-import { EventsGateway } from '@app/backend-api/admin/gateways';
+import { EventsGateway } from '@/admin/gateways';
 import {
   UserRepository,
   UserSkinCollectionRepository,
   UserSkinRepository,
-} from '@app/backend-api/admin/repositories';
+} from '@/admin/repositories';
 import {
   ActionService,
   ChatMessageService,
   SocketService,
   SpriteService,
-} from '@app/backend-api/admin/services';
+} from '@/admin/services';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '../config/config.module';
@@ -39,6 +39,7 @@ import { TwitchClientFactory } from './twitch/twitch-client.factory';
 import { TwitchUserFilterService } from './twitch/twitch-user-filter.service';
 import { UserSkinCollectionService } from './services/user-skin-collection.service';
 import { UserSkinService } from './services/user-skin.service';
+import path from 'path';
 
 const twitchClientFactory = {
   provide: 'TWITCH_CLIENT_FACTORY',

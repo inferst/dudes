@@ -1,0 +1,20 @@
+{
+  "name": "frontend-client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --clearScreen false",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "evotars": "^0.0.16",
+    "socket.io-client": "^4.8.1",
+    "vite": "^5.1.4"
+  }
+}

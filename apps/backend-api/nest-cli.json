@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "assets": [
+      {
+        "include": "../public",
+        "outDir": "./dist/public"
+      }
+    ]
+  }
+}

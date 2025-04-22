@@ -1,28 +1,37 @@
 {
-  "private": true,
   "name": "website",
-  "description": "",
-  "license": "",
-  "scripts": {},
-  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 4100",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
-    "@remix-run/node": "^2.8.1",
-    "@remix-run/react": "^2.8.1",
-    "@remix-run/serve": "^2.8.1",
-    "isbot": "^4.4.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "accept-language": "^3.0.20",
+    "evotars": "0.0.16",
+    "i18next": "^25.0.1",
+    "i18next-browser-languagedetector": "^8.0.5",
+    "i18next-resources-to-backend": "^1.2.1",
+    "next": "15.3.1",
+    "next-i18next": "^15.4.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^15.4.1"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.8.1",
-    "@remix-run/eslint-config": "^2.8.1",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
-  },
-  "engines": {
-    "node": ">=14"
-  },
-  "sideEffects": false
+    "@eslint/eslintrc": "^3",
+    "@next/eslint-plugin-next": "^15.3.1",
+    "@repo/types": "workspace:*",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
 }

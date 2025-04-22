@@ -1,7 +1,7 @@
-import { Auth } from '@app/backend-api/auth/decorators';
-import { AuthGuard } from '@app/backend-api/auth/guards';
-import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
-import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
+import { Auth } from '@/auth/decorators';
+import { AuthGuard } from '@/auth/guards';
+import { AuthUserProps } from '@/auth/services/auth.service';
+import { ZodPipe } from '@/pipes/zod.pipe';
 import {
   Body,
   Controller,
@@ -19,19 +19,19 @@ import {
   UpdateTwitchRewardDto,
   createTwitchRewardDtoSchema,
   updateTwitchRewardDtoSchema,
-} from '@lib/types';
+} from '@repo/types';
 import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';
 
 @Controller('/reward')
 export class RewardController {
   public constructor(
-    private readonly rewardRepository: TwitchRewardRepository
+    private readonly rewardRepository: TwitchRewardRepository,
   ) {}
 
   @Get('/twitch/list')
   @UseGuards(AuthGuard)
   public async getRewards(
-    @Auth() user: AuthUserProps
+    @Auth() user: AuthUserProps,
   ): Promise<TwitchRewardEntity[]> {
     return this.rewardRepository.getRewards(user);
   }
@@ -42,7 +42,7 @@ export class RewardController {
     @Param('id', ParseIntPipe) id: number,
     @Auth() user: AuthUserProps,
     @Body(new ZodPipe(updateTwitchRewardDtoSchema))
-    reward: UpdateTwitchRewardDto
+    reward: UpdateTwitchRewardDto,
   ): Promise<TwitchRewardEntity> {
     return this.rewardRepository.update(user, id, reward);
   }
@@ -51,7 +51,7 @@ export class RewardController {
   @UseGuards(AuthGuard)
   public async delete(
     @Param('id', ParseIntPipe) id: number,
-    @Auth() user: AuthUserProps
+    @Auth() user: AuthUserProps,
   ): Promise<void> {
     await this.rewardRepository.delete(user, id);
   }
@@ -60,7 +60,7 @@ export class RewardController {
   @UseGuards(AuthGuard)
   public async create(
     @Body(new ZodPipe(createTwitchRewardDtoSchema)) data: CreateTwitchRewardDto,
-    @Auth() user: AuthUserProps
+    @Auth() user: AuthUserProps,
   ): Promise<TwitchRewardEntity> {
     return this.rewardRepository.create(user, data);
   }

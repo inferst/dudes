@@ -1,9 +1,11 @@
 services:
   app:
     image: dudes-build
-    command: sh -c "pnpm run db:migrate:deploy && node dist/apps/backend-api/main.js"
+    build:
+      context: .
+    command: sh -c "pnpm --filter database run db:migrate:deploy && node apps/backend-api/dist/main.js"
     container_name: dudes-app
-    working_dir: /usr/src/dudes
+    working_dir: /app
     environment:
       - HOST_URL=${HOST_URL}
       - ADMIN_URL=${ADMIN_URL}
@@ -17,11 +19,11 @@ services:
 
   website:
     image: dudes-build
-    command: sh -c "cd apps/website && npx remix-serve build/index.js"
+    command: sh -c "cd apps/website && pnpm run start"
     environment:
       - PORT=${REMIX_PORT}
     container_name: dudes-website
-    working_dir: /usr/src/dudes
+    working_dir: /app
     user: $DOCKER_USER
 
   postgres:
@@ -41,6 +43,7 @@ services:
     container_name: dudes-nginx
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/var/www/html
     restart: always
 
 volumes:
@@ -48,5 +51,4 @@ volumes:
 
 networks:
   default:
-    external: true
     name: scoobydoo

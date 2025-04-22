@@ -1,5 +1,5 @@
-import { Login } from '@app/frontend-admin/components/Auth/Login';
-import { Layout } from '@app/frontend-admin/components/Layout/Layout';
+import { Login } from '@/components/Auth/Login';
+import { Layout } from '@/components/Layout/Layout';
 import { Routes as ReactRoutes, Route } from 'react-router-dom';
 import { ChattersPage } from './components/pages/ChattersPage/ChattersPage';
 import { CommandsPage } from './components/pages/CommandsPage/CommandsPage';

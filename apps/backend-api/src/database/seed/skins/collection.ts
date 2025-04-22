@@ -1,8 +1,8 @@
-import { PrismaClient, SkinCollection } from '@prisma/client';
+import { PrismaClient, SkinCollection } from '@repo/database';
 
 export async function skinCollectionSeed(
   prisma: PrismaClient,
-  name: string
+  name: string,
 ): Promise<SkinCollection> {
   const collection = await prisma.skinCollection.upsert({
     where: { name },
@@ -21,7 +21,7 @@ export async function skinCollectionSeed(
 
 export async function defaultUserSkinCollection(
   prisma: PrismaClient,
-  userId: number
+  userId: number,
 ): Promise<void> {
   const collection = await prisma.skinCollection.findFirst({
     where: {

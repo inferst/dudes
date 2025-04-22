@@ -1,9 +1,9 @@
-import { Action, PrismaClient, User } from '@prisma/client';
+import { Action, PrismaClient, User } from '@repo/database';
 
 export async function defaultDashCommandSeed(
   prisma: PrismaClient,
   user: User,
-  action?: Action
+  action?: Action,
 ): Promise<void> {
   const dashAction =
     action ??
@@ -48,8 +48,8 @@ export async function defaultDashCommandSeed(
           action: {
             force: 14,
           },
-          arguments: []
-        }
+          arguments: [],
+        },
       },
     });
   }

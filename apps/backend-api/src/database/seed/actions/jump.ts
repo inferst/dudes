@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 import { defaultJumpCommandSeed } from '../commands/jump';
 
 export async function jumpActionSeed(prisma: PrismaClient): Promise<void> {

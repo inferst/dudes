@@ -1,11 +1,27 @@
-import { Auth } from '@app/backend-api/auth/decorators';
-import { AuthGuard } from '@app/backend-api/auth/guards';
-import { AuthUserProps } from '@app/backend-api/auth/services/auth.service';
-import { ZodPipe } from '@app/backend-api/pipes/zod.pipe';
-import { Body, Controller, Get, Param, ParseIntPipe, Put, UseGuards, Post, Delete } from '@nestjs/common';
-import { UpdateCommandDto, CommandEntity, updateCommandDtoSchema, createCommandDtoSchema, CreateCommandDto } from '@lib/types';
+import { Auth } from '@/auth/decorators';
+import { AuthGuard } from '@/auth/guards';
+import { AuthUserProps } from '@/auth/services/auth.service';
+import { ZodPipe } from '@/pipes/zod.pipe';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Put,
+  UseGuards,
+  Post,
+  Delete,
+} from '@nestjs/common';
+import {
+  UpdateCommandDto,
+  CommandEntity,
+  updateCommandDtoSchema,
+  createCommandDtoSchema,
+  CreateCommandDto,
+} from '@repo/types';
 import { CommandRepository } from '../repositories/command.repository';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@repo/database';
 
 @Controller('/command')
 export class CommandController {
@@ -14,7 +30,7 @@ export class CommandController {
   @Get('/list')
   @UseGuards(AuthGuard)
   public async getCommands(
-    @Auth() user: AuthUserProps
+    @Auth() user: AuthUserProps,
   ): Promise<CommandEntity[]> {
     return this.commandRepository.getCommandsByUserId(user.userId);
   }
@@ -24,7 +40,7 @@ export class CommandController {
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Auth() user: AuthUserProps,
-    @Body(new ZodPipe(updateCommandDtoSchema)) command: UpdateCommandDto
+    @Body(new ZodPipe(updateCommandDtoSchema)) command: UpdateCommandDto,
   ): Promise<CommandEntity> {
     return this.commandRepository.update(user.userId, id, command);
   }
@@ -42,7 +58,7 @@ export class CommandController {
   @UseGuards(AuthGuard)
   public async create(
     @Body(new ZodPipe(createCommandDtoSchema)) data: CreateCommandDto,
-    @Auth() user: AuthUserProps
+    @Auth() user: AuthUserProps,
   ): Promise<CommandEntity> {
     const command: Prisma.CommandCreateInput = {
       user: {

@@ -1,11 +1,11 @@
-import { Button } from '@app/frontend-admin/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@app/frontend-admin/components/ui/card';
+} from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
 
 export function Login() {

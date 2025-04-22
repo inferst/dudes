@@ -1,4 +1,4 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -7,7 +7,7 @@ export class SpriteService {
 
   public async isSpriteAvailable(
     userId: number,
-    spriteName: string
+    spriteName: string,
   ): Promise<boolean> {
     const count = await this.prismaService.skin.count({
       where: {

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 import { TWITCH_PLATFORM_ID } from '../../constants';
 import { actionSeed } from './actions';
 import { dudesSkinCollectionSeed } from './skins';

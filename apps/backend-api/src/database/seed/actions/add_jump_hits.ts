@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 
 export async function addJumpHitsActionSeed(
-  prisma: PrismaClient
+  prisma: PrismaClient,
 ): Promise<void> {
   const addJumpHitsAction = await prisma.action.upsert({
     where: { name: 'add_jump_hits' },

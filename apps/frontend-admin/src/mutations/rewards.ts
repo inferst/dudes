@@ -1,4 +1,4 @@
-import { CreateTwitchRewardDto, RewardEntity, UpdateTwitchRewardDto } from '@lib/types';
+import { CreateTwitchRewardDto, RewardEntity, UpdateTwitchRewardDto } from '@repo/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '../api/api';
@@ -43,7 +43,7 @@ export const useCreateRewardMutation = () => {
   return useMutation<RewardEntity, AxiosError, CreateTwitchRewardDto, RewardEntity[]>(
     {
       mutationFn: api.createReward,
-      onSuccess: (data, variables) => {
+      onSuccess: (data) => {
         queryClient.setQueryData<RewardEntity[]>(
           rewardsKeys.list.queryKey,
           (rewards) => [...(rewards ?? []), data]

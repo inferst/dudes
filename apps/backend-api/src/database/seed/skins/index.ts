@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 import { defaultUserSkinCollection, skinCollectionSeed } from './collection';
 import { skins } from './dudes';
 import { defaultUserSkins, skinSeed } from './skin';
 
 export async function dudesSkinCollectionSeed(
-  prisma: PrismaClient
+  prisma: PrismaClient,
 ): Promise<void> {
   const collection = await skinCollectionSeed(prisma, 'dudes');
 

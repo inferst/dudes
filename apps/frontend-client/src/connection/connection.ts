@@ -6,7 +6,7 @@ import {
   SettingsEntity,
   TwitchChatterEntity,
   UserActionEntity,
-} from '@lib/types';
+} from '@repo/types';
 import { Socket, io } from 'socket.io-client';
 
 export class Connection {

@@ -1,6 +1,6 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma, UserSkin } from '@prisma/client';
+import { Prisma, UserSkin } from '@repo/database';
 
 @Injectable()
 export class UserSkinRepository {
@@ -9,7 +9,7 @@ export class UserSkinRepository {
   public async upsert(
     userId: number,
     id: number,
-    data: Prisma.UserSkinCreateInput
+    data: Prisma.UserSkinCreateInput,
   ): Promise<UserSkin> {
     return this.prismaService.userSkin.upsert({
       create: data,

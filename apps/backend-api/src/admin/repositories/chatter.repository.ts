@@ -1,6 +1,6 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Chatter } from '@prisma/client';
+import { Prisma, Chatter } from '@repo/database';
 
 @Injectable()
 export class ChatterRepository {
@@ -8,7 +8,7 @@ export class ChatterRepository {
 
   public async getChatterById(
     userId: number,
-    chatterId: string
+    chatterId: string,
   ): Promise<Chatter | null> {
     const data = await this.prismaService.chatter.findFirst({
       where: {
@@ -39,7 +39,7 @@ export class ChatterRepository {
   public async update(
     userId: number,
     id: number,
-    data: Prisma.ChatterUpdateInput
+    data: Prisma.ChatterUpdateInput,
   ): Promise<Chatter> {
     return this.prismaService.chatter.update({
       data,

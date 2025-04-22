@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import tinycolor from 'tinycolor2';
+import { Command } from '@repo/database';
 import {
   ActionEntity,
   RewardRedemptionData,
@@ -7,14 +7,14 @@ import {
   UserInfo,
   isColorUserActionEntity,
   isSpriteUserActionEntity,
-} from '@lib/types';
+} from '@repo/types';
+import tinycolor from 'tinycolor2';
 import { ActionRepository } from '../repositories/action.repository';
 import { CommandRepository } from '../repositories/command.repository';
 import { TwitchRewardRepository } from '../repositories/twitch-reward.repository';
 import { TwitchClientFactory } from '../twitch/twitch-client.factory';
-import { SpriteService } from './sprite.service';
 import { ChatterService } from './chatter.service';
-import { Command } from '@prisma/client';
+import { SpriteService } from './sprite.service';
 
 type CooldownStorage = {
   [id: string]: NodeJS.Timeout;
@@ -33,16 +33,15 @@ export class ActionService {
     private readonly actionRepository: ActionRepository,
     private readonly twitchRewardRepository: TwitchRewardRepository,
     @Inject('TWITCH_CLIENT_FACTORY')
-    private readonly twitchClientFactory: TwitchClientFactory
+    private readonly twitchClientFactory: TwitchClientFactory,
   ) {}
 
   private async getCommandByMessage(
     userId: number,
-    message: string
+    message: string,
   ): Promise<Command | undefined> {
-    const commands = await this.commandRepository.getActiveCommandsByUserId(
-      userId
-    );
+    const commands =
+      await this.commandRepository.getActiveCommandsByUserId(userId);
 
     const commandText = message.trim().split(' ')[0];
 
@@ -56,7 +55,7 @@ export class ActionService {
   }
 
   private async getActionById(
-    actionId: number
+    actionId: number,
   ): Promise<ActionEntity | undefined> {
     if (this.actions.length == 0) {
       this.actions = await this.actionRepository.getActions();
@@ -74,7 +73,7 @@ export class ActionService {
   private processCooldown(
     userId: number,
     messageUserId: string,
-    command: Command
+    command: Command,
   ): boolean {
     const cooldownId = `${userId}_${messageUserId}_${command.id}`;
 
@@ -92,7 +91,7 @@ export class ActionService {
   private async collectUserInfo(
     userAction: UserActionEntity,
     userId: number,
-    chatterId: string
+    chatterId: string,
   ): Promise<UserInfo> {
     const chatter = await this.chatterService.getChatter(userId, chatterId);
 
@@ -120,7 +119,7 @@ export class ActionService {
   }
 
   private mergeUserDefaultUserAction(
-    action: UserActionEntity
+    action: UserActionEntity,
   ): UserActionEntity {
     if (isColorUserActionEntity(action)) {
       const defaultValues = this.getDefaultColorActionValues();
@@ -146,7 +145,7 @@ export class ActionService {
     actionableData: PrismaJson.ActionableData,
     chatterId: string,
     defaultInfo: UserInfo,
-    argsText: string | undefined
+    argsText: string | undefined,
   ): Promise<UserActionEntity> {
     const hasArguments =
       actionableData.arguments &&
@@ -167,13 +166,13 @@ export class ActionService {
     };
 
     const userActionWithUserDefaultData = this.mergeUserDefaultUserAction(
-      userActionWithDefaultUserInfo
+      userActionWithDefaultUserInfo,
     );
 
     const userInfo = await this.collectUserInfo(
       userActionWithUserDefaultData,
       userId,
-      chatterId
+      chatterId,
     );
 
     return {
@@ -186,7 +185,7 @@ export class ActionService {
     userId: number,
     message: string,
     messageUserId: string,
-    info: UserInfo
+    info: UserInfo,
   ): Promise<UserActionEntity | undefined> {
     const command = await this.getCommandByMessage(userId, message);
 
@@ -212,7 +211,7 @@ export class ActionService {
       command.data,
       messageUserId,
       info,
-      argsText
+      argsText,
     );
 
     if (!(await this.isUserActionValid(userId, collectedUserAction))) {
@@ -225,18 +224,18 @@ export class ActionService {
   public async getUserActionByReward(
     userId: number,
     platformUserId: string,
-    redemption: RewardRedemptionData
+    redemption: RewardRedemptionData,
   ): Promise<UserActionEntity | undefined> {
     const apiClient = await this.twitchClientFactory.createApiClient(userId);
 
     const redemptionUserColor = await apiClient.chat.getColorForUser(
-      redemption.userId
+      redemption.userId,
     );
 
     const twitchReward = await this.twitchRewardRepository.getRewardById(
       userId,
       platformUserId,
-      redemption.rewardId
+      redemption.rewardId,
     );
 
     if (!twitchReward) {
@@ -263,7 +262,7 @@ export class ActionService {
       twitchReward.data,
       redemption.userId,
       info,
-      argsText
+      argsText,
     );
 
     if (!(await this.isUserActionValid(userId, collectedUserAction))) {
@@ -279,7 +278,7 @@ export class ActionService {
 
   private getArgumentsFromText(
     args: string[],
-    text: string
+    text: string,
   ): Record<string, string> {
     if (args.length == 0) {
       return {};
@@ -299,7 +298,7 @@ export class ActionService {
 
   private async isUserActionValid(
     userId: number,
-    action: ActionEntity
+    action: ActionEntity,
   ): Promise<boolean> {
     if (isSpriteUserActionEntity(action)) {
       return this.spriteService.isSpriteAvailable(userId, action.data.sprite);

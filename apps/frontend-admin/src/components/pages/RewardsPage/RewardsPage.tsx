@@ -2,10 +2,10 @@ import {
   useCreateRewardMutation,
   useDeleteRewardMutation,
   useUpdateRewardMutation,
-} from '@app/frontend-admin/mutations/rewards';
-import { useActionsQuery } from '@app/frontend-admin/queries/actions';
-import { useRewardsQuery } from '@app/frontend-admin/queries/rewards';
-import { ActionEntity, TwitchRewardEntity } from '@lib/types';
+} from '@/mutations/rewards';
+import { useActionsQuery } from '@/queries/actions';
+import { useRewardsQuery } from '@/queries/rewards';
+import { ActionEntity, TwitchRewardEntity } from '@repo/types';
 import { DeleteDialog } from '../../common/DeleteDialog';
 import { Loader } from '../../common/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
@@ -101,6 +101,8 @@ export function RewardsPage() {
         ></EditRewardForm>
       );
     }
+
+    return null;
   };
 
   return (

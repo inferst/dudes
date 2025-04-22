@@ -3,7 +3,7 @@ import {
   UpdateUserSkinDto,
   UserSkinCollectionEntity,
   UserSkinEntity,
-} from '@lib/types';
+} from '@repo/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '../api/api';

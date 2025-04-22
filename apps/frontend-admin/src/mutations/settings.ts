@@ -1,4 +1,4 @@
-import { SettingsEntity, UpdateSettingsDto } from '@lib/types';
+import { SettingsEntity, UpdateSettingsDto } from '@repo/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '../api/api';
@@ -23,7 +23,7 @@ export const useUpdateSettingsMutation = () => {
 
       queryClient.setQueryData<UpdateSettingsDto>(
         settingsKeys.list.queryKey,
-        (settings) => data
+        () => data
       );
 
       return prev;

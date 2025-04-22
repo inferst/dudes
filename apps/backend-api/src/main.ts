@@ -1,12 +1,12 @@
+import { ConfigService } from '@/config/config.service';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import { PrismaClient } from '@repo/database';
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import session from 'express-session';
 import passport from 'passport';
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import { PrismaClient } from '@prisma/client';
-import { ConfigService } from '@app/backend-api/config/config.service';
-import { ZodFilter } from './filters/zod.filter';
 import { TwitchHttpExceptionFilter } from './admin/filters/twitch-http-exception.filter';
+import { AppModule } from './app/app.module';
+import { ZodFilter } from './filters/zod.filter';
 
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 days.
 const SESSION_CHECK_PERIOD = 2 * 60 * 1000; // 2 minutes.
@@ -32,7 +32,7 @@ async function bootstrap(): Promise<void> {
         maxAge: COOKIE_MAX_AGE,
         sameSite: 'lax',
       },
-    })
+    }),
   );
 
   app.use(passport.initialize());

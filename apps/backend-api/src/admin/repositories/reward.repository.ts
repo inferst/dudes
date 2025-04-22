@@ -1,6 +1,6 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Reward } from '@prisma/client';
+import { Prisma, Reward } from '@repo/database';
 
 @Injectable()
 export class RewardRepository {
@@ -20,7 +20,7 @@ export class RewardRepository {
   public async update(
     userId: number,
     rewardId: number,
-    data: Prisma.RewardUpdateInput
+    data: Prisma.RewardUpdateInput,
   ): Promise<Reward> {
     return this.prismaService.reward.update({
       data,

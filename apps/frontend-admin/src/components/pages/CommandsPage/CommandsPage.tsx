@@ -11,10 +11,10 @@ import {
 } from '../../ui/table';
 import { CommandForm, CommandFormInput } from './CommandForm';
 
-import { useUpdateCommandMutation } from '@app/frontend-admin/mutations/commands';
-import { useActionsQuery } from '@app/frontend-admin/queries/actions';
-import { useCommandsQuery } from '@app/frontend-admin/queries/commands';
-import { CommandEntity } from '@lib/types';
+import { useUpdateCommandMutation } from '@/mutations/commands';
+import { useActionsQuery } from '@/queries/actions';
+import { useCommandsQuery } from '@/queries/commands';
+import { CommandEntity } from '@repo/types';
 import { Loader } from '../../common/Loader';
 import { useTranslation } from 'react-i18next';
 
@@ -68,6 +68,8 @@ export function CommandsPage() {
         ></CommandForm>
       );
     }
+
+    return null;
   };
 
   return (

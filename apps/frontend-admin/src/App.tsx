@@ -4,12 +4,12 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
-import { Toaster } from './components/ui/toaster';
-import { Routes } from './routes';
 import { isAxiosError } from 'axios';
 import { useMemo } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from './components/ui/toaster';
 import { useToast } from './components/ui/use-toast';
+import { Routes } from './routes';
 
 export function App() {
   const { toast } = useToast();
@@ -45,7 +45,12 @@ export function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <QueryClientProvider client={queryClient}>
           <Routes />
         </QueryClientProvider>

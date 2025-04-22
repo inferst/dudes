@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ChatterRepository } from '../repositories/chatter.repository';
-import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
-import { Chatter } from '@prisma/client';
-import { UserInfo } from '@lib/types';
+import { TWITCH_PLATFORM_ID } from '@/constants';
+import { Chatter } from '@repo/database';
+import { UserInfo } from '@repo/types';
 
 @Injectable()
 export class ChatterService {
@@ -11,7 +11,7 @@ export class ChatterService {
   public async getChatter(userId: number, chatterId: string): Promise<Chatter> {
     let chatter = await this.chatterRepository.getChatterById(
       userId,
-      chatterId
+      chatterId,
     );
 
     if (!chatter) {
@@ -38,7 +38,7 @@ export class ChatterService {
   public async updateChatter(
     userId: number,
     chatterId: string,
-    info: UserInfo
+    info: UserInfo,
   ): Promise<Chatter> {
     const chatter = await this.getChatter(userId, chatterId);
 

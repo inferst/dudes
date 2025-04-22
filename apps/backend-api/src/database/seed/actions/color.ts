@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@repo/database';
 import { defaultColorCommandSeed } from '../commands/color';
 
 export async function colorActionSeed(prisma: PrismaClient): Promise<void> {

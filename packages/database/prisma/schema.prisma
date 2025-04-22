@@ -1,0 +1,162 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../generated/client"
+}
+
+generator json {
+  provider = "prisma-json-types-generator"
+  output = "../generated/types"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int                  @id @default(autoincrement())
+  guid               String               @unique @default(uuid()) @db.Uuid
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  commands           Command[]
+  reward             Reward[]
+  settings           Settings[]
+  userToken          UserToken[]
+  chatters           Chatter[]
+  UserSkinCollection UserSkinCollection[]
+  UserSkin           UserSkin[]
+}
+
+model UserToken {
+  id                  Int       @id @default(autoincrement())
+  accessToken         String    @db.VarChar(255)
+  refreshToken        String    @db.VarChar(255)
+  platformUserId      String    @db.VarChar(255)
+  platformLogin       String    @db.VarChar(255)
+  expiresIn           Int       @default(0)
+  obtainmentTimestamp DateTime? @db.Timestamp(3)
+  userId              Int
+  user                User      @relation(fields: [userId], references: [id])
+  platformId          Int
+  platform            Platform  @relation(fields: [platformId], references: [id])
+  isTokenRevoked      Boolean   @default(false)
+
+  @@unique([userId, platformId])
+  @@unique([platformUserId, platformId])
+}
+
+model Settings {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+  /// [SettingsData]
+  data   Json @default("{}") @db.JsonB()
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model Command {
+  id       Int     @id @default(autoincrement())
+  actionId Int
+  action   Action  @relation(fields: [actionId], references: [id])
+  userId   Int
+  user     User    @relation(fields: [userId], references: [id])
+  isActive Boolean @default(false)
+  text     String  @db.VarChar(255)
+  cooldown Int     @default(0)
+  /// [ActionableData]
+  data     Json    @default("{}") @db.JsonB()
+}
+
+model Action {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(255)
+  title       String    @db.VarChar(255)
+  description String    @default("") @db.VarChar(255)
+  command     Command[]
+  reward      Reward[]
+  /// [ActionData]
+  data        Json      @default("{}") @db.JsonB()
+}
+
+model Platform {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique @db.VarChar(255)
+  userToken UserToken[]
+  rewards   Reward[]
+  chatters  Chatter[]
+}
+
+model Reward {
+  id               Int      @id @default(autoincrement())
+  actionId         Int
+  action           Action   @relation(fields: [actionId], references: [id])
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id])
+  platformId       Int
+  platform         Platform @relation(fields: [platformId], references: [id])
+  platformRewardId String
+  /// [ActionableData]
+  data             Json     @default("{}") @db.JsonB()
+}
+
+model Chatter {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  platformId Int
+  platform   Platform @relation(fields: [platformId], references: [id])
+  chatterId  String   @db.VarChar(255)
+  sprite     String   @default("")
+  color      String   @default("")
+}
+
+model SkinCollection {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique @db.VarChar(255)
+  parentId           Int?
+  skin               Skin[]
+  userSkinCollection UserSkinCollection[]
+}
+
+model Skin {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  collectionId Int
+  collection   SkinCollection @relation(fields: [collectionId], references: [id])
+  userSkin     UserSkin[]
+
+  @@unique([collectionId, name])
+}
+
+model UserSkinCollection {
+  id               Int            @id @default(autoincrement())
+  isActive         Boolean
+  isDefault        Boolean        @default(false)
+  userId           Int
+  user             User           @relation(fields: [userId], references: [id])
+  skinCollectionId Int
+  skinCollection   SkinCollection @relation(fields: [skinCollectionId], references: [id])
+
+  @@unique([skinCollectionId, userId])
+}
+
+model UserSkin {
+  id        Int     @id @default(autoincrement())
+  isActive  Boolean
+  isDefault Boolean @default(false)
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  skinId    Int
+  skin      Skin    @relation(fields: [skinId], references: [id])
+
+  @@unique([skinId, userId])
+}

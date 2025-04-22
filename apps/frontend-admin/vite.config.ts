@@ -1,12 +1,11 @@
-/// <reference types='vitest' />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { fileURLToPath } from 'node:url';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   base: '/admin',
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/apps/frontend-admin',
 
   server: {
     proxy: {
@@ -16,36 +15,18 @@ export default defineConfig({
       },
     },
     port: 4200,
-    host: 'localhost',
+    host: true,
   },
 
-  preview: {
-    port: 4200,
-    host: 'localhost',
-  },
+  // logLevel: 'warn',
 
-  plugins: [react(), nxViteTsPaths()],
+  // preview: {
+  //   port: 4200,
+  //   host: 'localhost',
+  // },
 
-  build: {
-    outDir: '../../dist/apps/frontend-admin',
-    reportCompressedSize: true,
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
-
-  test: {
-    globals: true,
-    cache: {
-      dir: '../../node_modules/.vitest',
-    },
-    environment: 'jsdom',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: '../../coverage/apps/frontend-admin',
-      provider: 'v8',
-    },
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
 });

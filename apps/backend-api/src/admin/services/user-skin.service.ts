@@ -1,5 +1,5 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { UpdateUserSkinDto, UserSkinEntity } from '@lib/types';
+import { PrismaService } from '@/database/prisma.service';
+import { UpdateUserSkinDto, UserSkinEntity } from '@repo/types';
 import {
   BadRequestException,
   Injectable,
@@ -12,7 +12,7 @@ export class UserSkinService {
 
   public async getUserSkinsByUserId(
     userId: number,
-    collectionId: number
+    collectionId: number,
   ): Promise<UserSkinEntity[]> {
     const skins = await this.prismaService.skin.findMany({
       where: {
@@ -50,7 +50,7 @@ export class UserSkinService {
 
   public async getActiveUserSkinByName(
     userId: number,
-    name: string
+    name: string,
   ): Promise<UserSkinEntity> {
     const skin = await this.prismaService.skin.findFirst({
       where: {
@@ -84,7 +84,7 @@ export class UserSkinService {
   public async update(
     userId: number,
     skinId: number,
-    data: UpdateUserSkinDto
+    data: UpdateUserSkinDto,
   ): Promise<UserSkinEntity> {
     const skin = await this.prismaService.skin.findFirst({
       where: {

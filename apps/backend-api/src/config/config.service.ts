@@ -10,11 +10,16 @@ type Config = {
   TWITCH_CLIENT_SECRET: string;
   TWITCH_CALLBACK_URL: string;
   DATABASE_URL: string;
+  PWD: string;
 };
 
 @Injectable()
 export class ConfigService {
   constructor(private configService: NestConfigService<Config, true>) {}
+
+  get root(): string {
+    return this.configService.get('PWD');
+  }
 
   get hostUrl(): string {
     return this.configService.get('HOST_URL');

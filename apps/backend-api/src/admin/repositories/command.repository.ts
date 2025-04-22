@@ -1,6 +1,6 @@
-import { PrismaService } from '@app/backend-api/database/prisma.service';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Command } from '@prisma/client';
+import { Prisma, Command } from '@repo/database';
 
 @Injectable()
 export class CommandRepository {
@@ -32,7 +32,7 @@ export class CommandRepository {
   public async update(
     userId: number,
     commandId: number,
-    data: Prisma.CommandUpdateInput
+    data: Prisma.CommandUpdateInput,
   ): Promise<Command> {
     return this.prismaService.command.update({
       data,

@@ -1,11 +1,11 @@
-import { UserRepository } from '@app/backend-api/admin/repositories';
+import { UserRepository } from '@/admin/repositories';
 import { Injectable, Logger } from '@nestjs/common';
-import { Settings, UserToken } from '@prisma/client';
+import { Settings, UserToken } from '@repo/database';
 import {
   ClientToServerEvents,
   ServerToClientsEvents,
   UserInfo,
-} from '@lib/types';
+} from '@repo/types';
 import { Socket } from 'socket.io';
 import { SettingsRepository } from '../repositories/settings.repository';
 
@@ -31,7 +31,7 @@ type Room = {
 
 @Injectable()
 export class SocketService<
-  TSocket extends Socket<ClientToServerEvents, ServerToClientsEvents>
+  TSocket extends Socket<ClientToServerEvents, ServerToClientsEvents>,
 > {
   private readonly logger = new Logger(SocketService.name);
 
@@ -45,7 +45,7 @@ export class SocketService<
     private readonly actionService: ActionService,
     private readonly chatMessageService: ChatMessageService,
     private readonly emoteService: EmoteService,
-    private readonly eventClinetFactory: EventClientFactory
+    private readonly eventClinetFactory: EventClientFactory,
   ) {}
 
   public getRooms(): Map<string, Room> {
@@ -70,7 +70,7 @@ export class SocketService<
     }
 
     const clients = room.clients.filter(
-      (client) => client.id !== connectedClient.socket.id
+      (client) => client.id !== connectedClient.socket.id,
     );
 
     if (clients.length > 0) {
@@ -132,7 +132,7 @@ export class SocketService<
     eventClient.connect();
 
     const emoteClient = await this.emoteService.createClient(
-      user.platformUserId
+      user.platformUserId,
     );
     emoteClient.connect();
 
@@ -154,7 +154,7 @@ export class SocketService<
         user.userId,
         data.message,
         data.userId,
-        data.info
+        data.info,
       );
 
       if (action) {
@@ -173,14 +173,14 @@ export class SocketService<
 
       const strippedMessage = this.chatMessageService.stripEmotes(
         message,
-        customEmotes.map((emote) => emote.name)
+        customEmotes.map((emote) => emote.name),
       );
 
       if (strippedMessage || emotes.length > 0) {
         const chatterInfo = await this.getChatterInfo(
           user.userId,
           data.userId,
-          data.info
+          data.info,
         );
 
         const messageData = {
@@ -197,7 +197,7 @@ export class SocketService<
 
     eventClient.onChatters((data) => {
       const entities = data.filter(
-        (entity) => !this.isHiddenChatter(entity.name, settings)
+        (entity) => !this.isHiddenChatter(entity.name, settings),
       );
 
       socket.emit('chatters', entities);
@@ -208,7 +208,7 @@ export class SocketService<
       const chatterInfo = await this.getChatterInfo(
         user.userId,
         data.broadcaster.id,
-        data.broadcaster.info
+        data.broadcaster.info,
       );
 
       socket.emit('raid', data);
@@ -229,14 +229,14 @@ export class SocketService<
       const action = await this.actionService.getUserActionByReward(
         user.userId,
         user.platformUserId,
-        data
+        data,
       );
 
       if (action) {
         const chatterInfo = await this.getChatterInfo(
           user.userId,
           data.userId,
-          action.info
+          action.info,
         );
 
         const actionData = {
@@ -263,11 +263,11 @@ export class SocketService<
   private async getChatterInfo(
     userId: number,
     chatterId: string,
-    info: UserInfo
+    info: UserInfo,
   ): Promise<UserInfo> {
     const chatter = await this.chatterRepository.getChatterById(
       userId,
-      chatterId
+      chatterId,
     );
 
     const sprite = chatter?.sprite ? chatter.sprite : 'default';

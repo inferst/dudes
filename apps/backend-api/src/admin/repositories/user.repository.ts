@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@app/backend-api/database/prisma.service';
-import { Prisma, User, UserToken } from '@prisma/client';
-import { TWITCH_PLATFORM_ID } from '@app/backend-api/constants';
+import { PrismaService } from '@/database/prisma.service';
+import { Prisma, User, UserToken } from '@repo/database';
+import { TWITCH_PLATFORM_ID } from '@/constants';
 
 @Injectable()
 export class UserRepository {
@@ -50,7 +50,7 @@ export class UserRepository {
 
   public async update(
     userId: number,
-    data: Prisma.UserUpdateInput
+    data: Prisma.UserUpdateInput,
   ): Promise<User> {
     return this.prismaService.user.update({
       data,

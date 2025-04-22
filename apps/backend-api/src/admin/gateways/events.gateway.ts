@@ -1,12 +1,12 @@
 import { Socket } from 'socket.io';
-import { SocketService } from '@app/backend-api/admin/services';
+import { SocketService } from '@/admin/services';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { ClientToServerEvents, ServerToClientsEvents } from '@lib/types';
+import { ClientToServerEvents, ServerToClientsEvents } from '@repo/types';
 
 @WebSocketGateway({
   cors: true,
@@ -19,7 +19,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   public constructor(
     private readonly socketService: SocketService<
       Socket<ServerToClientsEvents, ClientToServerEvents>
-    >
+    >,
   ) {}
 
   public handleDisconnect(socket: Socket): void {

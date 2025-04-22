@@ -38,8 +38,11 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.nx/cache
-
 # Env files
 .env
 .env.local
+
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
+
+.turbo
