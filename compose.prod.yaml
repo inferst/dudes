@@ -51,4 +51,5 @@ volumes:
 
 networks:
   default:
+    external: true
     name: scoobydoo
