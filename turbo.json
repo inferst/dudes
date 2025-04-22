@@ -11,7 +11,9 @@
         ".env*"
       ],
       "outputs": [
-        "dist/**"
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
       ]
     },
     "db:migrate:dev": {
