@@ -3,7 +3,7 @@ services:
     image: dudes-build
     build:
       context: .
-    command: sh -c "pnpm --filter database run db:migrate:deploy && node apps/backend-api/dist/main.js"
+    command: sh -c "node apps/backend-api/dist/main.js"
     container_name: dudes-app
     working_dir: /app
     environment:
