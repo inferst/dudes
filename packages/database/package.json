@@ -15,6 +15,7 @@
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed/seed.ts",
     "dev": "tsup src/* --watch",
+    "build": "tsup src/*",
     "format": "prisma format",
     "generate": "prisma generate",
     "lint": "eslint . --max-warnings 0",
