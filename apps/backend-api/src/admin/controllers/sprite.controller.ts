@@ -116,13 +116,11 @@ export class SpriteController {
 
     const spriteSrc = path.resolve(
       this.config.root,
-      '../../',
       src + spriteName + '/sprite.json',
     );
 
     const dataSrc = path.resolve(
       this.config.root,
-      '../../',
       src + spriteName + '/data.json',
     );
 
