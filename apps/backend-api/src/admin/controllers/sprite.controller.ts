@@ -114,15 +114,10 @@ export class SpriteController {
     const src = `static/skins/${collectionName}/`;
     const spriteName = skinName;
 
-    const spriteSrc = path.resolve(
-      this.config.root,
-      src + spriteName + '/sprite.json',
-    );
+    const spritePath = path.resolve(process.cwd(), '../../', src + spriteName);
 
-    const dataSrc = path.resolve(
-      this.config.root,
-      src + spriteName + '/data.json',
-    );
+    const spriteSrc = spritePath + '/sprite.json';
+    const dataSrc = spritePath + '/data.json';
 
     if (!existsSync(spriteSrc) || !existsSync(dataSrc)) {
       throw new NotFoundException();
