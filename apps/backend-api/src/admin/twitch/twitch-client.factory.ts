@@ -210,7 +210,7 @@ export class TwitchClientFactory {
       });
     };
 
-    let timerId: NodeJS.Timer;
+    let timerId: ReturnType<typeof setInterval>;
 
     const onChatters = (
       listener: (data: TwitchChatterEntity[]) => void,

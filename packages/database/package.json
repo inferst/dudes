@@ -10,31 +10,28 @@
     }
   },
   "scripts": {
+    "build": "tsup src/*",
+    "dev": "tsup src/* --watch",
+    "prebuild": "pnpm run generate",
+    "predev": "pnpm run generate",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed/seed.ts",
-    "dev": "tsup src/* --watch",
-    "build": "tsup src/*",
     "format": "prisma format",
     "generate": "prisma generate",
-    "lint": "eslint . --max-warnings 0",
-    "prebuild": "pnpm run generate",
-    "predev": "pnpm run generate",
     "studio": "prisma studio"
   },
-  "dependencies": {
-    "@prisma/client": "latest",
-    "zod": "^3.23.8"
-  },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "eslint": "^8.57.0",
     "prisma": "latest",
-    "prisma-json-types-generator": "^3.0.4",
+    "prisma-json-types-generator": "^3.2.3",
     "rimraf": "^5.0.5",
-    "tsup": "^8.0.2",
-    "tsx": "4.19.1"
+    "tsup": "^8.4.0",
+    "tsx": "4.19.3"
+  },
+  "dependencies": {
+    "@prisma/client": "6.6.0",
+    "zod": "3.23.8"
   }
 }
