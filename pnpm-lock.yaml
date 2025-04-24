@@ -275,8 +275,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
       evotars:
-        specifier: ^0.0.16
-        version: 0.0.16
+        specifier: ^0.0.17
+        version: 0.0.17
       socket.io-client:
         specifier: ^4.8.1
         version: 4.8.1
@@ -290,8 +290,8 @@ importers:
         specifier: ^3.0.20
         version: 3.0.20
       evotars:
-        specifier: 0.0.16
-        version: 0.0.16
+        specifier: 0.0.17
+        version: 0.0.17
       i18next:
         specifier: ^25.0.1
         version: 25.0.1(typescript@5.7.3)
@@ -3614,8 +3614,8 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
-  evotars@0.0.16:
-    resolution: {integrity: sha512-HT5ut0eLcVknrarwyUjZvXnry3lDYKQHahdg6khMg1w6NWZwnbEyD+sCLGR57MaenZEfA6Ae00ritH/Zg3/4WQ==}
+  evotars@0.0.17:
+    resolution: {integrity: sha512-eLV1VibBWVyFEn0DmQMlw/8mxcPVpVZYGOwYfoMxDR5fg7wrJIyQbcVRqHdwsF+1j/9BUEAdER0Y6sn+jHwInQ==}
 
   express-session@1.18.1:
     resolution: {integrity: sha512-a5mtTqEaZvBCL9A9aqkrtfz+3SMDhOVUnjafjo+s7A9Txkq+SVX2DLvSp1Zrv4uCXa3lMSK3viWnh9Gg07PBUA==}
@@ -9183,7 +9183,7 @@ snapshots:
 
   events@3.3.0: {}
 
-  evotars@0.0.16:
+  evotars@0.0.17:
     dependencies:
       '@pixi/gif': 3.0.1(pixi.js@8.8.0)
       '@tweenjs/tween.js': 23.1.3
