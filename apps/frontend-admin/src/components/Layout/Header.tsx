@@ -25,13 +25,15 @@ export function Header() {
           className={cn(
             'flex items-center',
             'rounded-md px-2 py-1',
-            'bg-primary text-primary-foreground text-2xl font-medium'
+            'bg-primary text-primary-foreground text-2xl font-medium',
           )}
         >
-          <span className="block">D</span>
-          <span className="block text-xl">U</span>
-          <span className="block">D</span>
-          <span className="block text-xl">E</span>
+          <span className="block">E</span>
+          <span className="block text-xl">V</span>
+          <span className="block">O</span>
+          <span className="block text-xl">T</span>
+          <span className="block">A</span>
+          <span className="block text-xl">R</span>
           <span className="block">S</span>
         </button>
         <div className="flex flex-1 justify-end">

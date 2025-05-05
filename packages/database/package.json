@@ -16,11 +16,8 @@
     "predev": "pnpm run generate",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
-    "db:push": "prisma db push",
     "db:seed": "tsx src/seed/seed.ts",
-    "format": "prisma format",
-    "generate": "prisma generate",
-    "studio": "prisma studio"
+    "generate": "prisma generate"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

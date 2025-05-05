@@ -1,0 +1,61 @@
+import { getT } from '@/app/i18n';
+import { Card } from '@/components/Card';
+import {
+  MessageSquareText,
+  Pickaxe,
+  Shirt,
+  Smile,
+  Terminal,
+} from 'lucide-react';
+import Image from 'next/image';
+
+export const Features = async () => {
+  const { t } = await getT('common');
+
+  return (
+    <>
+      <h2 className="text-5xl font-medium mb-8 mt-8">{t('features.title')}</h2>
+      <div className="text-center grid grid-cols-2 gap-6 my-4 max-w-[1200px]">
+        <Card
+          icon={<Terminal />}
+          title={t('features.commands.title')}
+          description={t('features.commands.description')}
+        />
+        <Card
+          icon={
+            <Image
+              src="/twitch.svg"
+              alt="Github logo"
+              width={24}
+              height={24}
+              priority
+              className="dark:invert"
+            />
+          }
+          title={t('features.rewards.title')}
+          description={t('features.rewards.description')}
+        />
+        <Card
+          icon={<MessageSquareText />}
+          title={t('features.emotes.title')}
+          description={t('features.emotes.description')}
+        />
+        <Card
+          icon={<Shirt />}
+          title={t('features.customization.title')}
+          description={t('features.customization.description')}
+        />
+        <Card
+          icon={<Pickaxe />}
+          title={t('features.raids.title')}
+          description={t('features.raids.description')}
+        />
+        <Card
+          icon={<Smile />}
+          title={t('features.web.title')}
+          description={t('features.web.description')}
+        />
+      </div>
+    </>
+  );
+};
