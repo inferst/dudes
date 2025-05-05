@@ -1,12 +1,6 @@
 import { getT } from '@/app/i18n';
 import { Card } from '@/components/Card';
-import {
-  MessageSquareText,
-  Pickaxe,
-  Shirt,
-  Smile,
-  Terminal,
-} from 'lucide-react';
+import { MessageSquareText, Shirt, Smile, Terminal, Pickaxe } from 'lucide-react';
 import Image from 'next/image';
 
 export const Features = async () => {
@@ -14,7 +8,7 @@ export const Features = async () => {
 
   return (
     <>
-      <h2 className="text-5xl font-medium mb-8 mt-8">{t('features.title')}</h2>
+      <h2 className="text-5xl font-medium mb-8 mt-8">{t('features.title')}<Pickaxe /></h2>
       <div className="text-center grid grid-cols-2 gap-6 my-4 max-w-[1200px]">
         <Card
           icon={<Terminal />}
@@ -46,7 +40,16 @@ export const Features = async () => {
           description={t('features.customization.description')}
         />
         <Card
-          icon={<Pickaxe />}
+          icon={
+            <Image
+              src="/twitch.svg"
+              alt="Github logo"
+              width={24}
+              height={24}
+              priority
+              className="dark:invert"
+            />
+          }
           title={t('features.raids.title')}
           description={t('features.raids.description')}
         />
