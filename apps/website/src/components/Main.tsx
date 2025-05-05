@@ -1,35 +1,82 @@
-import Link from 'next/link';
-import { DudesWrapper } from './DudesWrapper';
 import { getT } from '@/app/i18n';
+import { Features } from '@/components/Features';
+import { HowTo } from '@/components/HowTo';
+import Link from 'next/link';
+import Image from 'next/image';
+import { CSSProperties } from 'react';
+import { DudesWrapper } from './DudesWrapper';
+import { Login } from '@/components/Login';
 
 export const Main = async () => {
   const { t } = await getT('common');
 
   return (
-    <div className="flex justify-center">
-      <div className="container">
-        <div className="m-6 flex justify-center">
-          <Link
-            href="/"
-            className="flex items-center rounded-md px-2 pt-1 pb-2 bg-primary text-primary-foreground text-6xl font-medium"
+    <>
+      <div className="flex justify-center text-shadow-gray-400 text-shadow-2xs font-light">
+        <div className="container items-center flex flex-col">
+          <div className="m-6">
+            <Link
+              href="/"
+              className="flex items-center p-2 text-6xl font-medium"
+            >
+              <span className="block">E</span>
+              <span className="block text-5xl">V</span>
+              <span className="block">O</span>
+              <span className="block text-5xl">T</span>
+              <span className="block">A</span>
+              <span className="block text-5xl">R</span>
+              <span className="block">S</span>
+            </Link>
+          </div>
+          <div className="text-2xl text-center m-4 max-w-[800px]">
+            {t('intro.target')}
+          </div>
+          <div className="m-6">
+            <Login />
+          </div>
+          <div
+            className="flex justify-center bg-[url('/obs.png')] bg-no-repeat bg-contain bg-top w-full max-w-[1200px] aspect-[var(--aspect)]"
+            style={
+              {
+                '--aspect': '1.15/1',
+              } as CSSProperties
+            }
           >
-            <span className="block">D</span>
-            <span className="block text-4xl">U</span>
-            <span className="block">D</span>
-            <span className="block text-4xl">E</span>
-            <span className="block">S</span>
-          </Link>
-        </div>
-        <div className="text-2xl text-center m-4">{t('mainTitle')}</div>
-        <div className="flex justify-center">
-          <DudesWrapper />
-        </div>
-        <div className="m-6 text-2xl flex items-center justify-center">
-          <a className="block bg-[#772ce8] p-4 rounded-sm" href="/api/auth/login">
-            {t('twitchLoginButtonText')}
-          </a>
+            <DudesWrapper />
+          </div>
+          <div className="text-2xl text-center m-4 mb-10 font-light text-shadow-2xs text-shadow-gray-400 max-w-[800px]">
+            {t('intro.description')}
+          </div>
+          <Features />
+          <HowTo />
+          <div className="mb-24">
+            <Login />
+          </div>
         </div>
       </div>
-    </div>
+      <footer className="mx-auto max-w-[1600px] border-t-2 border-[#3c3c3c] py-10 px-20 flex items-center">
+        <div>
+          Created by{' '}
+          <a
+            href="https://twitch.tv/mikerime"
+            target="_blank"
+            className="text-purple-400"
+          >
+            MikeRime
+          </a>
+        </div>
+        <div className="flex flex-1 justify-end items-center">
+          <a href="https://github.com/inferst/dudes" target="_blank">
+            <Image
+              src="/github.svg"
+              alt="Github logo"
+              width={40}
+              height={40}
+              priority
+            />
+          </a>
+        </div>
+      </footer>
+    </>
   );
 };

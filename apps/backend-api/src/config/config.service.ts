@@ -17,10 +17,6 @@ type Config = {
 export class ConfigService {
   constructor(private configService: NestConfigService<Config, true>) {}
 
-  get root(): string {
-    return this.configService.get('PWD');
-  }
-
   get hostUrl(): string {
     return this.configService.get('HOST_URL');
   }

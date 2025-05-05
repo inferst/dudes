@@ -1,4 +1,3 @@
-import { ConfigService } from '@/config/config.service';
 import { PrismaService } from '@/database/prisma.service';
 import { ZodPipe } from '@/pipes/zod.pipe';
 import {
@@ -35,7 +34,6 @@ export type SpriteEntity = {
 @Controller('/sprite')
 export class SpriteController {
   constructor(
-    private readonly config: ConfigService,
     private readonly userRepository: UserRepository,
     private readonly prismaService: PrismaService,
   ) {}

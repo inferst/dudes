@@ -3,14 +3,12 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "generate": "turbo run generate",
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
-    "db:generate": "prisma generate --schema=apps/backend-api/prisma/schema.prisma",
-    "db:migrate:dev": "prisma migrate dev --schema=apps/backend-api/prisma/schema.prisma",
-    "db:migrate:deploy": "prisma migrate deploy --schema=apps/backend-api/prisma/schema.prisma",
-    "db:seed": "prisma db seed --schema=apps/backend-api/prisma/schema.prisma",
+    "db:migrate:dev": "turbo db:migrate:dev",
+    "db:migrate:deploy": "turbo db:migrate:deploy",
+    "db:migrate:seed": "turbo db:migrate:seed",
     "i18n:admin": "i18next-scanner --output locales 'apps/frontend-admin/src/**/*.{ts,tsx}'",
     "i18n:website": "i18next-scanner --output locales 'apps/website/src/**/*.{ts,tsx}'"
   },

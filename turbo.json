@@ -23,25 +23,25 @@
     "db:migrate:deploy": {
       "cache": false
     },
-    "db:push": {
-      "cache": false
-    },
     "db:seed": {
       "cache": false
     },
     "dev": {
       "cache": false,
-      "persistent": true
-    },
-    "generate": {
+      "persistent": true,
       "dependsOn": [
-        "^generate"
-      ],
-      "cache": false
+        "predev"
+      ]
     },
     "prebuild": {
       "dependsOn": [
         "^prebuild"
+      ],
+      "cache": false
+    },
+    "predev": {
+      "dependsOn": [
+        "^predev"
       ],
       "cache": false
     },
