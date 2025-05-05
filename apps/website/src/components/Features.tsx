@@ -1,6 +1,6 @@
 import { getT } from '@/app/i18n';
 import { Card } from '@/components/Card';
-import { MessageSquareText, Shirt, Smile, Terminal, Pickaxe } from 'lucide-react';
+import { MessageSquareText, Shirt, Smile, Terminal } from 'lucide-react';
 import Image from 'next/image';
 
 export const Features = async () => {
@@ -8,7 +8,7 @@ export const Features = async () => {
 
   return (
     <>
-      <h2 className="text-5xl font-medium mb-8 mt-8">{t('features.title')}<Pickaxe /></h2>
+      <h2 className="text-5xl font-medium mb-8 mt-8">{t('features.title')}</h2>
       <div className="text-center grid grid-cols-2 gap-6 my-4 max-w-[1200px]">
         <Card
           icon={<Terminal />}
