@@ -51,13 +51,13 @@ export function Sidebar() {
         defaultValue: 'Chatters',
       }),
     },
-    {
-      path: '/admin/donations',
-      title: t('Sidebar.donationsText', {
-        defaultValue: 'Donations',
-      }),
-      isDisabled: true,
-    },
+    // {
+    //   path: '/admin/donations',
+    //   title: t('Sidebar.donationsText', {
+    //     defaultValue: 'Donations',
+    //   }),
+    //   isDisabled: true,
+    // },
   ];
 
   const handleLinkClick = (link: NavLink) => {

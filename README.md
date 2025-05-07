@@ -39,7 +39,7 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
 > [!IMPORTANT]
 > You need [node](https://nodejs.org/en/download/package-manager) installed.
 
-1. Copy environment variables
+1. Copy environment variables and update them
     ```shell
     cp .env.example .env
     ```
@@ -69,9 +69,10 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
 
 # Ports
 
-- http://localhost:3000 - admin panel backend
-- http://localhost:4200 - admin panel frontend
-- http://localhost:4300 - client
+- http://localhost - website
+- http://localhost/api - admin panel backend
+- http://localhost/admin - admin panel frontend
+- http://localhost/client - client
 
 # Run the linter
 
