@@ -13,8 +13,12 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "evotars": "^0.0.17",
-    "socket.io-client": "^4.8.1",
-    "vite": "^5.1.4"
+    "evotars": "0.0.17",
+    "socket.io-client": "4.8.1",
+    "vite": "6.3.5"
+  },
+  "devDependencies": {
+    "eslint": "9.26.0",
+    "typescript": "5.8.3"
   }
 }

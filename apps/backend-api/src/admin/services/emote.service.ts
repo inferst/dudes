@@ -49,14 +49,16 @@ type SevenTVEventPulledEmote = {
   };
 };
 
-type SevenTVEmoteSetUpdateEvent = {
+type SevenTVEmoteEvent = {
   d: {
-    type: 'emote_set.update';
-    body: {
-      pushed?: SevenTVEventPushedEmote[];
-      pulled?: SevenTVEventPulledEmote[];
-    };
+    type: string;
+    body: SevenTVEmoteSetUpdateBody | SevenTVUserUpdateEvent;
   };
+};
+
+type SevenTVEmoteSetUpdateBody = {
+  pushed?: SevenTVEventPushedEmote[];
+  pulled?: SevenTVEventPulledEmote[];
 };
 
 type SevenTVUserUpdateData = {
@@ -66,15 +68,10 @@ type SevenTVUserUpdateData = {
 };
 
 type SevenTVUserUpdateEvent = {
-  d: {
-    type: 'user.update';
-    body: {
-      updated: {
-        key: 'connections';
-        value: SevenTVUserUpdateData[];
-      }[];
-    };
-  };
+  updated: {
+    key: 'connections';
+    value: SevenTVUserUpdateData[];
+  }[];
 };
 
 type UserData = {
@@ -87,16 +84,16 @@ type GlobalData = {
   };
 };
 
-const isSeventTVEventEmoteSetUpdate = (
-  data: any,
-): data is SevenTVEmoteSetUpdateEvent => {
-  return data?.d?.type == 'emote_set.update';
-};
-
-const isSeventTVEventUserUpdate = (
-  data: any,
-): data is SevenTVUserUpdateEvent => {
-  return data?.d?.type == 'user.update';
+const isSevenTVEvent = (data: unknown): data is SevenTVEmoteEvent => {
+  return (
+    typeof data == 'object' &&
+    data != null &&
+    'd' in data &&
+    typeof data.d == 'object' &&
+    data.d != null &&
+    'type' in data.d &&
+    typeof data.d.type == 'string'
+  );
 };
 
 export type EmoteClient = {
@@ -161,74 +158,79 @@ export class EmoteService {
 
         ws.send(JSON.stringify(userUpdateSubscribe));
 
-        ws.onmessage = async (event: any): Promise<void> => {
-          const data = JSON.parse(event.data);
+        ws.onmessage = async (event: unknown): Promise<void> => {
+          const data = JSON.parse((event as object)['data']);
 
-          if (isSeventTVEventUserUpdate(data)) {
-            const event = data.d.body.updated
-              .find((event) => event.key == 'connections')
-              ?.value.find((value) => value.key == 'emote_set_id');
+          if (isSevenTVEvent(data)) {
+            if (data.d.type == 'user.update') {
+              const body = data.d.body as SevenTVUserUpdateEvent;
 
-            if (event) {
-              ws.send(
-                JSON.stringify({
-                  op: 36,
-                  d: {
-                    type: 'emote_set.update',
-                    condition: {
-                      object_id: event.old_value,
+              const event = body.updated
+                .find((event) => event.key == 'connections')
+                ?.value.find((value) => value.key == 'emote_set_id');
+
+              if (event) {
+                ws.send(
+                  JSON.stringify({
+                    op: 36,
+                    d: {
+                      type: 'emote_set.update',
+                      condition: {
+                        object_id: event.old_value,
+                      },
                     },
-                  },
-                }),
-              );
+                  }),
+                );
 
-              ws.send(
-                JSON.stringify({
-                  op: 35,
-                  d: {
-                    type: 'emote_set.update',
-                    condition: {
-                      object_id: event.value,
+                ws.send(
+                  JSON.stringify({
+                    op: 35,
+                    d: {
+                      type: 'emote_set.update',
+                      condition: {
+                        object_id: event.value,
+                      },
                     },
-                  },
-                }),
-              );
+                  }),
+                );
 
-              emotesData = await this.getEmotesData(platformUserId);
+                emotesData = await this.getEmotesData(platformUserId);
 
-              if (emotesData) {
-                emotes = emotesData.data;
-              }
-            }
-          }
-
-          if (isSeventTVEventEmoteSetUpdate(data)) {
-            const body = data.d.body;
-            const pulled = body.pulled;
-            const pushed = body.pushed;
-
-            if (pulled) {
-              const data = pulled.map((emote) => emote.old_value.name);
-
-              for (const name of data) {
-                delete emotes[name];
+                if (emotesData) {
+                  emotes = emotesData.data;
+                }
               }
             }
 
-            if (pushed) {
-              const entries = pushed.map((emote) => {
-                const data = emote.value.data;
-                const url = data.animated
-                  ? data.host.url + '/4x.gif'
-                  : data.host.url + '/4x.png';
+            if (data.d.type == 'emote_set.update') {
+              const body = data.d.body as SevenTVEmoteSetUpdateBody;
 
-                return [
-                  emote.value.name,
-                  url.replace('//cdn.7tv.app', hostUrl + '/7tv-emotes'),
-                ];
-              });
+              const pulled = body.pulled;
+              const pushed = body.pushed;
 
-              emotes = { ...emotes, ...Object.fromEntries(entries) };
+              if (pulled) {
+                const data = pulled.map((emote) => emote.old_value.name);
+
+                for (const name of data) {
+                  delete emotes[name];
+                }
+              }
+
+              if (pushed) {
+                const entries = pushed.map((emote) => {
+                  const data = emote.value.data;
+                  const url = data.animated
+                    ? data.host.url + '/4x.gif'
+                    : data.host.url + '/4x.png';
+
+                  return [
+                    emote.value.name,
+                    url.replace('//cdn.7tv.app', hostUrl + '/7tv-emotes'),
+                  ];
+                });
+
+                emotes = { ...emotes, ...Object.fromEntries(entries) };
+              }
             }
           }
         };
@@ -246,7 +248,7 @@ export class EmoteService {
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket closed`);
       };
 
-      ws.onerror = (_: any): void => {
+      ws.onerror = (): void => {
         this.logger.log(`ObjectId: [${emoteSetId}] 7TV Web socket error`);
       };
 
@@ -292,7 +294,7 @@ export class EmoteService {
         ...globalData.data.emotes,
       ];
 
-      const emoteEntries = emotes.map((emote: any) => {
+      const emoteEntries = emotes.map((emote) => {
         const host = emote.data.host;
         const url = host.url + (emote.data.animated ? '/4x.gif' : '/4x.png');
         return [
@@ -307,6 +309,7 @@ export class EmoteService {
         data: Object.fromEntries(emoteEntries),
       };
     } catch (e) {
+      this.logger.error('Failed to fetch the emotes data.', e.toString());
       return;
     }
   }

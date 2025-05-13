@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useMemo } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { Toaster } from './components/ui/toaster';
 import { useToast } from './components/ui/use-toast';
 import { Routes } from './routes';
@@ -45,12 +45,7 @@ export function App() {
 
   return (
     <>
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
+      <BrowserRouter>
         <QueryClientProvider client={queryClient}>
           <Routes />
         </QueryClientProvider>

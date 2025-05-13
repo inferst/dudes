@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router';
 import { Button } from '../ui/button';
 import { useTranslation } from 'react-i18next';
 
@@ -51,13 +51,13 @@ export function Sidebar() {
         defaultValue: 'Chatters',
       }),
     },
-    {
-      path: '/admin/donations',
-      title: t('Sidebar.donationsText', {
-        defaultValue: 'Donations',
-      }),
-      isDisabled: true,
-    },
+    // {
+    //   path: '/admin/donations',
+    //   title: t('Sidebar.donationsText', {
+    //     defaultValue: 'Donations',
+    //   }),
+    //   isDisabled: true,
+    // },
   ];
 
   const handleLinkClick = (link: NavLink) => {

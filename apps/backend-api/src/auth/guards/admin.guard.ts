@@ -1,7 +1,12 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { AuthUserProps } from '../services/auth.service';
-import { PrismaService } from '@/database/prisma.service';
 import { TWITCH_PLATFORM_ID } from '@/constants';
+import { PrismaService } from '@/database/prisma.service';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
+import { AuthUserProps } from '../services/auth.service';
 
 type Request = {
   user?: AuthUserProps;
@@ -9,6 +14,8 @@ type Request = {
 
 @Injectable()
 export class AdminGuard implements CanActivate {
+  private readonly logger = new Logger(AdminGuard.name);
+
   // We are using prisma service directly to avoid repo import cycles.
   public constructor(private readonly prismaService: PrismaService) {}
 
@@ -34,6 +41,7 @@ export class AdminGuard implements CanActivate {
 
       return !isTokenRevoked;
     } catch (e) {
+      this.logger.error('Failed to check admin status.', e.toString());
       return false;
     }
   }

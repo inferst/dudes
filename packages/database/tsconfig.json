@@ -1,4 +1,7 @@
 {
-  "extends": "@repo/typescript-config/base.json",
-  "include": ["**/*.ts", "tsup.config.ts"],
+  "extends": "@repo/typescript-config/base-nestjs.json",
+  "include": [
+    "**/*.ts",
+    "tsup.config.ts"
+  ]
 }

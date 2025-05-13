@@ -1,6 +1,6 @@
 import { Login } from '@/components/Auth/Login';
 import { Layout } from '@/components/Layout/Layout';
-import { Routes as ReactRoutes, Route } from 'react-router-dom';
+import { Routes as ReactRoutes, Route } from 'react-router';
 import { ChattersPage } from './components/pages/ChattersPage/ChattersPage';
 import { CommandsPage } from './components/pages/CommandsPage/CommandsPage';
 import { PreviewPage } from './components/pages/PreviewPage/PreviewPage';

@@ -32,10 +32,12 @@ export class TwitchUserFilterService {
       for (const bot of data['bots']) {
         this.bot.add(bot[0]);
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       const file = readFileSync(
         path.resolve(__dirname, 'apps/backend-api/public/bots.json'),
       );
+
       const json = JSON.parse(file.toString());
 
       for (const bot of json['bots']) {
