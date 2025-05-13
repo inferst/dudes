@@ -39,7 +39,6 @@ import { TwitchClientFactory } from './twitch/twitch-client.factory';
 import { TwitchUserFilterService } from './twitch/twitch-user-filter.service';
 import { UserSkinCollectionService } from './services/user-skin-collection.service';
 import { UserSkinService } from './services/user-skin.service';
-import path from 'path';
 
 const twitchClientFactory = {
   provide: 'TWITCH_CLIENT_FACTORY',

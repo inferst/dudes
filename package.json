@@ -8,19 +8,17 @@
     "lint": "turbo lint",
     "db:migrate:dev": "turbo db:migrate:dev",
     "db:migrate:deploy": "turbo db:migrate:deploy",
-    "db:migrate:seed": "turbo db:migrate:seed",
-    "i18n:admin": "i18next-scanner --output locales 'apps/frontend-admin/src/**/*.{ts,tsx}'",
-    "i18n:website": "i18next-scanner --output locales 'apps/website/src/**/*.{ts,tsx}'"
+    "db:migrate:seed": "turbo db:migrate:seed"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} apps/backend-api/src/database/seed/seed.ts"
   },
   "devDependencies": {
-    "turbo": "^2.5.0",
-    "typescript": "5.7.3"
+    "turbo": "2.5.3",
+    "typescript": "5.8.3"
   },
-  "packageManager": "pnpm@10.4.1",
   "pnpm": {
     "neverBuiltDependencies": []
-  }
+  },
+  "packageManager": "pnpm@10.10.0"
 }

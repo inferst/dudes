@@ -1,11 +1,11 @@
-import { getT } from '@/app/i18n';
 import { Features } from '@/components/Features';
 import { HowTo } from '@/components/HowTo';
-import Link from 'next/link';
+import { Login } from '@/components/Login';
+import { getT } from '@/lib/i18n';
 import Image from 'next/image';
+import Link from 'next/link';
 import { CSSProperties } from 'react';
 import { DudesWrapper } from './DudesWrapper';
-import { Login } from '@/components/Login';
 
 export const Main = async () => {
   const { t } = await getT('common');

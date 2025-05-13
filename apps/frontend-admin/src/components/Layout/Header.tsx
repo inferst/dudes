@@ -1,7 +1,7 @@
 import { useAuth } from '@/components/Auth/use-auth';
 import { cn } from '@/lib/utils';
 import { ChevronDown, LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import {

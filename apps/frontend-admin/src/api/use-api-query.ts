@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const errorCodes = [401, 403];
 

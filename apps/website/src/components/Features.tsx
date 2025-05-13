@@ -1,5 +1,5 @@
-import { getT } from '@/app/i18n';
 import { Card } from '@/components/Card';
+import { getT } from '@/lib/i18n';
 import { MessageSquareText, Shirt, Smile, Terminal } from 'lucide-react';
 import Image from 'next/image';
 

@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '../../ui/table';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useUpdateUserSkinCollectionMutation } from '@/mutations/user-skins';
 import { Switch } from '../../ui/switch';
 

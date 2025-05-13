@@ -2,7 +2,7 @@ import { useUpdateUserSkinMutation } from '@/mutations/user-skins';
 import { useUserSkinsQuery } from '@/queries/user-skins';
 import { ArrowLeftIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { Loader } from '../../common/Loader';
 import { Button } from '../../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
