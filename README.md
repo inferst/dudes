@@ -37,13 +37,13 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
 # Run locally
 
 > [!IMPORTANT]
-> You need [node](https://nodejs.org/en/download/package-manager) installed.
+> You need to have [Node.js](https://nodejs.org/en/download/package-manager) installed.
 
-1. Copy environment variables and update them
+1. Copy the environment variables file and update it
     ```shell
     cp .env.example .env
     ```
-2. Install and run postgres
+2. Install and run PostgreSQL
 
     You can install [PostgreSQL](https://www.postgresql.org/download/) directly on your system or use Docker. For Docker instructions, refer to [Run the database in docker](<#run-the-database-in-docker>).
 3. Install pnpm
@@ -54,11 +54,11 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
     ```shell
     pnpm install
     ```
-5. Generate schema and migrate
+5. Generate the schema and run migrations
     ```shell
     pnpm run db:migrate:dev
     ```
-6. Fill the database with data
+6. Seed the database with initial data
     ```shell
     pnpm run db:seed
     ```
