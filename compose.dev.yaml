@@ -2,7 +2,7 @@ services:
 
   postgres:
     image: postgres:15-alpine
-    container_name: dudes-postgres
+    container_name: evotars-postgres
     ports:
       - 5432:5432
     volumes:
@@ -14,7 +14,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: dudes-nginx
+    container_name: evotars-nginx
     ports:
       - 80:80
     volumes:

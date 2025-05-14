@@ -5,7 +5,7 @@ import { getT } from '@/lib/i18n';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CSSProperties } from 'react';
-import { DudesWrapper } from './DudesWrapper';
+import { EvotarsWrapper } from './EvotarsWrapper';
 
 export const Main = async () => {
   const { t } = await getT('common');
@@ -42,7 +42,7 @@ export const Main = async () => {
               } as CSSProperties
             }
           >
-            <DudesWrapper />
+            <EvotarsWrapper />
           </div>
           <div className="text-2xl text-center m-4 mb-10 font-light text-shadow-2xs text-shadow-gray-400 max-w-[800px]">
             {t('intro.description')}
@@ -66,7 +66,7 @@ export const Main = async () => {
           </a>
         </div>
         <div className="flex flex-1 justify-end items-center">
-          <a href="https://github.com/inferst/dudes" target="_blank">
+          <a href="https://github.com/inferst/evotars" target="_blank">
             <Image
               src="/github.svg"
               alt="Github logo"

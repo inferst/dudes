@@ -1,12 +1,12 @@
 import { Evotars } from 'evotars';
 
 export class Debug {
-  constructor(readonly dudes: Evotars) {
-    this.generateDudes();
+  constructor(readonly evotars: Evotars) {
+    this.generateEvotars();
   }
 
-  public generateDudes(): void {
-    this.dudes.processMessage({
+  public generateEvotars(): void {
+    this.evotars.processMessage({
       userId: '1',
       emotes: [],
       message: 'Привет!',
@@ -18,7 +18,7 @@ export class Debug {
     });
 
     setTimeout(() => {
-      this.dudes.processAction({
+      this.evotars.processAction({
         userId: '1',
         data: {
           sprite: 'sith',
@@ -34,7 +34,7 @@ export class Debug {
         },
       });
 
-      this.dudes.processAction({
+      this.evotars.processAction({
         userId: '1',
         data: {
           color: 'cyan',

@@ -3,16 +3,16 @@ import { UpdateSettingsDto } from '../dto/settings';
 
 export const updateSettingsDtoSchema = z
   .object({
-    showAnonymousDudes: z.boolean().default(false).optional(),
-    fallingDudes: z.boolean().default(true).optional(),
+    showAnonymousEvotars: z.boolean().default(false).optional(),
+    fallingEvotars: z.boolean().default(true).optional(),
     fallingRaiders: z.boolean().default(false).optional(),
     hiddenUsers: z.string().default('').optional(),
   })
   .strict();
 
 export const defaultSettingsValues: UpdateSettingsDto = {
-  showAnonymousDudes: false,
-  fallingDudes: true,
+  showAnonymousEvotars: false,
+  fallingEvotars: true,
   fallingRaiders: false,
   hiddenUsers: '',
 };

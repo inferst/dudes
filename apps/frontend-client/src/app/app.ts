@@ -51,9 +51,9 @@ export class App {
 
     this.connection.onSettings((data) => {
       evotars.updateSettings({
-        fallingEvotars: data.fallingDudes,
+        fallingEvotars: data.fallingEvotars,
         fallingRaiders: data.fallingRaiders,
-        showAnonymousEvotars: data.showAnonymousDudes,
+        showAnonymousEvotars: data.showAnonymousEvotars,
       });
     });
 

@@ -44,13 +44,13 @@ export function SettingsForm(props: SettingsFormProps) {
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
-          <Label htmlFor="fallingDudes" className="text-xl">
-            {t('SettingsForm.fallingDudesText', {
-              defaultValue: 'Falling dudes',
+          <Label htmlFor="fallingEvotars" className="text-xl">
+            {t('SettingsForm.fallingEvotarsText', {
+              defaultValue: 'Falling evotars',
             })}
           </Label>
           <p className="text-sm text-muted-foreground">
-            {t('SettingsForm.fallingDudesDescription', {
+            {t('SettingsForm.fallingEvotarsDescription', {
               defaultValue: 'Drop dude in the top of screen',
             })}
           </p>
@@ -58,12 +58,12 @@ export function SettingsForm(props: SettingsFormProps) {
         <div className="col-span-3">
           <FormField
             control={form.control}
-            name={'fallingDudes'}
+            name={'fallingEvotars'}
             render={({ field }) => {
               return (
                 <Switch
                   {...field}
-                  id="fallingDudes"
+                  id="fallingEvotars"
                   onCheckedChange={(value) => {
                     field.onChange(value);
                     handleSubmit();
@@ -78,7 +78,7 @@ export function SettingsForm(props: SettingsFormProps) {
       </div>
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
-          <Label htmlFor="showAnonymousDudes" className="text-xl">
+          <Label htmlFor="showAnonymousEvotars" className="text-xl">
             {t('SettingsForm.spawnAnonymousViewersText', {
               defaultValue: 'Spawn anonymous viewers',
             })}
@@ -93,12 +93,12 @@ export function SettingsForm(props: SettingsFormProps) {
         <div className="col-span-3">
           <FormField
             control={form.control}
-            name={'showAnonymousDudes'}
+            name={'showAnonymousEvotars'}
             render={({ field }) => {
               return (
                 <Switch
                   {...field}
-                  id="showAnonymousDudes"
+                  id="showAnonymousEvotars"
                   onCheckedChange={(value) => {
                     field.onChange(value);
                     handleSubmit();

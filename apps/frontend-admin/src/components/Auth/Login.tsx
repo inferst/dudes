@@ -17,12 +17,12 @@ export function Login() {
         <CardHeader>
           <CardTitle className="text-center">
             {t('Login.title', {
-              defaultValue: 'Dudes Admin',
+              defaultValue: 'Evotars Admin',
             })}
           </CardTitle>
           <CardDescription>
             {t('Login.description', {
-              defaultValue: 'The way to manage your stream dudes.',
+              defaultValue: 'The way to manage your stream evotars.',
             })}
           </CardDescription>
         </CardHeader>
