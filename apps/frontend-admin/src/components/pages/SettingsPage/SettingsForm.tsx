@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   UpdateSettingsDto,
   UpdateSettingsForm,
+  defaultSettingsValues,
   updateSettingsDtoSchema,
 } from '@repo/types';
 import { useForm } from 'react-hook-form';
@@ -11,6 +12,7 @@ import { Switch } from '../../ui/switch';
 import { Separator } from '../../ui/separator';
 import { useTranslation } from 'react-i18next';
 import { Input } from '../../ui/input';
+import { ErrorMessage } from '@hookform/error-message';
 
 type FormInput = UpdateSettingsDto;
 
@@ -23,6 +25,8 @@ export function SettingsForm(props: SettingsFormProps) {
   const form = useForm<FormInput>({
     resolver: zodResolver(updateSettingsDtoSchema),
     values: props.data,
+    defaultValues: defaultSettingsValues,
+    mode: 'onChange',
   });
 
   const { t } = useTranslation();
@@ -33,7 +37,7 @@ export function SettingsForm(props: SettingsFormProps) {
     },
     (error) => {
       console.log('invalid: ', error);
-    }
+    },
   );
 
   return (
@@ -44,13 +48,55 @@ export function SettingsForm(props: SettingsFormProps) {
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
-          <Label htmlFor="fallingDudes" className="text-xl">
-            {t('SettingsForm.fallingDudesText', {
-              defaultValue: 'Falling dudes',
+          <Label htmlFor="maxEvotars" className="text-xl">
+            {t('SettingsForm.maxEvotarsText', {
+              defaultValue: 'Max Evotars',
+            })}
+          </Label>
+        </div>
+        <div className="col-span-1">
+          <FormField
+            control={form.control}
+            name={'maxEvotars'}
+            render={() => {
+              return (
+                <Input
+                  id="maxEvotars"
+                  type="number"
+                  min={1}
+                  {...form.register('maxEvotars', {
+                    setValueAs: (value) => {
+                      const prev = form.getValues('maxEvotars');
+                      const newValue =
+                        value === '' ? prev : parseInt(value, 10);
+                      return isNaN(newValue ?? 1) ? prev : newValue;
+                    },
+                  })}
+                  onBlur={handleSubmit}
+                />
+              );
+            }}
+          ></FormField>
+          <ErrorMessage
+            errors={form.formState.errors}
+            name="maxEvotars"
+            render={({ message }) => (
+              <p className="col-start-2 col-span-3 text-sm mt-2 text-destructive">
+                {message}
+              </p>
+            )}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-4 gap-4 mt-4">
+        <div>
+          <Label htmlFor="fallingEvotars" className="text-xl">
+            {t('SettingsForm.fallingEvotarsText', {
+              defaultValue: 'Falling evotars',
             })}
           </Label>
           <p className="text-sm text-muted-foreground">
-            {t('SettingsForm.fallingDudesDescription', {
+            {t('SettingsForm.fallingEvotarsDescription', {
               defaultValue: 'Drop dude in the top of screen',
             })}
           </p>
@@ -58,12 +104,12 @@ export function SettingsForm(props: SettingsFormProps) {
         <div className="col-span-3">
           <FormField
             control={form.control}
-            name={'fallingDudes'}
+            name={'fallingEvotars'}
             render={({ field }) => {
               return (
                 <Switch
                   {...field}
-                  id="fallingDudes"
+                  id="fallingEvotars"
                   onCheckedChange={(value) => {
                     field.onChange(value);
                     handleSubmit();
@@ -78,7 +124,7 @@ export function SettingsForm(props: SettingsFormProps) {
       </div>
       <div className="grid grid-cols-4 gap-4 mt-4">
         <div>
-          <Label htmlFor="showAnonymousDudes" className="text-xl">
+          <Label htmlFor="showAnonymousEvotars" className="text-xl">
             {t('SettingsForm.spawnAnonymousViewersText', {
               defaultValue: 'Spawn anonymous viewers',
             })}
@@ -93,12 +139,12 @@ export function SettingsForm(props: SettingsFormProps) {
         <div className="col-span-3">
           <FormField
             control={form.control}
-            name={'showAnonymousDudes'}
+            name={'showAnonymousEvotars'}
             render={({ field }) => {
               return (
                 <Switch
                   {...field}
-                  id="showAnonymousDudes"
+                  id="showAnonymousEvotars"
                   onCheckedChange={(value) => {
                     field.onChange(value);
                     handleSubmit();

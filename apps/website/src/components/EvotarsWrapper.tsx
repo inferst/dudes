@@ -5,10 +5,10 @@ import type { ActionData } from 'evotars';
 import { Evotars } from 'evotars';
 import { useCallback, useState } from 'react';
 
-export const DudesWrapper = () => {
+export const EvotarsWrapper = () => {
   const [isInit, setIsInit] = useState(false);
 
-  const initDudes = useCallback(
+  const initEvotars = useCallback(
     async (element: HTMLDivElement) => {
       if (typeof document == 'undefined' || !element || isInit) {
         return;
@@ -79,7 +79,7 @@ export const DudesWrapper = () => {
       setIsInit(true);
 
       const settings: SettingsEntity = {
-        fallingDudes: true,
+        fallingEvotars: true,
         fallingRaiders: true,
       };
 
@@ -169,7 +169,7 @@ export const DudesWrapper = () => {
   );
 
   const ref = (element: HTMLDivElement) => {
-    initDudes(element);
+    initEvotars(element);
   };
 
   return <div className="w-[89%] h-[47%] mt-[6%]" ref={ref} />;

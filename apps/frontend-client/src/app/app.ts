@@ -10,6 +10,7 @@ export class App {
 
   public async init(): Promise<void> {
     const guid = getGuid();
+
     const evotars = new Evotars(document.body, {
       font: '/static/fonts/Rubik-VariableFont_wght.ttf',
       sounds: { jump: { src: '/static/sounds/jump.mp3' } },
@@ -51,9 +52,10 @@ export class App {
 
     this.connection.onSettings((data) => {
       evotars.updateSettings({
-        fallingEvotars: data.fallingDudes,
+        fallingEvotars: data.fallingEvotars,
         fallingRaiders: data.fallingRaiders,
-        showAnonymousEvotars: data.showAnonymousDudes,
+        showAnonymousEvotars: data.showAnonymousEvotars,
+        maxEvotars: data.maxEvotars,
       });
     });
 

@@ -12,10 +12,11 @@ export const prisma = new PrismaClient();
 declare global {
   namespace PrismaJson {
     type SettingsData = {
-      showAnonymousDudes?: boolean;
-      fallingDudes?: boolean;
+      showAnonymousEvotars?: boolean;
+      fallingEvotars?: boolean;
       fallingRaiders?: boolean;
       hiddenUsers?: string;
+      maxEvotars?: number;
     };
 
     type ActionData = Record<string, string | number | undefined>;

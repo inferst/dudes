@@ -1,7 +1,7 @@
-<h1 align="center">Dudes</h1>
+<h1 align="center">Evotars</h1>
 <div align="center">
   <a
-  href="https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/inferst/dudes">
+  href="https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/inferst/evotars">
     <img
     src="https://img.shields.io/static/v1?style=for-the-badge&logo=docker&label=devcontainer&message=supported&color=0797ff&labelColor=000000"
     alt="Dev Containers Badge"
