@@ -1,5 +1,5 @@
-name: Dudes Deploy
-run-name: ${{ github.actor }} is deploying Dudes
+name: Evotars Deploy
+run-name: ${{ github.actor }} is deploying Evotars
 on:
   push:
     branches:
@@ -42,7 +42,7 @@ jobs:
         script: |
           cd /srv/dudes
           docker system prune --all --force
-          docker build -t dudes-build --network=host --build-arg VITE_CJS_IGNORE_WARNING=${{ vars.VITE_CJS_IGNORE_WARNING }} --build-arg VITE_CLIENT_SOCKET_HOST=${{ vars.VITE_CLIENT_SOCKET_HOST }} --build-arg VITE_API_URL=${{ vars.VITE_API_URL }} .
+          docker build -t evotars-build --network=host --build-arg VITE_CJS_IGNORE_WARNING=${{ vars.VITE_CJS_IGNORE_WARNING }} --build-arg VITE_CLIENT_SOCKET_HOST=${{ vars.VITE_CLIENT_SOCKET_HOST }} --build-arg VITE_API_URL=${{ vars.VITE_API_URL }} .
   run_docker_compose_up:
     runs-on: ubuntu-latest
     timeout-minutes: 10
