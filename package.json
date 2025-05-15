@@ -8,7 +8,7 @@
     "lint": "turbo lint",
     "db:migrate:dev": "turbo db:migrate:dev",
     "db:migrate:deploy": "turbo db:migrate:deploy",
-    "db:migrate:seed": "turbo db:migrate:seed"
+    "db:seed": "turbo db:seed"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} apps/backend-api/src/database/seed/seed.ts"
