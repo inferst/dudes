@@ -18,7 +18,7 @@ export default defineConfig({
   // },
 
   build: {
-    // outDir: './dist/apps/frontend-client',
+    // outDir: './dist/apps/client',
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,

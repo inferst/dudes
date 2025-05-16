@@ -27,12 +27,12 @@ import { AppController } from './controllers/app.controller';
       },
     ]),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../', 'frontend-client/dist'),
+      rootPath: join(__dirname, '../../../', 'client/dist'),
       renderPath: '*path',
       serveRoot: '/client',
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../', 'frontend-admin/dist'),
+      rootPath: join(__dirname, '../../../', 'admin/dist'),
       renderPath: '*path',
       serveRoot: '/admin',
     }),

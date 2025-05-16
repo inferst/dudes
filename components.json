@@ -4,14 +4,14 @@
   "rsc": false,
   "tsx": true,
   "tailwind": {
-    "config": "apps/frontend-admin/tailwind.config.js",
-    "css": "apps/frontend-admin/src/style.css",
+    "config": "apps/admin/tailwind.config.js",
+    "css": "apps/admin/src/style.css",
     "baseColor": "zinc",
     "cssVariables": true,
     "prefix": ""
   },
   "aliases": {
-    "components": "@app/frontend-admin/components",
-    "utils": "@app/frontend-admin/lib/utils"
+    "components": "@app/admin/components",
+    "utils": "@app/admin/lib/utils"
   }
 }

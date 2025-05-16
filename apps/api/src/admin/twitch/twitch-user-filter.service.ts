@@ -35,7 +35,7 @@ export class TwitchUserFilterService {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       const file = readFileSync(
-        path.resolve(__dirname, 'apps/backend-api/public/bots.json'),
+        path.resolve(__dirname, 'apps/api/public/bots.json'),
       );
 
       const json = JSON.parse(file.toString());

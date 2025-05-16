@@ -11,7 +11,7 @@
     "db:seed": "turbo db:seed"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} apps/backend-api/src/database/seed/seed.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} apps/api/src/database/seed/seed.ts"
   },
   "devDependencies": {
     "turbo": "2.5.3",

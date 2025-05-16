@@ -9,7 +9,7 @@ type CardProps = {
 export const Card = (props: CardProps) => {
   return (
     <>
-      <div className="from-card-1 to-99% to-card-2 p-8 bg-radial-[at_50%_50%] rounded-2xl border-1 border-card-border items-center flex flex-col">
+      <div className="bg-card-1 p-8 rounded-2xl border-1 border-card-border items-center flex flex-col">
         <div className="border-gray-400 border-2 p-4 rounded-[100%]">
           {props.icon}
         </div>

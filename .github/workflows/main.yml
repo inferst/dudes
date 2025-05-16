@@ -1,9 +1,6 @@
 name: Evotars Deploy
 run-name: ${{ github.actor }} is deploying Evotars
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 jobs:
   copy_files_to_server:
