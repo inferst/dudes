@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
-import Image from 'next/image';
 import './globals.css';
 
 const geistSans = Geist({
@@ -36,7 +35,7 @@ export default function RootLayout({
           src="https://scripts.simpleanalyticscdn.com/latest.js"
         ></Script>
         <noscript>
-          <Image
+          <img
             src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true"
             alt=""
             referrerPolicy="no-referrer-when-downgrade"

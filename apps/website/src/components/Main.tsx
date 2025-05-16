@@ -55,16 +55,12 @@ export const Main = async () => {
         </div>
       </div>
       <footer className="mx-auto max-w-[1600px] border-t-2 border-[#3c3c3c] py-10 px-20 flex items-center">
-        <div>
-          Created by{' '}
-          <a
-            href="https://twitch.tv/mikerime"
-            target="_blank"
-            className="text-purple-400"
-          >
-            MikeRime
-          </a>
-        </div>
+        <a href="/terms" className="text-purple-400 mr-4">
+          Terms of Use
+        </a>
+        <a href="/privacy" className="text-purple-400">
+          Privacy Policy
+        </a>
         <div className="flex flex-1 justify-end items-center">
           <a href="https://github.com/inferst/evotars" target="_blank">
             <Image
