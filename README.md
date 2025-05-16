@@ -9,18 +9,28 @@
   </a>
 </div>
 
-<img
-src="https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_83ffd63c128c4fbc86784ff2914836a9/default/dark/4.0"
-width="100px"
-align="right"
-/>
+# Overview
 
-Animated characters for chatters in your stream.
+Evotars is a simple and free web-based overlay that adds animated avatars for your Twitch chatters. It's a lightweight alternative to Stream Avatars, designed with accessibility and ease of use in mind. Perfect for small or new streamers who want to add some fun interactivity to their streams without complex setup or extra software.
 
+## Features
+* Animated avatars for chatters in your stream
+* Chat commands: !jump, !dash, !color
+* Channel point reward integration
+* Separate display of 7tv emotes
+* Falling avatars triggered by raids
+* Web-based — no installation required
 
+## How to Use
+1. Go to https://evotars.inferst.com
+2. Log in with your Twitch account
+3. Customize your settings
+4. Copy your unique overlay URL
+5. Add it to OBS as a Browser Source
 
+# Development
 
-# Run the database in docker
+## Run the database in docker
 
 ```shell
 docker compose -f compose.dev.yaml up -d
@@ -34,7 +44,7 @@ To change the PostgreSQL port, use the following command structure:
 docker compose -f compose.dev.yaml run -d -p <port>:5432
 ```
 
-# Run locally
+## Run locally
 
 > [!IMPORTANT]
 > You need to have [Node.js](https://nodejs.org/en/download/package-manager) installed.
@@ -67,16 +77,21 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
     pnpm run dev
     ```
 
-# Ports
+## Links
 
 - http://localhost - website
 - http://localhost/api - admin panel backend
 - http://localhost/admin - admin panel frontend
 - http://localhost/client - client
 
-# Run the linter
+## Run the linter
 
 ```shell
 pnpm run lint
 ```
 
+# Contributors
+
+<a href="https://github.com/inferst/evotars-app/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=inferst/evotars-app" />
+</a>
