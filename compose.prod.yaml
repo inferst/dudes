@@ -3,7 +3,7 @@ services:
     image: evotars-build
     build:
       context: .
-    command: sh -c "cd apps/backend-api && node dist/main.js"
+    command: sh -c "cd apps/api && node dist/main.js"
     container_name: evotars-app
     working_dir: /app
     environment:
