@@ -36,7 +36,7 @@ export function Header() {
           <span className="block text-xl">R</span>
           <span className="block">S</span>
         </button>
-        <div className="flex flex-1 justify-end">
+        <div className="flex flex-1 justify-end ml-4">
           <div className="flex items-center">
             <Avatar className="w-8 h-8">
               <AvatarImage

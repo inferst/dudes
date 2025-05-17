@@ -34,8 +34,8 @@ export function PreviewPage() {
       </CardHeader>
       <CardContent>
         <div className="flex items-center">
-          <div className="rounded-tl-md rounded-bl-md border p-2">
-            <div className="blur-sm">{user?.previewUrl}</div>
+          <div className="rounded-tl-md rounded-bl-md border p-2 h-10 max-w-[300px] overflow-hidden text-nowrap">
+            <div className="blur-xs">{user?.previewUrl}</div>
           </div>
           <Button
             onClick={handleCopyClick}

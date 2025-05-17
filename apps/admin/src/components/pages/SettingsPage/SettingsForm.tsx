@@ -47,14 +47,14 @@ export function SettingsForm(props: SettingsFormProps) {
       </h4>
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
-        <div>
+        <div className="lg:col-span-1 col-span-2">
           <Label htmlFor="maxEvotars" className="text-xl">
             {t('SettingsForm.maxEvotarsText', {
               defaultValue: 'Max Evotars',
             })}
           </Label>
         </div>
-        <div className="col-span-1">
+        <div className="lg:col-span-3 col-span-2">
           <FormField
             control={form.control}
             name={'maxEvotars'}
@@ -73,6 +73,7 @@ export function SettingsForm(props: SettingsFormProps) {
                     },
                   })}
                   onBlur={handleSubmit}
+                  className="max-w-36"
                 />
               );
             }}
@@ -89,7 +90,7 @@ export function SettingsForm(props: SettingsFormProps) {
         </div>
       </div>
       <div className="grid grid-cols-4 gap-4 mt-4">
-        <div>
+        <div className="lg:col-span-1 col-span-2">
           <Label htmlFor="fallingEvotars" className="text-xl">
             {t('SettingsForm.fallingEvotarsText', {
               defaultValue: 'Falling evotars',
@@ -101,7 +102,7 @@ export function SettingsForm(props: SettingsFormProps) {
             })}
           </p>
         </div>
-        <div className="col-span-3">
+        <div className="lg:col-span-3 col-span-2">
           <FormField
             control={form.control}
             name={'fallingEvotars'}
@@ -123,7 +124,7 @@ export function SettingsForm(props: SettingsFormProps) {
         </div>
       </div>
       <div className="grid grid-cols-4 gap-4 mt-4">
-        <div>
+        <div className="lg:col-span-1 col-span-2">
           <Label htmlFor="showAnonymousEvotars" className="text-xl">
             {t('SettingsForm.spawnAnonymousViewersText', {
               defaultValue: 'Spawn anonymous viewers',
@@ -136,7 +137,7 @@ export function SettingsForm(props: SettingsFormProps) {
             })}
           </p>
         </div>
-        <div className="col-span-3">
+        <div className="lg:col-span-3 col-span-2">
           <FormField
             control={form.control}
             name={'showAnonymousEvotars'}
@@ -165,7 +166,7 @@ export function SettingsForm(props: SettingsFormProps) {
       </h4>
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
-        <div>
+        <div className="lg:col-span-1 col-span-2">
           <Label htmlFor="fallingRaiders" className="text-xl">
             {t('SettingsForm.fallingRaidersText', {
               defaultValue: 'Falling raiders',
@@ -177,7 +178,7 @@ export function SettingsForm(props: SettingsFormProps) {
             })}
           </p>
         </div>
-        <div className="col-span-3">
+        <div className="lg:col-span-3 col-span-2">
           <FormField
             control={form.control}
             name={'fallingRaiders'}
@@ -206,7 +207,7 @@ export function SettingsForm(props: SettingsFormProps) {
       </h4>
       <Separator className="my-4" />
       <div className="grid grid-cols-4 gap-4 mt-4">
-        <div>
+        <div className="lg:col-span-1 col-span-2">
           <Label htmlFor="hiddenUsers" className="text-xl">
             {t('SettingsForm.hiddenUsersText', {
               defaultValue: 'Hidden Users',
@@ -218,7 +219,7 @@ export function SettingsForm(props: SettingsFormProps) {
             })}
           </p>
         </div>
-        <div className="col-span-3">
+        <div className="lg:col-span-3 col-span-2">
           <FormField
             control={form.control}
             name={'hiddenUsers'}

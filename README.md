@@ -80,9 +80,9 @@ docker compose -f compose.dev.yaml run -d -p <port>:5432
 ## Links
 
 - http://localhost - website
-- http://localhost/api - admin panel backend
-- http://localhost/admin - admin panel frontend
-- http://localhost/client - client
+- http://localhost/api - api
+- http://localhost/admin - admin panel
+- http://localhost/client - client overlay
 
 ## Run the linter
 

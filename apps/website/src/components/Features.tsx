@@ -9,7 +9,7 @@ export const Features = async () => {
   return (
     <>
       <h2 className="text-5xl font-medium mb-8 mt-8">{t('features.title')}</h2>
-      <div className="text-center grid grid-cols-2 gap-6 my-4 max-w-[1200px]">
+      <div className="text-center grid md:grid-cols-2 grid-cols-1 gap-6 mx-4 my-4 max-w-[1200px]">
         <Card
           icon={<Terminal />}
           title={t('features.commands.title')}

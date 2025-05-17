@@ -11,54 +11,55 @@ export const Main = async () => {
   const { t } = await getT('common');
 
   return (
-    <>
-      <div className="flex justify-center text-shadow-gray-400 text-shadow-2xs font-light">
-        <div className="container items-center flex flex-col">
-          <div className="m-6">
-            <Link
-              href="/"
-              className="flex items-center p-2 text-6xl font-medium"
-            >
-              <span className="block">E</span>
-              <span className="block text-5xl">V</span>
-              <span className="block">O</span>
-              <span className="block text-5xl">T</span>
-              <span className="block">A</span>
-              <span className="block text-5xl">R</span>
-              <span className="block">S</span>
-            </Link>
-          </div>
-          <div className="text-2xl text-center m-4 max-w-[800px]">
-            {t('intro.target')}
-          </div>
-          <div className="m-6">
-            <Login />
-          </div>
-          <div
-            className="flex justify-center bg-[url('/obs.png')] bg-no-repeat bg-contain bg-top w-full max-w-[1200px] aspect-[var(--aspect)]"
-            style={
-              {
-                '--aspect': '1.15/1',
-              } as CSSProperties
-            }
-          >
-            <EvotarsWrapper />
-          </div>
-          <div className="text-2xl text-center m-4 mb-10 font-light text-shadow-2xs text-shadow-gray-400 max-w-[800px]">
-            {t('intro.description')}
-          </div>
-          <Features />
-          <HowTo />
-          <div className="mb-24">
-            <Login />
-          </div>
+    <div className="container mx-auto">
+      <main className="items-center flex flex-col text-shadow-gray-400 text-shadow-xs font-light">
+        <div className="m-6">
+          <Link href="/" className="flex items-center p-2 text-6xl font-medium">
+            <span className="block">E</span>
+            <span className="block text-5xl">V</span>
+            <span className="block">O</span>
+            <span className="block text-5xl">T</span>
+            <span className="block">A</span>
+            <span className="block text-5xl">R</span>
+            <span className="block">S</span>
+          </Link>
         </div>
-      </div>
-      <footer className="mx-auto max-w-[1600px] border-t-2 border-[#3c3c3c] py-10 px-20 flex items-center">
-        <a href="/terms" className="text-purple-400 mr-4">
+        <div className="text-2xl text-center m-4 max-w-[800px]">
+          {t('intro.target')}
+        </div>
+        <div className="m-6">
+          <Login />
+        </div>
+        <div
+          className="flex justify-center bg-[url('/obs.png')] bg-no-repeat bg-contain bg-top w-full max-w-[1200px] aspect-[var(--aspect)]"
+          style={
+            {
+              '--aspect': '1.15/1',
+            } as CSSProperties
+          }
+        >
+          <EvotarsWrapper />
+        </div>
+        <div className="text-2xl text-center m-4 mb-10 font-light text-shadow-2xs text-shadow-gray-400 max-w-[800px]">
+          {t('intro.description')}
+        </div>
+        <Features />
+        <HowTo />
+        <div className="mb-24">
+          <Login />
+        </div>
+      </main>
+      <footer className="text-sm border-t-1 border-[#3c3c3c] py-6 px-10 flex items-center">
+        <a
+          href="/terms"
+          className="font-medium text-purple-600 dark:text-purple-500 hover:underline mr-4"
+        >
           Terms of Use
         </a>
-        <a href="/privacy" className="text-purple-400">
+        <a
+          href="/privacy"
+          className="font-medium text-purple-600 dark:text-purple-500 hover:underline mr-4"
+        >
           Privacy Policy
         </a>
         <div className="flex flex-1 justify-end items-center">
@@ -73,6 +74,6 @@ export const Main = async () => {
           </a>
         </div>
       </footer>
-    </>
+    </div>
   );
 };
