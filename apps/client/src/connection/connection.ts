@@ -9,6 +9,12 @@ import {
 } from '@repo/types';
 import { Socket, io } from 'socket.io-client';
 
+type ConnectionError = {
+  message: string;
+  description: string;
+  context: string;
+} & Error;
+
 export class Connection {
   private socket!: Socket<ServerToClientsEvents, ClientToServerEvents>;
 
@@ -24,6 +30,14 @@ export class Connection {
     });
 
     this.socket = socket;
+
+    socket.on('connect_error', (err) => {
+      const e = err as ConnectionError;
+
+      console.log(e.message);
+      console.log(e.description);
+      console.log(e.context);
+    });
   }
 
   public onMessage(callback: (data: MessageEntity) => void): void {
