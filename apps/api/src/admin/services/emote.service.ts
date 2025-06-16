@@ -159,79 +159,86 @@ export class EmoteService {
         ws.send(JSON.stringify(userUpdateSubscribe));
 
         ws.onmessage = async (event: unknown): Promise<void> => {
-          const data = JSON.parse((event as object)['data']);
+          try {
+            const data = JSON.parse((event as object)['data']);
 
-          if (isSevenTVEvent(data)) {
-            if (data.d.type == 'user.update') {
-              const body = data.d.body as SevenTVUserUpdateEvent;
+            if (isSevenTVEvent(data)) {
+              if (data.d.type == 'user.update') {
+                const body = data.d.body as SevenTVUserUpdateEvent;
 
-              const event = body.updated
-                .find((event) => event.key == 'connections')
-                ?.value.find((value) => value.key == 'emote_set_id');
+                const event = body.updated
+                  .find((event) => event.key == 'connections')
+                  ?.value.find((value) => value.key == 'emote_set_id');
 
-              if (event) {
-                ws.send(
-                  JSON.stringify({
-                    op: 36,
-                    d: {
-                      type: 'emote_set.update',
-                      condition: {
-                        object_id: event.old_value,
+                if (event) {
+                  ws.send(
+                    JSON.stringify({
+                      op: 36,
+                      d: {
+                        type: 'emote_set.update',
+                        condition: {
+                          object_id: event.old_value,
+                        },
                       },
-                    },
-                  }),
-                );
+                    }),
+                  );
 
-                ws.send(
-                  JSON.stringify({
-                    op: 35,
-                    d: {
-                      type: 'emote_set.update',
-                      condition: {
-                        object_id: event.value,
+                  ws.send(
+                    JSON.stringify({
+                      op: 35,
+                      d: {
+                        type: 'emote_set.update',
+                        condition: {
+                          object_id: event.value,
+                        },
                       },
-                    },
-                  }),
-                );
+                    }),
+                  );
 
-                emotesData = await this.getEmotesData(platformUserId);
+                  emotesData = await this.getEmotesData(platformUserId);
 
-                if (emotesData) {
-                  emotes = emotesData.data;
-                }
-              }
-            }
-
-            if (data.d.type == 'emote_set.update') {
-              const body = data.d.body as SevenTVEmoteSetUpdateBody;
-
-              const pulled = body.pulled;
-              const pushed = body.pushed;
-
-              if (pulled) {
-                const data = pulled.map((emote) => emote.old_value.name);
-
-                for (const name of data) {
-                  delete emotes[name];
+                  if (emotesData) {
+                    emotes = emotesData.data;
+                  }
                 }
               }
 
-              if (pushed) {
-                const entries = pushed.map((emote) => {
-                  const data = emote.value.data;
-                  const url = data.animated
-                    ? data.host.url + '/4x.gif'
-                    : data.host.url + '/4x.png';
+              if (data.d.type == 'emote_set.update') {
+                const body = data.d.body as SevenTVEmoteSetUpdateBody;
 
-                  return [
-                    emote.value.name,
-                    url.replace('//cdn.7tv.app', hostUrl + '/7tv-emotes'),
-                  ];
-                });
+                const pulled = body.pulled;
+                const pushed = body.pushed;
 
-                emotes = { ...emotes, ...Object.fromEntries(entries) };
+                if (pulled) {
+                  const data = pulled.map((emote) => emote.old_value.name);
+
+                  for (const name of data) {
+                    delete emotes[name];
+                  }
+                }
+
+                if (pushed) {
+                  const entries = pushed.map((emote) => {
+                    const data = emote.value.data;
+                    const url = data.animated
+                      ? data.host.url + '/4x.gif'
+                      : data.host.url + '/4x.png';
+
+                    return [
+                      emote.value.name,
+                      url.replace('//cdn.7tv.app', hostUrl + '/7tv-emotes'),
+                    ];
+                  });
+
+                  emotes = { ...emotes, ...Object.fromEntries(entries) };
+                }
               }
             }
+          } catch (e) {
+            this.logger.error(
+              'Failed to process 7TV Web socket message.',
+              e.toString(),
+            );
           }
         };
 
