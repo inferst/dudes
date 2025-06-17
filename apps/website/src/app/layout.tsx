@@ -15,7 +15,19 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Evotars',
-  description: 'Make your stream more fun with Evotars',
+  description:
+    'Evotars turns your Twitch chat participants into interactive avatars on your stream. Boost engagement and grow your channel with customizable, game-like characters for your viewers.',
+  keywords:
+    'twitch, chat, avatars, stream, streamer, interactive, channel rewards, emotes, 7tv, obs, overlay',
+  openGraph: {
+    title: 'Evotars — Interactive Twitch Avatars for Chat viewers',
+    description:
+      'Evotars brings your Twitch chat to life with interactive, customizable avatars. Easy browser integration for OBS, channel rewards, 7TV emotes, and raid support.',
+    url: 'https://evotars.inferst.com',
+    locale: 'en_US',
+    type: 'website',
+    siteName: 'Evotars',
+  },
 };
 
 export default function RootLayout({
