@@ -44,12 +44,12 @@ export const Main = async () => {
           {t('intro.description')}
         </div>
         <Features />
-        <HowTo />
-        <div className="mb-24">
-          <Login />
-        </div>
+        {/* <HowTo /> */}
+        {/* <div className="mb-24"> */}
+        {/*   <Login /> */}
+        {/* </div> */}
       </main>
-      <footer className="text-sm border-t-1 border-[#3c3c3c] py-6 px-10 flex items-center">
+      <footer className="text-sm border-t-1 border-[#3c3c3c] py-6 px-10 flex items-center mt-24">
         <a
           href="/terms"
           className="font-medium text-purple-600 dark:text-purple-500 hover:underline mr-4"
