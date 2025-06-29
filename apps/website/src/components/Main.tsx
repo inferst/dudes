@@ -1,5 +1,4 @@
 import { Features } from '@/components/Features';
-import { HowTo } from '@/components/HowTo';
 import { Login } from '@/components/Login';
 import { getT } from '@/lib/i18n';
 import Image from 'next/image';
