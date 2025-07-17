@@ -9,6 +9,8 @@ import { TwitchHttpExceptionFilter } from './admin/filters/twitch-http-exception
 import { AppModule } from './app/app.module';
 import { ZodFilter } from './filters/zod.filter';
 
+import './instruments';
+
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 days.
 const SESSION_CHECK_PERIOD = 2 * 60 * 1000; // 2 minutes.
 

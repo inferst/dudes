@@ -24,6 +24,7 @@
     "@quixo3/prisma-session-store": "3.1.13",
     "@repo/database": "workspace:*",
     "@repo/types": "workspace:*",
+    "@sentry/nestjs": "9.40.0",
     "@twurple/api": "7.3.0",
     "@twurple/api-call": "7.3.0",
     "@twurple/auth": "7.3.0",
