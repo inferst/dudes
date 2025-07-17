@@ -3,14 +3,16 @@ import { AuthModule } from '@/auth/auth.module';
 import { ConfigModule } from '@/config/config.module';
 import { DatabaseModule } from '@/database/database.module';
 import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
+import { APP_FILTER, RouterModule } from '@nestjs/core';
 import { PassportModule } from '@nestjs/passport';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { join } from 'path';
 import { AppController } from './controllers/app.controller';
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     ConfigModule,
     DatabaseModule,
     AuthModule,
@@ -38,6 +40,11 @@ import { AppController } from './controllers/app.controller';
     }),
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },
+  ],
 })
 export class AppModule {}
