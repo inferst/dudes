@@ -11,6 +11,7 @@ services:
       - POSTGRES_PASSWORD=dudes
       - POSTGRES_USER=dudes
       - POSTGRES_DB=dudes
+    restart: unless-stopped
 
   nginx:
     image: nginx:alpine
@@ -20,7 +21,7 @@ services:
     volumes:
       - ./nginx/dev.conf:/etc/nginx/conf.d/default.conf
       - ./static:/var/www/html
-    restart: always
+    restart: unless-stopped
 
 volumes:
   postgres-data:
